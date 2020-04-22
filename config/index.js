@@ -27,12 +27,35 @@ const config = convict({
     arg: 'frontAppUrl',
     env: 'FRONT_APP_URL'
   },
-
+  tokenExpiration: {
+    doc: 'Token exp. date',
+    default: 1,
+    arg: 'tokenExpiration',
+    env: 'tokenExpiration'
+  },
   jwtSecret: {
     doc: 'JWT token secret',
     default: 'DEFAULT_TOKEN',
     arg: 'jwtSecret',
     env: 'JWT_TOKEN'
+  },
+  emailHost: {
+    doc: 'Host of email',
+    default: 'DEFAULT_EMAIL_HOST',
+    arg: 'emailHost',
+    env: 'EMAIL_HOST'
+  },
+  email: {
+    doc: 'Email for sending emails',
+    default: 'DEFAULT_EMAIL',
+    arg: 'email',
+    env: 'EMAIL'
+  },
+  emailPass: {
+    doc: 'Email password',
+    default: 'DEFAULT_EMAIL_PASS',
+    arg: 'emailPass',
+    env: 'EMAIL_PASS'
   }
 });
 

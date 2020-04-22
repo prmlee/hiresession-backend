@@ -38,6 +38,14 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
+      highDeagree:{
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      graduationYear:{
+        type: Sequelize.INTEGER,
+        allowNull:true
+      },
       profileImg:{
         type: Sequelize.STRING,
         allowNull:true

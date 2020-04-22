@@ -1,5 +1,9 @@
 {
   "appName": "hiresession",
   "frontAppUrl": "http://localhost:3000",
-  "jwtSecret": "oxZnqJX0xuvlfYrgDT9UmraGOcdu3h0GdNn6xT_0n8sbkaTDUKSBltmNEE3ScXFol40UdLSsYZAlWeRygeNdMA"
+  "jwtSecret": "oxZnqJX0xuvlfYrgDT9UmraGOcdu3h0GdNn6xT_0n8sbkaTDUKSBltmNEE3ScXFol40UdLSsYZAlWeRygeNdMA",
+  "tokenExpiration": 1,
+  "emailHost" : "smtp.gmail.com",
+  "email" : "razmikbortorian188@gmail.com",
+  "emailPass" : "bortotian2020"
 }

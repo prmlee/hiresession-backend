@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const tokenExpiration = 7;
+const tokenExpiration = config.tokenExpiration;
 
 const Roles = Object.freeze({
-  customer: 0,
-  admin: 1
+  candidate: 0,
+  employer: 1,
+  admin: 2
 });
 
 function createToken(email, firstName, lastName, role) {
