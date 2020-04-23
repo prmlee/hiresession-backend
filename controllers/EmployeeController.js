@@ -7,9 +7,9 @@ const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 
 
-const {User} = require('../models');
+const {User, employeeSettings} = require('../models');
 
-async function settings(req, res) {
+async function profile(req, res) {
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
@@ -52,7 +52,6 @@ async function settings(req, res) {
             updatedObj.companyImg = req.file.filename;
             if(res.locals.user.companyImg){
                 const filePath = `uploads/${res.locals.user.companyImg}`
-                console.log(filePath)
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });
@@ -67,8 +66,6 @@ async function settings(req, res) {
         }
 
         try {
-            console.log('ssss',updatedObj)
-
             await  User.update({
                 ...updatedObj
             }, {
@@ -101,4 +98,105 @@ async function settings(req, res) {
 
 }
 
-module.exports = {settings};
+
+async function settings(req, res){
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json({validation: errors.array()});
+    }
+
+    const employeeId = res.locals.user.id;
+
+    try{
+        await employeeSettings.create({
+            employeeId,
+            date: req.body.date,
+            startTimeFrom: req.body.startTimeFrom,
+            startTimeTo: req.body.startTimeTo,
+            endTimeFrom: req.body.endTimeFrom,
+            endTimeTo: req.body.endTimeTo,
+            duration: req.body.duration,
+            durationType: req.body.durationType,
+        });
+
+        return  res.status(httpStatus.OK).json({
+            success: true,
+            message:"Settings successfully created",
+        });
+    }catch (e) {
+
+        return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message
+        });
+    }
+}
+
+async function getSettings(req, res){
+
+    try {
+        const employeeId = res.locals.user.id;
+
+        const settings = await employeeSettings.findOne({
+            where: {
+                employeeId
+            },
+            raw:true
+        })
+
+        return  res.status(httpStatus.OK).json({
+            success: true,
+            data:settings,
+        })
+
+    }catch (e) {
+
+        return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message
+        });
+    }
+}
+
+async function updateSettings(req, res){
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json({validation: errors.array()});
+    }
+
+
+    const updatedObj  = req.body;
+
+    try {
+        await  employeeSettings.update({
+            ...updatedObj
+        }, {
+            where: {
+                employeeId: res.locals.user.id,
+                id: req.body.id
+            },
+            paranoid: true
+        })
+
+        return  res.status(httpStatus.OK).json({
+            success: true,
+            message:"Updated successfully"
+        });
+
+    }catch (e) {
+        return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message
+        });
+    }
+}
+
+module.exports = {settings, profile, getSettings, updateSettings};

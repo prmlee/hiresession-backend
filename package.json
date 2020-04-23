@@ -9,8 +9,7 @@
     "start:prod": " NODE_ENV=production PORT=8000 node ./bin/www",
     "migrate": "sequelize db:migrate",
     "seeder": "sequelize db:seed:all",
-    "migrate:prod": "sequelize db:migrate --env production",
-    "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
+    "migrate:prod": "sequelize db:migrate --env production"
   },
   "author": "",
   "license": "ISC",

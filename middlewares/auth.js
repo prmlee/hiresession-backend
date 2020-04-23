@@ -22,9 +22,11 @@ async function isLoggedUser(role, req, res, next) {
     try{
       const decodedToken = await verifyToken(token);
       if(decodedToken && decodedToken.role === role){
-      console.log(decodedToken.email);
+
         const user = await User.findOne({
-          email:decodedToken.email,
+          where: {
+            email: decodedToken.email
+          },
           raw:true
         });
 
@@ -36,16 +38,20 @@ async function isLoggedUser(role, req, res, next) {
 
         res.locals.user = user;
         next();
+      }else{
+        res
+            .status(httpStatus.UNAUTHORIZED)
+            .json({authorization: [{message:  'Unauthorized'}]});
       }
     }catch (err) {
       return  res
           .status(httpStatus.UNAUTHORIZED)
-          .json({authorization: [{msg: err ? err.message : 'Unauthorized'}]});
+          .json({authorization: [{message: err ? err.message : 'Unauthorized'}]});
     }
   } else {
     res
         .status(httpStatus.UNAUTHORIZED)
-        .json({authorization: [{msg: 'Unauthorized'}]});
+        .json({authorization: [{message: 'Unauthorized'}]});
   }
 }
 
