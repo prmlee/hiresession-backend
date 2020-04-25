@@ -8,14 +8,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       firstName: DataTypes.STRING,
       lastName: DataTypes.STRING,
-      shcool: DataTypes.STRING,
-      major: DataTypes.STRING,
-      highDeagree: DataTypes.STRING,
-      graduationYear: DataTypes.INTEGER,
-      companyName: DataTypes.STRING,
-      profileImg: DataTypes.STRING,
-      companyImg: DataTypes.STRING,
-      JobTitle: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
         validate: {

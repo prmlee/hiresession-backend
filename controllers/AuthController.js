@@ -7,14 +7,13 @@ const {createToken, createResetPassToken, verifyToken, Roles} = require('../help
 const mailer = require('../services/mail-sender');
 const configs = require('../config');
 
-const {User, Admin} = require('../models');
+const {User, Candidates, Employees, SupportingDocuments, Admin} = require('../models');
 
-async function register(req, res) {
-
+async function candidateRegister(req, res) {
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, 'uploads');
+            callback(null, 'uploads/candidate');
         },
 
         filename: function (req, file, callback) {
@@ -25,20 +24,14 @@ async function register(req, res) {
     })
 
 
-    const profileImg = multer({
+    const upload = multer({
         storage,
         limits:{fileSize:1000000},
 
-    }).fields([
-        {
-            name: 'profileImg', maxCount: 1
-        }, {
-            name: 'companyLogo', maxCount: 1
-        }
-    ]);
+    }).single('resume');
 
 
-     profileImg(req, res, async (err) => {
+    upload(req, res, async (err) => {
 
          if(!req.body.email){
             return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
@@ -60,6 +53,13 @@ async function register(req, res) {
                  message: "Last Name is required"
              })
          }
+
+        if(!req.body.password || !req.body.confirmPassword || (req.body.password !== req.body.confirmPassword)){
+            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+                success: false,
+                message: "password does not match!"
+            })
+        }
 
          if(!req.body.role){
              return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
@@ -95,22 +95,158 @@ async function register(req, res) {
         const HASHED_PASSWORD = bcrypt.hashSync(password, saltRounds);
 
         try {
-            await User.create({
+             const createdUser = await User.create({
                 firstName:req.body.firstName,
                 lastName:req.body.lastName,
                 role:req.body.role,
                 email:req.body.email,
+                password:HASHED_PASSWORD,
+            });
+
+            await Candidates.create({
+                userId:createdUser.dataValues.id,
+                major:req.body.major || '',
                 shcool:req.body.shcool || '',
                 highDeagree:req.body.highDeagree || '',
                 graduationYear:req.body.graduationYear || '',
-                major:req.body.major || '',
+                desiredJobTitle:req.body.desiredJobTitle || '',
+                industryInterested:req.body.industryInterested || '',
+                resume:req.file.filename,
+            })
+
+            return  res.status(httpStatus.OK).json({
+                success: true,
+                message:"you already registered"
+            });
+
+        }catch (e) {
+            return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: e.message
+            });
+        }
+    })
+}
+
+async function employeeRegister(req, res) {
+
+    const storage = multer.diskStorage({
+        destination : function (req, file, callback) {
+            callback(null, 'uploads/employeer');
+        },
+
+        filename: function (req, file, callback) {
+
+            callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+
+        }
+    })
+
+
+    const profileImg = multer({
+        storage,
+        limits:{fileSize:1000000},
+
+    }).fields([
+        {
+            name: 'profileImg', maxCount: 1
+        }, {
+            name: 'companyLogo', maxCount: 1
+        },
+        {
+            name: 'supportingDocs', supportingDocs: 20
+        }
+    ]);
+
+
+    profileImg(req, res, async (err) => {
+
+        if(!req.body.email){
+            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+                success: false,
+                message: "email is required"
+            })
+        }
+
+        if(!req.body.firstName){
+            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+                success: false,
+                message: "First Name is required"
+            })
+        }
+
+        if(!req.body.lastName){
+            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+                success: false,
+                message: "Last Name is required"
+            })
+        }
+
+        if(!req.body.role){
+            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+                success: false,
+                message: "Role is required"
+            })
+        }
+
+
+        if(!req.body.password || !req.body.confirmPassword || (req.body.password !== req.body.confirmPassword)){
+            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+                success: false,
+                message: "password does not match!"
+            })
+        }
+
+        const user = await User.findOne({
+            where: {
+                email: req.body.email
+            },
+            raw: true,
+        });
+
+        if(user){
+            return  res.status(httpStatus.FORBIDDEN).json({
+                success: false,
+                message: 'this email already used'
+            })
+        }
+
+        if(err){
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                success:false,
+                message:err
+            })
+        }
+
+        const saltRounds = 10;
+        const password = req.body.password;
+
+        const HASHED_PASSWORD = bcrypt.hashSync(password, saltRounds);
+
+        try {
+            const createdUser = await User.create({
+                firstName:req.body.firstName,
+                lastName:req.body.lastName,
+                role:req.body.role,
+                email:req.body.email,
+                password:HASHED_PASSWORD,
+            });
+
+            await Employees.create({
+                userId:createdUser.dataValues.id,
                 JobTitle:req.body.JobTitle || '',
                 companyName:req.body.companyName || '',
-                status:'active',
-                password:HASHED_PASSWORD,
+                videoUrl:req.body.videoUrl || '',
                 profileImg:req.files.profileImg[0].filename,
                 companyImg:req.files.companyLogo[0].filename,
             })
+
+            for(let i in req.files.supportingDocs){
+                await SupportingDocuments.create({
+                    userId:createdUser.dataValues.id,
+                    docName: req.files.supportingDocs[i].filename
+                })
+            }
 
             return  res.status(httpStatus.OK).json({
                 success: true,
@@ -260,9 +396,10 @@ async function resetPassword(req, res) {
             .json(errors.array());
     }
 
-    const decodedToken = await verifyToken(req.body.token);
-
     try {
+
+        const decodedToken = await verifyToken(req.body.token);
+
         await  User.update({
             password: req.body.password
         }, {
@@ -286,5 +423,50 @@ async function resetPassword(req, res) {
     }
 }
 
+async function changePassword(req, res) {
 
-module.exports = {register, login, adminLogin, resetPassword, resetPassEmail};
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json(errors.array());
+    }
+
+    console.log(res.locals.user);
+
+    const result = await bcrypt
+        .compare(req.body.oldPassword, res.locals.user.password);
+
+    if(!result){
+        return  res.status(httpStatus.UNAUTHORIZED).json({
+            success:"false",
+            message: "Invalid Login or password"
+        })
+    }
+
+    try {
+        await  User.update({
+            password: req.body.password
+        }, {
+            where: {
+                email: res.locals.user.email
+            },
+            paranoid: true
+        })
+
+        return res.status(httpStatus.OK).json({
+            success : true,
+            message : "Your password successfully updated!"
+        });
+
+    }catch (e) {
+        console.log(e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success : false,
+            message : e
+        });
+    }
+}
+
+
+module.exports = {candidateRegister, employeeRegister, login, adminLogin, resetPassword, resetPassEmail, changePassword};

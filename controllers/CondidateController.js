@@ -4,7 +4,7 @@ const path = require('path');
 const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 
-const {User} = require('../models');
+const { User } = require('../models');
 
 async function profile(req, res){
 
@@ -25,7 +25,7 @@ async function profile(req, res){
     }
 
     const updatedObj  = req.body;
-console.log('cvcvcvcvcvcvcvcvcvcv',res.locals.user);
+
     try {
         await  User.update({
             ...updatedObj
@@ -40,7 +40,6 @@ console.log('cvcvcvcvcvcvcvcvcvcv',res.locals.user);
 
         if(req.body.email){
             token  = await createToken(req.body.email, res.locals.user.firstName, res.locals.user.lastName, Roles[res.locals.user.role]);
-
         }
 
         return  res.status(httpStatus.OK).json({
@@ -57,4 +56,16 @@ console.log('cvcvcvcvcvcvcvcvcvcv',res.locals.user);
     }
 }
 
-module.exports = {profile}
+async function sheduleInterview(req, res){
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json({validation: errors.array()});
+    }
+
+}
+
+module.exports = { profile, sheduleInterview }

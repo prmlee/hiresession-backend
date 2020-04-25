@@ -1,14 +1,23 @@
 const express = require('express');
 const {check} = require('express-validator/check');
 const AuthController = require('../controllers/AuthController');
+const { isUserLoggedIn } = require('../middlewares/auth');
 
 const router = express.Router();
 
+
 router
-  .route('/register')
+  .route('/employeeRegister')
   .post(
-    AuthController.register
+    AuthController.employeeRegister
   );
+
+
+router
+    .route('/candidateRegister')
+    .post(
+        AuthController.candidateRegister
+    );
 
 
 router
@@ -37,6 +46,14 @@ router
     .put(
         [check('password').isLength({min: 6}),check('confirmPassword').isLength({min: 6}),check('token').exists()],
         AuthController.resetPassword
+    );
+
+router
+    .route('/changePassword')
+    .put(
+        isUserLoggedIn,
+        [check('password').isLength({min: 6}),check('confirmPassword').isLength({min: 6}),check('oldPassword')],
+        AuthController.changePassword
     );
 
 module.exports = router;

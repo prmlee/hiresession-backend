@@ -1,15 +1,21 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Users', {
+    return queryInterface.createTable('Candidates', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstName: {
-        type: Sequelize.STRING
+      userId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       shcool: {
         type: Sequelize.STRING,
@@ -19,26 +25,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull:true
       },
-      companyName: {
-        type: Sequelize.STRING,
-        allowNull:true
-      },
-      JobTitle: {
-        type: Sequelize.STRING,
-        allowNull:true
-      },
-      email: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
-      },
-      lastName: {
-        type: Sequelize.STRING
-      },
-      password: {
-        type: Sequelize.STRING
-      },
       highDeagree:{
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      resume:{
         type: Sequelize.STRING,
         allowNull:true
       },
@@ -46,23 +37,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull:true
       },
-      profileImg:{
+      desiredJobTitle:{
         type: Sequelize.STRING,
         allowNull:true
       },
-      companyImg:{
-        type: Sequelize.STRING,
-        allowNull:true
-      },
-      status: {
+      industryInterested: {
         type: Sequelize.ENUM,
-        values: ['active', 'inactive'],
-        defaultValue: 'active'
-      },
-      role: {
-        type: Sequelize.ENUM,
-        values: ['candidate', 'employer'],
-        defaultValue: 'candidate'
+        values: ['html', 'css'],
+        defaultValue: 'html'
       },
       createdAt: {
         allowNull: false,
@@ -78,6 +60,6 @@ module.exports = {
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('Candidate');
   }
 };

@@ -55,4 +55,44 @@ async function isLoggedUser(role, req, res, next) {
   }
 }
 
-module.exports = {isLoggedEmployer, isLoggedCandidate, isLoggedAdmin};
+async function isUserLoggedIn(req, res, next) {
+  if(req.headers.authorization) {
+    const token = req.headers.authorization.split(' ')[1];
+
+    try{
+      const decodedToken = await verifyToken(token);
+      if(decodedToken){
+
+        const user = await User.findOne({
+          where: {
+            email: decodedToken.email
+          },
+          raw:true
+        });
+
+        if(!user){
+          return  res
+              .status(httpStatus.UNAUTHORIZED)
+              .json({authorization: [{message: 'Unauthorized'}]});
+        }
+
+        res.locals.user = user;
+        next();
+      }else{
+        res
+            .status(httpStatus.UNAUTHORIZED)
+            .json({authorization: [{message:  'Unauthorized'}]});
+      }
+    }catch (err) {
+      return  res
+          .status(httpStatus.UNAUTHORIZED)
+          .json({authorization: [{message: err ? err.message : 'Unauthorized'}]});
+    }
+  } else {
+    res
+        .status(httpStatus.UNAUTHORIZED)
+        .json({authorization: [{message: 'Unauthorized'}]});
+  }
+}
+
+module.exports = {isLoggedEmployer, isLoggedCandidate, isLoggedAdmin, isUserLoggedIn};

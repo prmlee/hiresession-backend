@@ -13,4 +13,12 @@ router
     );
 
 
+router
+    .route('/sheduleInterview')
+    .patch(
+        isLoggedCandidate,
+        CandidateController.sheduleInterview
+    );
+
+
 module.exports = router;

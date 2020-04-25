@@ -1,0 +1,18 @@
+
+module.exports = (sequelize, DataTypes) => {
+
+  const Employee = sequelize.define('Employees', {
+    userId: DataTypes.INTEGER,
+    companyName: DataTypes.STRING,
+    profileImg: DataTypes.STRING,
+    companyImg: DataTypes.STRING,
+    videoUrl: DataTypes.STRING,
+    JobTitle: DataTypes.STRING,
+  }, {});
+
+  Employee.associate = function(models) {
+  // associations can be defined here
+  };
+
+  return Employee;
+};
