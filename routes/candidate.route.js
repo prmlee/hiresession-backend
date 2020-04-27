@@ -20,5 +20,11 @@ router
         CandidateController.sheduleInterview
     );
 
+router
+    .route('/getLoggedInUser')
+    .get(
+        isLoggedCandidate,
+        CandidateController.getLoggedInUser
+    );
 
 module.exports = router;

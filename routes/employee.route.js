@@ -46,4 +46,11 @@ router
         EmployeeController.getSettings
     );
 
+router
+    .route('/getLoggedInUser')
+    .get(
+        isLoggedEmployer,
+        EmployeeController.getLoggedInUser
+    );
+
 module.exports = router;

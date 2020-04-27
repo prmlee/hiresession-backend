@@ -1,6 +1,6 @@
 const { verifyToken, Roles } = require('../helpers/JwtHelper');
 const httpStatus = require('http-status');
-const {User} = require('../models');
+const {User, Admin} = require('../models');
 
 function isLoggedEmployer(req, res, next) {
   isLoggedUser(Roles.employer, req, res, next);
@@ -23,21 +23,41 @@ async function isLoggedUser(role, req, res, next) {
       const decodedToken = await verifyToken(token);
       if(decodedToken && decodedToken.role === role){
 
-        const user = await User.findOne({
-          where: {
-            email: decodedToken.email
-          },
-          raw:true
-        });
+        if(role === Roles.admin){
 
-        if(!user){
-          return  res
-              .status(httpStatus.UNAUTHORIZED)
-              .json({authorization: [{message: 'Unauthorized'}]});
+          const admin = await Admin.findOne({
+            where: {
+              email: decodedToken.email
+            },
+            raw:true
+          });
+
+          if(!admin){
+            return  res
+                .status(httpStatus.UNAUTHORIZED)
+                .json({authorization: [{message: 'Unauthorized'}]});
+          }
+
+          res.locals.user = admin;
+          next();
+
+        }else{
+          const user = await User.findOne({
+            where: {
+              email: decodedToken.email
+            },
+            raw:true
+          });
+
+          if(!user){
+            return  res
+                .status(httpStatus.UNAUTHORIZED)
+                .json({authorization: [{message: 'Unauthorized'}]});
+          }
+
+          res.locals.user = user;
+          next();
         }
-
-        res.locals.user = user;
-        next();
       }else{
         res
             .status(httpStatus.UNAUTHORIZED)

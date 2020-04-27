@@ -1,14 +1,14 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('employeeSettings', {
+    return queryInterface.createTable('Events', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      employeeId: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
@@ -17,28 +17,22 @@ module.exports = {
         onUpdate: 'cascade',
         onDelete: 'cascade'
       },
+      eventName: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      eventLogo:{
+        type: Sequelize.STRING,
+        allowNull:true
+      },
       date: {
         type: Sequelize.DATEONLY
       },
-      startTimeFrom: {
+      startTime: {
         type: Sequelize.TIME
       },
-      startTimeTo: {
+      endTime: {
         type: Sequelize.TIME
-      },
-      endTimeFrom: {
-        type: Sequelize.TIME
-      },
-      endTimeTo: {
-        type: Sequelize.TIME
-      },
-      duration: {
-        type: Sequelize.INTEGER
-      },
-      durationType: {
-        type: Sequelize.ENUM,
-        values: ['Min', 'Hours'],
-        defaultValue: 'Min'
       },
       createdAt: {
         allowNull: false,
@@ -47,10 +41,13 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      deletedAt: {
+        type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('Admins');
+    return queryInterface.dropTable('Employee');
   }
 };

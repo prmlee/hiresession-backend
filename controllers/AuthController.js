@@ -432,8 +432,6 @@ async function changePassword(req, res) {
             .json(errors.array());
     }
 
-    console.log(res.locals.user);
-
     const result = await bcrypt
         .compare(req.body.oldPassword, res.locals.user.password);
 

@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = function(models) {
-
+    User.hasOne(models.Employees, {as:'employee', foreignKey:'userId'})
+    User.hasOne(models.Candidates, {as:'candidate', foreignKey:'userId'})
   };
 
   User.beforeBulkUpdate(user => {

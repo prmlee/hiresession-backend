@@ -7,13 +7,13 @@ const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 
 
-const {User, employeeSettings} = require('../models');
+const {User, employeeSettings, Employees} = require('../models');
 
 async function profile(req, res) {
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, 'uploads');
+            callback(null, 'uploads/employeer');
         },
 
         filename: function (req, file, callback) {
@@ -49,9 +49,25 @@ async function profile(req, res) {
         const updatedObj  = req.body;
 
         if(req.file){
-            updatedObj.companyImg = req.file.filename;
-            if(res.locals.user.companyImg){
-                const filePath = `uploads/${res.locals.user.companyImg}`
+
+            const employee = await Employees.findOne({
+                where: {
+                    userId: res.locals.user.id
+                },
+                raw: true,
+            })
+
+            Employees.update({
+                companyImg:req.file.filename
+            }, {
+                where: {
+                    userId: res.locals.user.id
+                },
+                paranoid: true
+            })
+
+            if(employee.companyImg){
+                const filePath = `uploads/employeer/${employee.companyImg}`
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });
@@ -199,4 +215,37 @@ async function updateSettings(req, res){
     }
 }
 
-module.exports = {settings, profile, getSettings, updateSettings};
+async function getLoggedInUser(req, res){
+
+        try {
+            const currentEmployee = await  User.findOne({
+                where: {
+                    id: res.locals.user.id
+                },
+                include : [
+                    {
+                        model:Employees,
+                        as:'employee'
+                    }
+                ],
+                raw: true,
+            });
+
+            delete currentEmployee.password;
+
+            console.log(currentEmployee);
+
+            return  res.status(httpStatus.OK).json({
+                success: true,
+                data:currentEmployee,
+            })
+
+        }catch (e) {
+            return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: e.message
+            });
+        }
+}
+
+module.exports = {getLoggedInUser, settings, profile, getSettings, updateSettings};

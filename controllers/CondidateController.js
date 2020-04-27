@@ -1,59 +1,117 @@
 const bcrypt = require('bcrypt');
 const httpStatus = require('http-status');
 const path = require('path');
+const multer = require('multer');
+var fs = require('fs');
 const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 
-const { User } = require('../models');
+const { User, Candidates } = require('../models');
 
 async function profile(req, res){
 
-    if(req.body.email){
-        const user = await User.findOne({
-            where: {
-                email: req.body.email
-            },
-            raw: true,
-        });
+    const storage = multer.diskStorage({
+        destination : function (req, file, callback) {
+            callback(null, 'uploads/candidate');
+        },
 
-        if(user){
-            return  res.status(httpStatus.FORBIDDEN).json({
-                success: false,
-                message: 'this email already used'
-            })
+        filename: function (req, file, callback) {
+
+            callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+
         }
-    }
+    });
 
-    const updatedObj  = req.body;
+    const uploads = multer({
+        storage,
+        limits:{fileSize:1000000},
 
-    try {
-        await  User.update({
-            ...updatedObj
-        }, {
-            where: {
-                email: res.locals.user.email
-            },
-            paranoid: true
-        })
+    }).single('resume');
 
-        let token  = null;
+    uploads(req, res, async (err) => {
 
         if(req.body.email){
-            token  = await createToken(req.body.email, res.locals.user.firstName, res.locals.user.lastName, Roles[res.locals.user.role]);
+            const user = await User.findOne({
+                where: {
+                    email: req.body.email
+                },
+                raw: true,
+            });
+
+            if(user){
+                return  res.status(httpStatus.FORBIDDEN).json({
+                    success: false,
+                    message: 'this email already used'
+                })
+            }
         }
 
-        return  res.status(httpStatus.OK).json({
-            success: true,
-            message:"Updated successfully",
-            token
-        });
+        const updatedObj  = req.body;
 
-    }catch (e) {
-        return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            message: e.message
-        });
-    }
+        if(req.file){
+
+            const candidate = await Candidates.findOne({
+                where: {
+                    userId: res.locals.user.id
+                },
+                raw: true,
+            })
+
+            Candidates.update({
+                resume:req.file.filename
+            }, {
+                where: {
+                    userId: res.locals.user.id
+                },
+                paranoid: true
+            })
+
+            if(candidate.resume){
+                const filePath = `uploads/candidate/${candidate.resume}`
+                await  fs.unlink(filePath, function (err) {
+                    console.log(err);
+                });
+            }
+
+        }
+
+        if(err){
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                success:false,
+                message:err
+            })
+        }
+
+        try {
+            await  User.update({
+                ...updatedObj
+            }, {
+                where: {
+                    email: res.locals.user.email
+                },
+                paranoid: true
+            })
+
+            let token  = null;
+
+            if(req.body.email){
+                token  = await createToken(req.body.email, res.locals.user.firstName, res.locals.user.lastName, Roles[res.locals.user.role]);
+
+            }
+
+            return  res.status(httpStatus.OK).json({
+                success: true,
+                message:"Updated successfully",
+                token
+            });
+
+        }catch (e) {
+            return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: e.message
+            });
+        }
+    });
 }
 
 async function sheduleInterview(req, res){
@@ -65,7 +123,37 @@ async function sheduleInterview(req, res){
             .status(httpStatus.UNPROCESSABLE_ENTITY)
             .json({validation: errors.array()});
     }
-
 }
 
-module.exports = { profile, sheduleInterview }
+async function getLoggedInUser(req, res){
+
+    try {
+        const currentCandidate = await  User.findOne({
+            where: {
+                id: res.locals.user.id
+            },
+            include : [
+                {
+                    model:Candidates,
+                    as:'candidate'
+                }
+            ],
+            raw: true,
+        });
+
+        delete currentCandidate.password;
+
+        return  res.status(httpStatus.OK).json({
+            success: true,
+            data:currentCandidate,
+        })
+
+    }catch (e) {
+        return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message
+        });
+    }
+}
+
+module.exports = { profile, sheduleInterview, getLoggedInUser }
