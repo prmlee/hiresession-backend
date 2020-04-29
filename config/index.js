@@ -56,6 +56,18 @@ const config = convict({
     default: 'DEFAULT_EMAIL_PASS',
     arg: 'emailPass',
     env: 'EMAIL_PASS'
+  },
+  zoomEmail:{
+    doc: 'Zoom account Email',
+    default: 'razmikbortorian188@gmail.com',
+    arg: 'zoomEmail',
+    env: 'zoom_email'
+  },
+  zoomTimezone:{
+    doc: 'Zoom timezone',
+    default: 'NewYork',
+    arg: 'zoomTimezone',
+    env: 'zoom_timezone'
   }
 });
 

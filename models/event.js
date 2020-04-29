@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
     date: DataTypes.DATE,
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
+    startUrl: DataTypes.STRING,
+    meetingId: DataTypes.STRING,
+    joinUrl: DataTypes.STRING,
+    status: DataTypes.STRING,
+
   }, {});
 
   Events.associate = function(models) {

@@ -5,5 +5,7 @@
   "tokenExpiration": 1,
   "emailHost" : "smtp.gmail.com",
   "email" : "razmikbortorian188@gmail.com",
-  "emailPass" : "bortotian2020"
+  "emailPass" : "bortotian2020",
+  "zoomEmail" : "razmikbortorian188@gmail.com",
+  "zoomTimezone" : "America/New_York"
 }

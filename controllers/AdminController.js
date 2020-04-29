@@ -3,6 +3,7 @@ const path = require('path');
 const multer = require('multer')
 const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
+const {createMeeting, updateMeeting} = require('../services/zoom-service')
 var fs = require('fs');
 
 
@@ -72,6 +73,22 @@ async function createEvent(req, res){
             })
         }
 
+        const  meetingData = await createMeeting(req.body);
+
+        if((await meetingData).status !== 200){
+            return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: meetingData.message
+            });
+
+            if(req.file){
+                const filePath = `uploads/events/${req.file.filename}`
+                await  fs.unlink(filePath, function (err) {
+                    console.log(err);
+                });
+            }
+        }
+    console.log(meetingData.data.id);
         try {
             await Events.create({
                 userId:req.body.userId,
@@ -80,6 +97,10 @@ async function createEvent(req, res){
                 eventLogo:req.file.filename,
                 startTime:req.body.startTime,
                 endTime:req.body.endTime,
+                startUrl:meetingData.data.start_url,
+                joinUrl:meetingData.data.join_url,
+                status:meetingData.data.status,
+                meetingId:meetingData.data.id,
             })
 
             return  res.status(httpStatus.OK).json({
@@ -118,6 +139,8 @@ async  function updateEvent(req, res){
 
     uploads(req, res, async (err) => {
 
+
+
         if(err){
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
                 success:false,
@@ -132,16 +155,18 @@ async  function updateEvent(req, res){
             })
         }
 
+        const event = await Events.findOne({
+            where: {
+                id: req.body.id
+            },
+            raw: true,
+        })
+
         const updatedObj  = req.body;
 
-        if(req.file){
+        const  meetingData = await updateMeeting(updatedObj, event.meetingId);
 
-            const event = await Events.findOne({
-                where: {
-                    id: req.body.id
-                },
-                raw: true,
-            })
+        if(req.file){
 
             if(event.eventLogo){
                 const filePath = `uploads/events/${event.eventLogo}`
@@ -149,10 +174,9 @@ async  function updateEvent(req, res){
                     console.log(err);
                 });
             }
-
         }
 
-        updatedObj.eventLogo = req.file.filename
+        updatedObj.eventLogo = req.file.filename;
 
         if(err){
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
