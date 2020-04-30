@@ -27,4 +27,18 @@ router
         CandidateController.getLoggedInUser
     );
 
+router
+    .route('/getSingleEmployee/:id')
+    .get(
+        isLoggedCandidate,
+        CandidateController.getSingleEmployee
+    );
+
+router
+    .route('/getInterviews')
+    .get(
+        isLoggedCandidate,
+        CandidateController.getInterviews
+    );
+
 module.exports = router;

@@ -39,9 +39,9 @@ async function updateMeeting(body, meetingId){
     const url =  `https://api.zoom.us/v2/meetings/${meetingId}`;
 
     const data = await normaliseData(body);
-
+    const token = generateJWT();
     const headers =  {
-        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImVrVmRCekpvUV9tTUEwYkpJR0IxSXciLCJleHAiOjE1ODg2NzU4NjMsImlhdCI6MTU4ODA3MTA2Mn0.lHizBOrHtJjrLJmWTEft0k_vK6No8D0yohHYdQd23wA',
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
         'User-Agent': 'Zoom-api-Jwt-Request',
     };
@@ -67,6 +67,11 @@ async function updateMeeting(body, meetingId){
 
 function generateJWT(){
 
+    const payload = {
+        iss: configs.zoomApiKey,
+        exp: ((new Date()).getTime() + 5000)
+    };
+    return jwt.sign(payload, configs.zoomApiSecret);
 }
 
 async  function normaliseData(data){

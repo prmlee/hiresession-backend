@@ -6,7 +6,7 @@ var fs = require('fs');
 const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 
-const { User, Candidates } = require('../models');
+const { User, Candidates, SupportingDocuments, Employees, Interviews, Events } = require('../models');
 
 async function profile(req, res){
 
@@ -156,4 +156,64 @@ async function getLoggedInUser(req, res){
     }
 }
 
-module.exports = { profile, sheduleInterview, getLoggedInUser }
+async function getSingleEmployee(req, res){
+
+    const singleCompany = await User.findOne({
+        include : [
+            {
+                attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+                model:Employees,
+                as:'employee'
+            },
+            {
+                attributes :['docName'],
+                model:SupportingDocuments,
+                as:'SupportingDocuments'
+            }
+        ],
+        where: {
+            id: req.params.id
+        },
+    });
+
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:singleCompany
+    })
+}
+
+async function getInterviews(req, res){
+
+
+    const interviewList = await Interviews.findAll({
+        include : [
+            {
+                attributes :['firstName', 'lastName', 'status', 'role'],
+                model:User,
+                as:'Company',
+                where:{
+                    role:2
+                },
+                include : [
+                    {
+                        attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+                        model:Employees,
+                        as:'employee'
+                    }
+                ],
+            },
+            {
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'joinUrl', 'status'],
+                model:Events,
+                as:'events',
+            }
+        ],
+    });
+
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:interviewList
+    })
+}
+
+module.exports = { profile, sheduleInterview, getLoggedInUser, getSingleEmployee, getInterviews }

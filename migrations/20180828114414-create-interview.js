@@ -1,14 +1,23 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Employees', {
+    return queryInterface.createTable('Interviews', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userId: {
+      employeeId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
+      },
+      candidateId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
@@ -26,25 +35,18 @@ module.exports = {
         onUpdate: 'cascade',
         onDelete: 'cascade'
       },
-      companyName: {
-        type: Sequelize.STRING,
-        allowNull:true
+      date: {
+        type: Sequelize.DATEONLY
       },
-      JobTitle: {
-        type: Sequelize.STRING,
-        allowNull:true
+      startTime: {
+        type: Sequelize.TIME
       },
-      profileImg:{
-        type: Sequelize.STRING,
-        allowNull:true
+
+      endTime: {
+        type: Sequelize.TIME
       },
-      companyImg:{
-        type: Sequelize.STRING,
-        allowNull:true
-      },
-      videoUrl:{
-        type: Sequelize.STRING,
-        allowNull:true
+      note: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -53,13 +55,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      deletedAt: {
-        type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('Employee');
+    return queryInterface.dropTable('Admins');
   }
 };

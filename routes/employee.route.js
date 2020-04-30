@@ -47,6 +47,13 @@ router
     );
 
 router
+    .route('/getAttachedFiles')
+    .get(
+        isLoggedEmployer,
+        EmployeeController.getAttachedFiles
+    );
+
+router
     .route('/getLoggedInUser')
     .get(
         isLoggedEmployer,

@@ -80,7 +80,6 @@ async function profile(req, res) {
                 message:err
             })
         }
-
         try {
             await  User.update({
                 ...updatedObj
@@ -114,7 +113,6 @@ async function profile(req, res) {
 
 }
 
-
 async function settings(req, res){
 
     const errors = validationResult(req);
@@ -130,6 +128,7 @@ async function settings(req, res){
     try{
         await employeeSettings.create({
             employeeId,
+            eventId: req.body.eventId,
             date: req.body.date,
             startTimeFrom: req.body.startTimeFrom,
             startTimeTo: req.body.startTimeTo,
@@ -188,8 +187,8 @@ async function updateSettings(req, res){
             .json({validation: errors.array()});
     }
 
-
     const updatedObj  = req.body;
+
 
     try {
         await  employeeSettings.update({
@@ -233,8 +232,6 @@ async function getLoggedInUser(req, res){
 
             delete currentEmployee.password;
 
-            console.log(currentEmployee);
-
             return  res.status(httpStatus.OK).json({
                 success: true,
                 data:currentEmployee,
@@ -248,4 +245,19 @@ async function getLoggedInUser(req, res){
         }
 }
 
-module.exports = {getLoggedInUser, settings, profile, getSettings, updateSettings};
+async function getAttachedFiles(req, res){
+
+    const AttachedFiles = await Employees.findAll({
+        where: {
+            userId: res.locals.user.id
+        },
+        raw: true,
+    })
+
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:AttachedFiles
+    })
+}
+
+module.exports = {getLoggedInUser, settings, profile, getSettings, updateSettings, getAttachedFiles};

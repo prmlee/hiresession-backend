@@ -68,6 +68,18 @@ const config = convict({
     default: 'NewYork',
     arg: 'zoomTimezone',
     env: 'zoom_timezone'
+  },
+  zoomApiKey:{
+    doc: 'zoom Api Key',
+    default: '',
+    arg: 'zoomApiKey',
+    env: 'zoomApiKey'
+  },
+  zoomApiSecret:{
+    doc: 'zoom Api Secret',
+    default: '',
+    arg: 'zoomApiSecret',
+    env: 'zoomApiSecret'
   }
 });
 

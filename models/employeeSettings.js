@@ -3,8 +3,9 @@ const bcrypt = require('bcrypt');
 module.exports = (sequelize, DataTypes) => {
   const saltRounds = 10;
 
-  const Admin = sequelize.define('employeeSettings', {
+  const EmployeeSettings = sequelize.define('employeeSettings', {
     employeeId: DataTypes.INTEGER,
+    eventId: DataTypes.INTEGER,
     date: DataTypes.DATE,
     startTimeFrom: DataTypes.TIME,
     startTimeTo: DataTypes.TIME,
@@ -17,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
 
-  Admin.associate = function(models) {
+  EmployeeSettings.associate = function(models) {
 
   };
 
 
 
-  return Admin;
+  return EmployeeSettings;
 };

@@ -7,6 +7,8 @@
   "email" : "razmikbortorian188@gmail.com",
   "emailPass" : "bortotian2020",
   "zoomEmail" : "razmikbortorian188@gmail.com",
-  "zoomTimezone" : "America/New_York"
+  "zoomTimezone" : "America/New_York",
+  "zoomApiKey": "ekVdBzJoQ_mMA0bJIGB1Iw",
+  "zoomApiSecret": "YjcdauczpH6WMBSHhMs1qbe2wHWuUiXefEbf"
 
 }
