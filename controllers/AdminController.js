@@ -210,4 +210,29 @@ async  function updateEvent(req, res){
     })
 }
 
-module.exports = {createEvent, updateEvent};
+async function getLoggedInAdmin(req, res){
+
+    try {
+        const currentCandidate = await  Admin.findOne({
+            where: {
+                id: res.locals.user.id
+            },
+            raw: true,
+        });
+
+        delete currentCandidate.password;
+
+        return  res.status(httpStatus.OK).json({
+            success: true,
+            data:currentCandidate,
+        })
+
+    }catch (e) {
+        return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message
+        });
+    }
+}
+
+module.exports = {createEvent, updateEvent, getLoggedInAdmin};

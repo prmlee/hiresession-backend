@@ -20,5 +20,12 @@ router
         adminController.updateEvent
     );
 
+router
+    .route('/getLoggedInAdmin')
+    .get(
+        isLoggedAdmin,
+        adminController.getLoggedInAdmin
+    );
+
 
 module.exports = router;
