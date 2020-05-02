@@ -38,7 +38,7 @@ async function isLoggedUser(role, req, res, next) {
                 .json({authorization: [{message: 'Unauthorized'}]});
           }
 
-          res.loc.als.user = admin;
+          res.locals.user = admin;
           next();
 
         }else{
