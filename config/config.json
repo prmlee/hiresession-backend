@@ -1,9 +1,9 @@
 {
   "development": {
     "username": "root",
-    "password": null,
+    "password": "Hiresession1234$",
     "database": "hiresession",
-    "host": "127.0.0.1",
+    "host": "3.83.230.150",
     "dialect": "mysql",
     "operatorsAliases": false
   },
