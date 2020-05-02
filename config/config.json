@@ -17,9 +17,9 @@
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "password": "Hiresession1234$",
+    "database": "Hiresession",
+    "host": "3.83.230.150",
     "dialect": "mysql",
     "operatorsAliases": false
   }
