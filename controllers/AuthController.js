@@ -103,6 +103,8 @@ async function candidateRegister(req, res) {
                 password:HASHED_PASSWORD,
             });
 
+             const filename = (req.file)?req.file.filename:'';
+
             await Candidates.create({
                 userId:createdUser.dataValues.id,
                 major:req.body.major || '',
@@ -111,7 +113,7 @@ async function candidateRegister(req, res) {
                 graduationYear:req.body.graduationYear || '',
                 desiredJobTitle:req.body.desiredJobTitle || '',
                 industryInterested:req.body.industryInterested || '',
-                resume:req.file.filename,
+                resume:filename,
             })
 
             return  res.status(httpStatus.OK).json({
