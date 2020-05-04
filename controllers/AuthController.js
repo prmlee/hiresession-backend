@@ -110,7 +110,7 @@ async function candidateRegister(req, res) {
                 major:req.body.major || '',
                 shcool:req.body.shcool || '',
                 highDeagree:req.body.highDeagree || '',
-                graduationYear:req.body.graduationYear || '',
+                graduationYear:req.body.graduationYear || 0,
                 desiredJobTitle:req.body.desiredJobTitle || '',
                 industryInterested:req.body.industryInterested || '',
                 resume:filename,
@@ -244,6 +244,7 @@ async function employeeRegister(req, res) {
             })
 
             for(let i in req.files.supportingDocs){
+
                 await SupportingDocuments.create({
                     userId:createdUser.dataValues.id,
                     docName: req.files.supportingDocs[i].filename
