@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
 
   Employee.associate = function(models) {
-  // associations can be defined here
+    Employee.hasMany(models.Events, {as:'events', foreignKey:'eventId', sourceKey:'id'});
   };
 
   return Employee;

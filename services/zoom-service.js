@@ -8,9 +8,10 @@ async function createMeeting(body) {
     const url =  `https://api.zoom.us/v2/users/${configs.zoomEmail}/meetings`;
 
     const data = await normaliseData(body);
-
+    const token = generateJWT();
+console.log(token)
     const headers =  {
-            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImVrVmRCekpvUV9tTUEwYkpJR0IxSXciLCJleHAiOjE1ODg2NzU4NjMsImlhdCI6MTU4ODA3MTA2Mn0.lHizBOrHtJjrLJmWTEft0k_vK6No8D0yohHYdQd23wA',
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
             'User-Agent': 'Zoom-api-Jwt-Request',
     };

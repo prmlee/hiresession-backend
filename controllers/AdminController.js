@@ -72,7 +72,6 @@ async function createEvent(req, res){
                 message: "End Time is required"
             })
         }
-
         const  meetingData = await createMeeting(req.body);
 
         if((await meetingData).status !== 200){
@@ -88,7 +87,7 @@ async function createEvent(req, res){
                 });
             }
         }
-    console.log(meetingData.data.id);
+
         try {
             await Events.create({
                 userId:req.body.userId,
@@ -235,4 +234,140 @@ async function getLoggedInAdmin(req, res){
     }
 }
 
-module.exports = {createEvent, updateEvent, getLoggedInAdmin};
+async function getCompanies(req, res){
+
+    const CompanyList = await User.findAll({
+        attributes :['firstName', 'lastName', 'status', 'role'],
+        include : [
+            {
+                attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+                model:Employees,
+                as:'employee'
+            },
+            {
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'joinUrl', 'status'],
+                model:Events,
+                as:'events',
+            }
+        ],
+        where:{
+            role:2,
+            status:1
+        },
+    });
+
+    res.status(httpStatus.OK).json({
+        success:true,
+        data:CompanyList
+    })
+}
+
+async function archiveCompany(req, res){
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json(errors.array());
+    }
+
+    try {
+        await  User.update({
+            status: 2
+        }, {
+            where: {
+                id: req.body.id,
+                status:1
+            },
+            paranoid: true
+        })
+
+        return res.status(httpStatus.OK).json({
+            success : true,
+            message : "Company successfully archived"
+        });
+
+    }catch (e) {
+        console.log(e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success : false,
+            message : e
+        });
+    }
+}
+
+async function revertCompany(req, res){
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json(errors.array());
+    }
+
+    try {
+        await  User.update({
+            status: 1
+        }, {
+            where: {
+                id: req.body.id,
+                status:2
+            },
+            paranoid: true
+        })
+
+        return res.status(httpStatus.OK).json({
+            success : true,
+            message : "Company successfully reverted"
+        });
+
+    }catch (e) {
+        console.log(e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success : false,
+            message : e
+        });
+    }
+}
+
+async function deleteCompany(req, res){
+
+    const id =  req.params.id;
+    if (!id) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json(errors.array());
+    }
+
+    try {
+        await  User.destroy( {
+            where: {
+                id,
+                status:2
+            },
+            paranoid: true
+        })
+
+        return res.status(httpStatus.OK).json({
+            success : true,
+            message : "Company successfully deleted"
+        });
+
+    }catch (e) {
+        console.log(e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success : false,
+            message : e
+        });
+    }
+}
+
+module.exports = {
+    createEvent,
+    updateEvent,
+    getLoggedInAdmin,
+    getCompanies,
+    archiveCompany,
+    revertCompany,
+    deleteCompany
+};

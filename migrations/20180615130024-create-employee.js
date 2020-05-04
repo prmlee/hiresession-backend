@@ -17,15 +17,6 @@ module.exports = {
         onUpdate: 'cascade',
         onDelete: 'cascade'
       },
-      eventId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Events',
-          key: 'id'
-        },
-        onUpdate: 'cascade',
-        onDelete: 'cascade'
-      },
       companyName: {
         type: Sequelize.STRING,
         allowNull:true

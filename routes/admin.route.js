@@ -27,5 +27,35 @@ router
         adminController.getLoggedInAdmin
     );
 
+router
+    .route('/getCompanies')
+    .get(
+        isLoggedAdmin,
+        adminController.getCompanies
+    );
+
+router
+    .route('/archiveCompany')
+    .put(
+        isLoggedAdmin,
+        [check('id').exists().isInt()],
+        adminController.archiveCompany
+    );
+
+router
+    .route('/revertCompany')
+    .put(
+        isLoggedAdmin,
+        [check('id').exists().isInt()],
+        adminController.revertCompany
+    );
+
+router
+    .route('/deleteCompany/:id')
+    .delete(
+        isLoggedAdmin,
+        adminController.deleteCompany
+    );
+
 
 module.exports = router;
