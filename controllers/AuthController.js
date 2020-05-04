@@ -300,10 +300,10 @@ async function login(req, res){
     }
 
     const token  = await createToken(user.email, user.firstName, user.lastName, Roles[user.role]);
-
     return  res.status(httpStatus.OK).json({
         success: true,
-        token
+        token,
+        role:Roles[user.role]+1
     })
 }
 
