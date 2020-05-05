@@ -13,7 +13,7 @@ async function candidateRegister(req, res) {
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, 'uploads/candidate');
+            callback(null, '/var/www/html/uploads/candidate');
         },
 
         filename: function (req, file, callback) {
@@ -134,7 +134,7 @@ async function employeeRegister(req, res) {
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, 'uploads/employeer');
+            callback(null, '/var/www/html/uploads/employeer');
         },
 
         filename: function (req, file, callback) {
@@ -247,7 +247,8 @@ async function employeeRegister(req, res) {
 
                 await SupportingDocuments.create({
                     userId:createdUser.dataValues.id,
-                    docName: req.files.supportingDocs[i].filename
+                    docName: req.files.supportingDocs[i].filename,
+                    fileSize: req.files.supportingDocs[i].size
                 })
             }
 
@@ -469,6 +470,8 @@ async function changePassword(req, res) {
         });
     }
 }
+
+
 
 
 module.exports = {candidateRegister, employeeRegister, login, adminLogin, resetPassword, resetPassEmail, changePassword};
