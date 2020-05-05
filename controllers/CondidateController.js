@@ -167,7 +167,7 @@ async function getSingleEmployee(req, res){
                 as:'employee'
             },
             {
-                attributes :['docName'],
+                attributes :['docName','fileSize'],
                 model:SupportingDocuments,
                 as:'SupportingDocuments'
             }
