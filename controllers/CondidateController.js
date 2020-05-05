@@ -216,4 +216,29 @@ async function getInterviews(req, res){
     })
 }
 
-module.exports = { profile, sheduleInterview, getLoggedInUser, getSingleEmployee, getInterviews }
+
+async function getCompanies(req, res){
+
+    const CompanyList = await User.findAll({
+        attributes :['id','firstName', 'lastName', 'status', 'role'],
+        include : [
+            {
+                attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+                model:Employees,
+                as:'employee'
+            }
+        ],
+        where:{
+            role:2,
+            status:1
+        },
+    });
+
+    res.status(httpStatus.OK).json({
+        success:true,
+        data:CompanyList
+    })
+}
+
+
+module.exports = { profile, sheduleInterview, getLoggedInUser, getSingleEmployee, getInterviews, getCompanies }

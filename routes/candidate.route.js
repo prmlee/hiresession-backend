@@ -35,6 +35,13 @@ router
     );
 
 router
+    .route('/getCompanies')
+    .get(
+        isLoggedCandidate,
+        CandidateController.getCompanies
+    );
+
+router
     .route('/getInterviews')
     .get(
         isLoggedCandidate,
