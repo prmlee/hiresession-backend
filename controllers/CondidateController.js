@@ -159,6 +159,7 @@ async function getLoggedInUser(req, res){
 async function getSingleEmployee(req, res){
 
     const singleCompany = await User.findOne({
+        attributes :['id','firstName', 'lastName', 'status', 'role'],
         include : [
             {
                 attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
