@@ -13,7 +13,7 @@ async function profile(req, res) {
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, 'uploads/employeer');
+            callback(null, '/var/www/html/uploads/employeer');
         },
 
         filename: function (req, file, callback) {
@@ -67,7 +67,7 @@ async function profile(req, res) {
             })
 
             if(employee.companyImg){
-                const filePath = `uploads/employeer/${employee.companyImg}`
+                const filePath = `/var/www/html/uploads/employeer/${employee.companyImg}`
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });

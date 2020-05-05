@@ -13,7 +13,7 @@ async function createEvent(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, 'uploads/events');
+            callback(null, '/var/www/html/uploads/events');
         },
 
         filename: function (req, file, callback) {
@@ -81,7 +81,7 @@ async function createEvent(req, res){
             });
 
             if(req.file){
-                const filePath = `uploads/events/${req.file.filename}`
+                const filePath = `/var/www/html/uploads/events/${req.file.filename}`
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });
@@ -120,7 +120,7 @@ async  function updateEvent(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, 'uploads/events');
+            callback(null, '/var/www/html/uploads/events');
         },
 
         filename: function (req, file, callback) {
@@ -168,7 +168,7 @@ async  function updateEvent(req, res){
         if(req.file){
 
             if(event.eventLogo){
-                const filePath = `uploads/events/${event.eventLogo}`
+                const filePath = `/var/www/html/uploads/events/${event.eventLogo}`
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });
