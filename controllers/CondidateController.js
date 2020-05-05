@@ -223,21 +223,19 @@ async function getInterviews(req, res){
 
 async function getCompanies(req, res){
 
-    const CompanyList = await Employees.findAll({
-        attributes :['id','companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+    const CompanyList = await User.findAll({
+        attributes :['id','firstName', 'lastName', 'status', 'role'],
         include : [
             {
-                attributes :['id','firstName', 'lastName', 'status', 'role'],
-
-                model:User,
-                as:'users',
-                where:{
-                    role:2,
-                    status:1
-                },
+                attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+                model:Employees,
+                as:'employee'
             }
         ],
-
+        where:{
+            role:2,
+            status:1
+        },
     });
 
     res.status(httpStatus.OK).json({
