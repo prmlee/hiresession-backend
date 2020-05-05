@@ -184,6 +184,8 @@ async function getSingleEmployee(req, res){
 
 async function getInterviews(req, res){
 
+    const limit = 10;
+    const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
     const interviewList = await Interviews.findAll({
         include : [
@@ -208,6 +210,8 @@ async function getInterviews(req, res){
                 as:'events',
             }
         ],
+        limit,
+        offset
     });
 
     return  res.status(httpStatus.OK).json({
@@ -219,19 +223,21 @@ async function getInterviews(req, res){
 
 async function getCompanies(req, res){
 
-    const CompanyList = await User.findAll({
-        attributes :['id','firstName', 'lastName', 'status', 'role'],
+    const CompanyList = await Employees.findAll({
+        attributes :['id','companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
         include : [
             {
-                attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
-                model:Employees,
-                as:'employee'
+                attributes :['id','firstName', 'lastName', 'status', 'role'],
+
+                model:User,
+                as:'users',
+                where:{
+                    role:2,
+                    status:1
+                },
             }
         ],
-        where:{
-            role:2,
-            status:1
-        },
+
     });
 
     res.status(httpStatus.OK).json({

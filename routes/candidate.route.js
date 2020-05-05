@@ -42,7 +42,7 @@ router
     );
 
 router
-    .route('/getInterviews')
+    .route('/getInterviews/:page?')
     .get(
         isLoggedCandidate,
         CandidateController.getInterviews

@@ -60,4 +60,10 @@ router
         EmployeeController.getLoggedInUser
     );
 
+router
+    .route('/getInterviews/:page?')
+    .get(
+        isLoggedEmployer,
+        EmployeeController.getInterviews
+    );
 module.exports = router;

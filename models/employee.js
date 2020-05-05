@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Employee.associate = function(models) {
     Employee.hasMany(models.Events, {as:'events', foreignKey:'eventId', sourceKey:'id'});
+    Employee.hasOne(models.User, {as:'users', foreignKey:'id', sourceKey:'userId'});
   };
 
   return Employee;

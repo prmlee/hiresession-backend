@@ -7,7 +7,7 @@ const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 
 
-const {User, employeeSettings, Employees} = require('../models');
+const {Candidates, User, employeeSettings, Employees, Events, Interviews} = require('../models');
 
 async function profile(req, res) {
 
@@ -260,4 +260,41 @@ async function getAttachedFiles(req, res){
     })
 }
 
-module.exports = {getLoggedInUser, settings, profile, getSettings, updateSettings, getAttachedFiles};
+async function getInterviews(req, res){
+
+    const limit = 10;
+    const offset = req.params.page ? (req.params.page - 1) * limit : 0;
+
+    const interviewList = await Interviews.findAll({
+        include : [
+            {
+                attributes :['firstName', 'lastName', 'status', 'role'],
+                model:User,
+                as:'Candidate',
+                where:{
+                    role:1
+                },
+                include : [
+                    {
+                        model:Candidates,
+                        as:'candidate'
+                    }
+                ],
+            },
+            {
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'joinUrl', 'status'],
+                model:Events,
+                as:'events',
+            }
+        ],
+        limit,
+        offset
+    });
+
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:interviewList
+    })
+}
+
+module.exports = {getLoggedInUser, settings, profile, getSettings, updateSettings, getAttachedFiles, getInterviews};

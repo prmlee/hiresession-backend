@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Interviews.associate = function(models) {
     Interviews.hasOne(models.User, {as:'Company', foreignKey:'id', sourceKey:'employeeId'});
-    Interviews.hasOne(models.User, {as:'candidate', foreignKey:'id', sourceKey:'candidateId'});
+    Interviews.hasOne(models.User, {as:'Candidate', foreignKey:'id', sourceKey:'candidateId'});
     Interviews.hasOne(models.Events, {as:'events', foreignKey:'id', sourceKey:'eventId'});
   };
 
