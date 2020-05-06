@@ -183,7 +183,8 @@ async function getSingleEmployee(req, res){
 
     return  res.status(httpStatus.OK).json({
         success:true,
-        data:singleCompany
+        data:{singleCompany,times},
+
     })
 }
 
@@ -220,13 +221,15 @@ async function getTimes(employeeId){
         unavailable: []
     }
 
+    const checkArr = [];
+
     for(let i in interviews){
 
         returnObj.unavailable.push({
             startTime:interviews[i].startTime,
             endTime:interviews[i].endTime
         });
-
+        checkArr.push(interviews[i].endTime)
     }
 
     let duration = settingData.duration;
@@ -235,22 +238,56 @@ async function getTimes(employeeId){
     for(let i in settingData.SettingDurations){
 
         const minutes = setting.SettingDurations[i].dataValues.startTime.split(':');
-        let newTime = '';
 
-        if(settingData.durationType === "Hours"){
-            minutes[0]+ duration;
-            newTime =  minutes.join(":")
-        }else {
-            minutes[1] = parseInt(minutes[1]) + parseInt(duration)
-            newTime = minutes.join(":")
+
+        const availableTime =  createTimes(duration, settingData.durationType, minutes, setting.SettingDurations[i].endTime, [], setting.SettingDurations[i].dataValues.startTime, checkArr);
+        returnObj.available.push(availableTime);
+    }
+
+    return returnObj;
+}
+
+ function createTimes(duration, durationType, startTime, endTime, arr, startTime2, checkArr){
+    let returnArray = arr;
+    let newTime = '';
+
+    if(durationType === "Hours"){
+        startTime[0]+ duration;
+        newTime =  startTime.join(":")
+    }else {
+        const b  = parseInt(startTime[1]) + parseInt(duration)
+
+        if(b=== 60){
+            startTime[0] = (parseInt(startTime[0]) +1).toString();
+            startTime[1] = '00';
+        }else{
+            startTime[1] = b;
         }
 
-        returnObj.available.push({
-            startTime:setting.SettingDurations[i].dataValues.startTime,
-            endTime:newTime
-        });
+        newTime = startTime.join(":")
 
     }
+
+    const format = 'hh:mm:ss';
+
+    if(!checkArr.includes(newTime)){
+
+        returnArray.push({
+            startTime:startTime2,
+            endTime:newTime
+        })
+    }
+
+
+
+    if(moment(newTime,format).isBefore(moment(endTime, format))){
+
+        const argNewTime = newTime.split(":")
+
+        createTimes(duration, durationType, argNewTime, endTime, returnArray, newTime, checkArr)
+    }
+
+     return  returnArray
 }
 
 async function getInterviews(req, res){
