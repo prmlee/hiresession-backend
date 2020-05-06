@@ -214,12 +214,17 @@ async function getTimes(employeeId){
         raw:true
     })
 
-
-    const settingData = setting.dataValues;
     const returnObj = {
         available:[],
         unavailable: []
     }
+
+    if(!setting){
+        return returnObj
+    }
+
+    const settingData = setting.dataValues;
+
 
     const checkArr = [];
 
