@@ -48,15 +48,14 @@ async function profile(req, res) {
         }
         const updatedObj  = req.body;
 
+        const employee = await Employees.findOne({
+            where: {
+                userId: res.locals.user.id
+            },
+            raw: true,
+        })
+
         if(req.file){
-
-            const employee = await Employees.findOne({
-                where: {
-                    userId: res.locals.user.id
-                },
-                raw: true,
-            })
-
 
             Employees.update({
                 companyImg:req.file.filename,
@@ -74,6 +73,17 @@ async function profile(req, res) {
                     console.log(err);
                 });
             }
+        }else{
+
+            Employees.update({
+                companyImg:req.file.filename,
+                companyName: req.body.companyName || employee.companyName
+            }, {
+                where: {
+                    userId: res.locals.user.id
+                },
+                paranoid: true
+            })
         }
 
         if(err){

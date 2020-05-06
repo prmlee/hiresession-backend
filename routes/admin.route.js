@@ -79,5 +79,13 @@ router
         adminController.getArchivedCandidates
     );
 
+router
+    .route('/archiveCandidate')
+    .put(
+        isLoggedAdmin,
+        [check('id').exists().isInt()],
+        adminController.archiveCandidate
+    );
+
 
 module.exports = router;
