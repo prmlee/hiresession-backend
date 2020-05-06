@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.SupportingDocuments, {as:'SupportingDocuments', foreignKey:'userId'});
     User.hasOne(models.Candidates, {as:'candidate', foreignKey:'userId'});
     User.hasOne(models.Events, {as:'events', foreignKey:'userId', sourceKey:'id'});
+    User.hasMany(models.Interviews, {as:'interviews', foreignKey:'candidateId'});
   };
 
   User.beforeBulkUpdate(user => {

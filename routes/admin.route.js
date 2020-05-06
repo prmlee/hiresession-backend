@@ -35,6 +35,13 @@ router
     );
 
 router
+    .route('/getArchivedCompanies')
+    .get(
+        isLoggedAdmin,
+        adminController.getArchivedCompanies
+    );
+
+router
     .route('/archiveCompany')
     .put(
         isLoggedAdmin,
@@ -55,6 +62,21 @@ router
     .delete(
         isLoggedAdmin,
         adminController.deleteCompany
+    );
+
+router
+    .route('/getCandidates')
+    .get(
+        isLoggedAdmin,
+        adminController.getCandidates
+    );
+
+
+router
+    .route('/getArchivedCandidates')
+    .get(
+        isLoggedAdmin,
+        adminController.getArchivedCandidates
     );
 
 

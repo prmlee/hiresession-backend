@@ -57,8 +57,10 @@ async function profile(req, res) {
                 raw: true,
             })
 
+
             Employees.update({
-                companyImg:req.file.filename
+                companyImg:req.file.filename,
+                companyName: req.body.companyName || employee.companyName
             }, {
                 where: {
                     userId: res.locals.user.id
@@ -66,7 +68,7 @@ async function profile(req, res) {
                 paranoid: true
             })
 
-            if(employee.companyImg){
+           if(employee.companyImg){
                 const filePath = `/var/www/html/uploads/employeer/${employee.companyImg}`
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
