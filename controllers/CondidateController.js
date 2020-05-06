@@ -2,11 +2,13 @@ const bcrypt = require('bcrypt');
 const httpStatus = require('http-status');
 const path = require('path');
 const multer = require('multer');
+const moment = require('moment');
 var fs = require('fs');
 const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
+const {Op} = require('sequelize');
 
-const { User, Candidates, SupportingDocuments, Employees, Interviews, Events } = require('../models');
+const { User, Candidates, SupportingDocuments, Employees, Interviews, Events, employeeSettings, SettingDurations } = require('../models');
 
 async function profile(req, res){
 
@@ -177,10 +179,78 @@ async function getSingleEmployee(req, res){
         },
     });
 
+    const times = await  getTimes(req.params.id);
+
     return  res.status(httpStatus.OK).json({
         success:true,
         data:singleCompany
     })
+}
+
+async function getTimes(employeeId){
+    const date  = new Date();
+
+    const setting =  await employeeSettings.findOne({
+        where: {
+            employeeId,
+            date: moment(date).format("YYYY-MM-DD")
+        },
+        include : [
+            {
+                model:SettingDurations,
+                as:'SettingDurations',
+
+            }
+        ],
+
+    });
+
+    const interviews = await Interviews.findAll({
+        where:{
+            employeeId,
+            date: moment(date).format("YYYY-MM-DD")
+        },
+        raw:true
+    })
+
+
+    const settingData = setting.dataValues;
+    const returnObj = {
+        available:[],
+        unavailable: []
+    }
+
+    for(let i in interviews){
+
+        returnObj.unavailable.push({
+            startTime:interviews[i].startTime,
+            endTime:interviews[i].endTime
+        });
+
+    }
+
+    let duration = settingData.duration;
+
+
+    for(let i in settingData.SettingDurations){
+
+        const minutes = setting.SettingDurations[i].dataValues.startTime.split(':');
+        let newTime = '';
+
+        if(settingData.durationType === "Hours"){
+            minutes[0]+ duration;
+            newTime =  minutes.join(":")
+        }else {
+            minutes[1] = parseInt(minutes[1]) + parseInt(duration)
+            newTime = minutes.join(":")
+        }
+
+        returnObj.available.push({
+            startTime:setting.SettingDurations[i].dataValues.startTime,
+            endTime:newTime
+        });
+
+    }
 }
 
 async function getInterviews(req, res){
@@ -233,6 +303,5 @@ async function getCompanies(req, res){
         data:CompanyList
     })
 }
-
 
 module.exports = { profile, sheduleInterview, getLoggedInUser, getSingleEmployee, getInterviews, getCompanies }

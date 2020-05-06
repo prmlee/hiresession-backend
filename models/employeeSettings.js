@@ -6,11 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   const EmployeeSettings = sequelize.define('employeeSettings', {
     employeeId: DataTypes.INTEGER,
     eventId: DataTypes.INTEGER,
-    date: DataTypes.DATE,
-    startTimeFrom: DataTypes.TIME,
-    startTimeTo: DataTypes.TIME,
-    endTimeFrom: DataTypes.TIME,
-    endTimeTo: DataTypes.TIME,
+    date: DataTypes.STRING,
     duration: DataTypes.INTEGER,
     durationType:  {
       type: DataTypes.ENUM,
@@ -19,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
 
   EmployeeSettings.associate = function(models) {
-
+    EmployeeSettings.hasMany(models.SettingDurations, {as:'SettingDurations', foreignKey:'settingId'});
   };
 
 

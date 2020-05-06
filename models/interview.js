@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     employeeId: DataTypes.INTEGER,
     candidateId: DataTypes.INTEGER,
     eventId: DataTypes.INTEGER,
-    date: DataTypes.DATE,
+    date: DataTypes.STRING,
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
     note: DataTypes.TEXT,

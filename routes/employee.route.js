@@ -29,10 +29,7 @@ router
         isLoggedEmployer,
         [
             check('date').exists(),
-            check('startTimeFrom').exists(),
-            check('startTimeTo').exists(),
-            check('endTimeFrom').exists(),
-            check('endTimeTo').exists(),
+            check('times').exists(),
             check('duration').exists(),
             check('durationType').exists(),
         ],

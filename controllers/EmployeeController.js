@@ -7,7 +7,7 @@ const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 
 
-const {Candidates, User, employeeSettings, Employees, Events, Interviews} = require('../models');
+const {Candidates, User, employeeSettings, Employees, Events, Interviews, SettingDurations} = require('../models');
 
 async function profile(req, res) {
 
@@ -126,7 +126,7 @@ async function settings(req, res){
     const employeeId = res.locals.user.id;
 
     try{
-        await employeeSettings.create({
+        const employeeSetting =  await employeeSettings.create({
             employeeId,
             eventId: req.body.eventId,
             date: req.body.date,
@@ -137,6 +137,15 @@ async function settings(req, res){
             duration: req.body.duration,
             durationType: req.body.durationType,
         });
+
+        for(let i in req.body.times){
+
+            await SettingDurations.create({
+                settingId:employeeSetting.dataValues.id,
+                startTime: req.body.times[i].startTime,
+                endTime: req.body.times[i].endTime
+            })
+        }
 
         return  res.status(httpStatus.OK).json({
             success: true,
