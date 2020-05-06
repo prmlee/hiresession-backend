@@ -179,7 +179,9 @@ async function getSingleEmployee(req, res){
         },
     });
 
-    const times = await  getTimes(req.params.id);
+    const date  = new Date();
+
+    const times = await  getTimes(req.params.id, date);
 
     return  res.status(httpStatus.OK).json({
         success:true,
@@ -188,8 +190,8 @@ async function getSingleEmployee(req, res){
     })
 }
 
-async function getTimes(employeeId){
-    const date  = new Date();
+async function getTimes(employeeId, date){
+
 
     const setting =  await employeeSettings.findOne({
         where: {
@@ -250,6 +252,23 @@ async function getTimes(employeeId){
     }
 
     return returnObj;
+}
+
+async function getTimesForDay(req, res) {
+
+    try{
+        const times = await getTimes(req.params.id,  req.params.date);
+        return res.status(httpStatus.OK).json({
+            success:true,
+            data:times
+        })
+    }catch (e) {
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success:false,
+            data:[]
+        })
+    }
+
 }
 
  function createTimes(duration, durationType, startTime, endTime, arr, startTime2, checkArr){
@@ -346,4 +365,4 @@ async function getCompanies(req, res){
     })
 }
 
-module.exports = { profile, sheduleInterview, getLoggedInUser, getSingleEmployee, getInterviews, getCompanies }
+module.exports = { profile, sheduleInterview, getLoggedInUser, getSingleEmployee, getInterviews, getCompanies, getTimesForDay }

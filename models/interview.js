@@ -10,6 +10,12 @@ module.exports = (sequelize, DataTypes) => {
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
     note: DataTypes.TEXT,
+    status: {
+      type: DataTypes.ENUM,
+      values: ['interviewed', 'canceled','upcoming']
+    },
+    rating:DataTypes.INTEGER
+
   }, {});
 
   Interviews.associate = function(models) {

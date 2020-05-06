@@ -48,6 +48,11 @@ module.exports = {
       note: {
         type: Sequelize.TEXT
       },
+      status: {
+        type: Sequelize.ENUM,
+        values: ['interviewed', 'canceled','upcoming']
+      },
+      Sequelize:Sequelize.INTEGER,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

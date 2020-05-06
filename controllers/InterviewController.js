@@ -23,6 +23,7 @@ async function createInterview(req, res){
             date:req.body.date,
             startTime:req.body.startTime,
             endTime:req.body.endTime,
+            status:3,
             note:req.body.note || '',
         });
 
@@ -38,8 +39,72 @@ async function createInterview(req, res){
     }
 }
 
-async function getInterviews(req, res){
+async function changeStatus(req, res){
 
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json(errors.array());
+    }
+
+    try {
+        await  Interviews.update({
+            status: req.body.status
+        }, {
+            where: {
+                id: req.body.id
+            },
+            paranoid: true
+        })
+
+        return res.status(httpStatus.OK).json({
+            success : true,
+            message : "Status successfully changed"
+        });
+
+    }catch (e) {
+        console.log(e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success : false,
+            message : e
+        });
+    }
 }
 
-module.exports = {createInterview, getInterviews};
+async function changeRating(req, res){
+
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json(errors.array());
+    }
+
+    try {
+        await  Interviews.update({
+            rating: req.body.rating
+        }, {
+            where: {
+                id: req.body.id
+            },
+            paranoid: true
+        })
+
+        return res.status(httpStatus.OK).json({
+            success : true,
+            message : "Status successfully changed"
+        });
+
+    }catch (e) {
+        console.log(e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success : false,
+            message : e
+        });
+    }
+}
+
+module.exports = {createInterview, changeStatus, changeRating};

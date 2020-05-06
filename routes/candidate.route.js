@@ -42,6 +42,14 @@ router
     );
 
 router
+    .route('/getTimesForDay/:id/:date')
+    .get(
+        isLoggedCandidate,
+        CandidateController.getTimesForDay
+    );
+
+
+router
     .route('/getInterviews/:page?')
     .get(
         isLoggedCandidate,
