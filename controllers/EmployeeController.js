@@ -47,7 +47,7 @@ async function profile(req, res) {
             }
         }
         const updatedObj  = req.body;
-
+        console.log('aaaaaaaaaaaaaaaaaa',updatedObj)
         const employee = await Employees.findOne({
             where: {
                 userId: res.locals.user.id
