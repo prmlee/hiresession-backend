@@ -346,10 +346,11 @@ async function adminLogin(req, res){
     }
 
     const token  = await createToken(admin.email, admin.name, null, Roles.admin);
-
+    console.log(Roles.admin)
     return  res.status(httpStatus.OK).json({
         success: true,
-        token
+        token,
+        roles:Roles.admin
     })
 }
 
