@@ -52,7 +52,7 @@ module.exports = {
         type: Sequelize.ENUM,
         values: ['interviewed', 'canceled','upcoming']
       },
-      Sequelize:Sequelize.INTEGER,
+      rating:Sequelize.INTEGER,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

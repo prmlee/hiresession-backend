@@ -35,6 +35,13 @@ router
     );
 
 router
+    .route('/getOnlyCompanies')
+    .get(
+        isLoggedAdmin,
+        adminController.getOnlyCompanies
+    );
+
+router
     .route('/getArchivedCompanies')
     .get(
         isLoggedAdmin,
@@ -87,5 +94,26 @@ router
         adminController.archiveCandidate
     );
 
+router
+    .route('/revertCandidate')
+    .put(
+        isLoggedAdmin,
+        [check('id').exists().isInt()],
+        adminController.revertCandidate
+    );
+
+router
+    .route('/deleteCandidate/:id')
+    .delete(
+        isLoggedAdmin,
+        adminController.deleteCandidate
+    );
+
+router
+    .route('/activities/:page?')
+    .get(
+        isLoggedAdmin,
+        adminController.activities
+    );
 
 module.exports = router;

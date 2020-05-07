@@ -237,7 +237,7 @@ async function getLoggedInAdmin(req, res){
 async function getCompanies(req, res){
 
     const CompanyList = await User.findAll({
-        attributes :['firstName', 'lastName', 'status', 'role'],
+        attributes :['id', 'firstName', 'lastName', 'status', 'role'],
         include : [
             {
                 attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
@@ -261,6 +261,30 @@ async function getCompanies(req, res){
         data:CompanyList
     })
 }
+
+async function getOnlyCompanies(req, res){
+
+    const CompanyList = await User.findAll({
+        attributes :['id', 'firstName', 'lastName', 'status', 'role'],
+        include : [
+            {
+                attributes :['id','companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+                model:Employees,
+                as:'employee'
+            },
+        ],
+        where:{
+            role:2,
+            status:1
+        },
+    });
+
+    res.status(httpStatus.OK).json({
+        success:true,
+        data:CompanyList
+    })
+}
+
 
 async function archiveCompany(req, res){
 
@@ -473,7 +497,7 @@ async function revertCandidate(req, res){
 
         return res.status(httpStatus.OK).json({
             success : true,
-            message : "Company successfully reverted"
+            message : "Candidate successfully reverted"
         });
 
     }catch (e) {
@@ -505,7 +529,7 @@ async function deleteCandidate(req, res){
 
         return res.status(httpStatus.OK).json({
             success : true,
-            message : "Company successfully deleted"
+            message : "Candidate successfully deleted"
         });
 
     }catch (e) {
@@ -544,6 +568,58 @@ async function getArchivedCandidates(req, res){
     })
 }
 
+async function activities(req, res){
+
+    const limit = 10;
+    const offset = req.params.page ? (req.params.page - 1) * limit : 0;
+
+    const interviewList = await Interviews.findAll({
+        include : [
+            {
+                attributes :['firstName', 'lastName', 'status', 'role'],
+                model:User,
+                as:'Candidate',
+                where:{
+                    role:1
+                },
+                include : [
+                    {
+                        model:Candidates,
+                        as:'candidate'
+                    }
+                ],
+            },
+            {
+                attributes :['firstName', 'lastName', 'status', 'role'],
+                model:User,
+                as:'Company',
+                where:{
+                    role:2
+                },
+                include : [
+                    {
+                        attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+                        model:Employees,
+                        as:'employee'
+                    }
+                ],
+            },
+            {
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'joinUrl', 'status'],
+                model:Events,
+                as:'events',
+            }
+        ],
+        limit,
+        offset
+    });
+
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:interviewList
+    })
+}
+
 module.exports = {
     createEvent,
     updateEvent,
@@ -557,5 +633,7 @@ module.exports = {
     archiveCandidate,
     revertCandidate,
     deleteCandidate,
-    getArchivedCandidates
+    getArchivedCandidates,
+    activities,
+    getOnlyCompanies
 };
