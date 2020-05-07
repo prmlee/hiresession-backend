@@ -239,8 +239,8 @@ async function employeeRegister(req, res) {
                 JobTitle:req.body.JobTitle || '',
                 companyName:req.body.companyName || '',
                 videoUrl:req.body.videoUrl || '',
-                profileImg:req.files.profileImg[0].filename,
-                companyImg:req.files.companyLogo[0].filename,
+                profileImg:req.files.profileImg[0].filename || '',
+                companyImg:req.files.companyLogo[0].filename || '',
             })
 
             for(let i in req.files.supportingDocs){
