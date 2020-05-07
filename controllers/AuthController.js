@@ -234,13 +234,16 @@ async function employeeRegister(req, res) {
                 password:HASHED_PASSWORD,
             });
 
+            const profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:'';
+            const companyLogo = (req.files && req.files.companyLogo)?req.files.companyLogo[0].filename:'';
+
             await Employees.create({
                 userId:createdUser.dataValues.id,
                 JobTitle:req.body.JobTitle || '',
                 companyName:req.body.companyName || '',
                 videoUrl:req.body.videoUrl || '',
-                profileImg:req.files.profileImg[0].filename || '',
-                companyImg:req.files.companyLogo[0].filename || '',
+                profileImg: profileImg || '',
+                companyImg:companyLogo || '',
             })
 
             for(let i in req.files.supportingDocs){
