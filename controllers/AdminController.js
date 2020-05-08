@@ -715,6 +715,7 @@ async  function getEvents(req, res){
 async  function getSingleEvent(req, res){
 
     const events = await Events.findOne({
+        attributes: ['id', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
         include:[
             {
                 attributes: ['id'],
