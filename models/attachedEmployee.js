@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
 
   AttachedEmployees.associate = function(models) {
+    AttachedEmployees.hasOne(models.Events, {as:'events', foreignKey:'userId', sourceKey:'id'});
   };
 
   return AttachedEmployees;

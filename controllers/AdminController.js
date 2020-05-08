@@ -448,7 +448,7 @@ async function getArchivedCompanies(req, res){
 async function getCandidates(req, res){
 
     const CompanyList = await User.findAll({
-        attributes :['firstName', 'lastName', 'status', 'role'],
+        attributes :['firstName', 'lastName','email', 'status', 'role'],
         include : [
             {
                 model:Candidates,
@@ -458,6 +458,23 @@ async function getCandidates(req, res){
                 attributes :['id', 'date', 'startTime', 'endTime', 'note', 'status', 'rating'],
                 model:Interviews,
                 as:'interviews',
+                include:[
+                    {
+                        attributes :['id', 'status', 'role'],
+                        model:User,
+                        as:'Company',
+                        where:{
+                            role:2
+                        },
+                        include : [
+                            {
+                                attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+                                model:Employees,
+                                as:'employee'
+                            }
+                        ],
+                    },
+                ]
             }
         ],
         where:{
