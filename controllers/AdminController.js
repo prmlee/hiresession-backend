@@ -7,7 +7,7 @@ const {createMeeting, updateMeeting} = require('../services/zoom-service')
 var fs = require('fs');
 
 
-const {User, Candidates, Employees, SupportingDocuments, Admin, Events, Interviews} = require('../models');
+const {User, Candidates, Employees, SupportingDocuments, Admin, Events, Interviews, AttachedEmployees} = require('../models');
 
 async function createEvent(req, res){
 
@@ -89,8 +89,7 @@ async function createEvent(req, res){
         }
 
         try {
-            await Events.create({
-                userId:req.body.userId,
+          const event =  await Events.create({
                 eventName:req.body.eventName,
                 date:req.body.date,
                 eventLogo:req.file.filename,
@@ -102,12 +101,22 @@ async function createEvent(req, res){
                 meetingId:meetingData.data.id,
             })
 
+            for(let i in req.body.userId){
+
+                await AttachedEmployees.create({
+                    userId:req.body.userId[i],
+                    EventId:event.dataValues.id,
+                })
+            }
+
+
             return  res.status(httpStatus.OK).json({
                 success: true,
                 message:"Event successfully created",
             });
 
         }catch (e) {
+            console.log(e)
             return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
                 success: false,
                 message: e.message
@@ -120,7 +129,7 @@ async  function updateEvent(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, '/var/www/html/uploads/events');
+            callback(null, 'uploads/events');
         },
 
         filename: function (req, file, callback) {
@@ -155,11 +164,14 @@ async  function updateEvent(req, res){
         }
 
         const event = await Events.findOne({
+            attributes:['id','meetingId', 'eventLogo'],
             where: {
                 id: req.body.id
             },
             raw: true,
         })
+
+
 
         const updatedObj  = req.body;
 
@@ -185,7 +197,26 @@ async  function updateEvent(req, res){
         }
 
         try {
-            console.log('asdas',updatedObj)
+
+            if(req.body.userId){
+
+
+                await AttachedEmployees.destroy( {
+                    where: {
+                        EventId:req.body.id
+                    },
+                    paranoid: true
+                })
+
+                for(let i in req.body.userId){
+
+                    await AttachedEmployees.create({
+                        userId:req.body.userId[i],
+                        EventId:req.body.id,
+                    })
+                }
+            }
+
             await Events.update({
                 ...updatedObj
             }, {
