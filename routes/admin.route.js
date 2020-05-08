@@ -117,6 +117,13 @@ router
     );
 
 router
+    .route('/getEvents')
+    .get(
+        isLoggedAdmin,
+        adminController.getEvents
+    );
+
+router
     .route('/getEvent/:id')
     .get(
         isLoggedAdmin,
