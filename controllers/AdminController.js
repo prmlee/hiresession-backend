@@ -712,7 +712,47 @@ async  function getEvents(req, res){
     })
 }
 
+async  function getSingleEvent(req, res){
+
+    const events = await Events.findOne({
+        attributes: ['id', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
+        include:[
+            {
+                attributes: ['id'],
+                model:AttachedEmployees,
+                as:'attachedEmployees',
+                include:[
+                    {
+                        attributes :['id', 'firstName', 'lastName', 'status', 'role'],
+                        model:User,
+                        as:'Company',
+                        where:{
+                            role:2
+                        },
+                        include : [
+                            {
+                                attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+                                model:Employees,
+                                as:'employee'
+                            }
+                        ],
+                    }
+                ]
+            }
+        ],
+        where:{
+            id:req.params.id
+        }
+    });
+
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:events
+    })
+}
+
 module.exports = {
+    getSingleEvent,
     getEvents,
     createEvent,
     updateEvent,
