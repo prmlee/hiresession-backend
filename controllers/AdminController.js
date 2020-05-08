@@ -268,12 +268,38 @@ async function getLoggedInAdmin(req, res){
 async function getCompanies(req, res){
 
     const CompanyList = await User.findAll({
-        attributes :['id', 'firstName', 'lastName', 'status', 'role'],
+        attributes :['id', 'firstName', 'lastName', 'email','status', 'role'],
         include : [
             {
                 attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
                 model:Employees,
                 as:'employee'
+            },
+            {
+                attributes :['id', 'date', 'startTime', 'endTime', 'note', 'status', 'rating'],
+                model:Interviews,
+                as:'interview',
+                include:[
+                    {
+                        attributes :['id', 'status', 'role'],
+                        model:User,
+                        as:'Candidate',
+                        where:{
+                            role:1
+                        },
+                        include : [
+                            {
+                                model:Candidates,
+                                as:'candidate'
+                            }
+                        ],
+                    },
+                    {
+                        attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'joinUrl', 'status'],
+                        model:Events,
+                        as:'events',
+                    }
+                ]
             },
             {
                 attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'joinUrl', 'status'],
