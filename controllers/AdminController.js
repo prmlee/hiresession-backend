@@ -474,6 +474,11 @@ async function getCandidates(req, res){
                             }
                         ],
                     },
+                    {
+                        attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'joinUrl', 'status'],
+                        model:Events,
+                        as:'events',
+                    }
                 ]
             }
         ],
