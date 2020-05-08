@@ -699,7 +699,21 @@ async function activities(req, res){
     })
 }
 
+async  function getEvents(req, res){
+
+    const events = await Events.findAll({
+        attributes: ['id', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
+        raw:true
+    });
+
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:events
+    })
+}
+
 module.exports = {
+    getEvents,
     createEvent,
     updateEvent,
     getLoggedInAdmin,

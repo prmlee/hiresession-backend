@@ -116,4 +116,11 @@ router
         adminController.activities
     );
 
+router
+    .route('/getEvents')
+    .get(
+        isLoggedAdmin,
+        adminController.getEvents
+    );
+
 module.exports = router;
