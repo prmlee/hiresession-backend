@@ -281,7 +281,7 @@ async function getCompanies(req, res){
                 as:'interview',
                 include:[
                     {
-                        attributes :['id', 'status', 'role'],
+                        attributes :['id', 'firstName', 'lastName', 'email','status', 'role'],
                         model:User,
                         as:'Candidate',
                         where:{
