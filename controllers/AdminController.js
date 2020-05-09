@@ -100,12 +100,15 @@ async function createEvent(req, res){
                 status:meetingData.data.status,
                 meetingId:meetingData.data.id,
             })
+
+            const ids = split(req.body.userId);
+
             console.log('aaaaaaaaaaaaaa', typeof req.body.userId)
             console.log('aaaaaaaaaaaaaa', ids )
-            for(let i in req.body.userId){
+            for(let i in ids){
 
                 await AttachedEmployees.create({
-                    userId:req.body.userId[i],
+                    userId:ids[i],
                     EventId:event.dataValues.id,
                 })
             }
