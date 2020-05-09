@@ -13,7 +13,7 @@ async function createEvent(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, '/var/www/html/uploads/events');
+            callback(null, 'uploads/events');
         },
 
         filename: function (req, file, callback) {
@@ -81,7 +81,7 @@ async function createEvent(req, res){
             });
 
             if(req.file){
-                const filePath = `/var/www/html/uploads/events/${req.file.filename}`
+                const filePath = `uploads/events/${req.file.filename}`
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });
@@ -100,7 +100,8 @@ async function createEvent(req, res){
                 status:meetingData.data.status,
                 meetingId:meetingData.data.id,
             })
-console.log('aaaaaaaaaaaaaa', req.body.userId)
+console.log('aaaaaaaaaaaaaa', typeof req.body.userId)
+console.log('aaaaaaaaaaaaaa',  req.body.userId)
             for(let i in req.body.userId){
 
                 await AttachedEmployees.create({
