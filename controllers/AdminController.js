@@ -101,7 +101,7 @@ async function createEvent(req, res){
                 meetingId:meetingData.data.id,
             })
 
-            const ids = split(req.body.userId);
+            const ids = req.body.userId.split(',');
 
             console.log('aaaaaaaaaaaaaa', typeof req.body.userId)
             console.log('aaaaaaaaaaaaaa', ids )
