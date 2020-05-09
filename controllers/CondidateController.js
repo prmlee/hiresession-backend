@@ -246,7 +246,10 @@ async function getTimes(employeeId, date){
 
 
         const availableTime =  createTimes(duration, settingData.durationType, minutes, setting.SettingDurations[i].endTime, [], setting.SettingDurations[i].dataValues.startTime, checkArr);
-        returnObj.push(availableTime);
+        for (let j in availableTime){
+
+            returnObj.push(availableTime[j]);
+        }
     }
 
     return returnObj;
