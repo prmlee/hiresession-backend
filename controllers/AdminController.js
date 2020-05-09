@@ -100,7 +100,7 @@ async function createEvent(req, res){
                 status:meetingData.data.status,
                 meetingId:meetingData.data.id,
             })
-
+console.log('aaaaaaaaaaaaaa', req.body.userId)
             for(let i in req.body.userId){
 
                 await AttachedEmployees.create({

@@ -4,7 +4,7 @@ const saltRounds = 10;
 const password = 'changeThePass123';
 
 const HASHED_PASSWORD = bcrypt.hashSync(password, saltRounds);
-const ADMIN_EMAIL = 'admin@mail.com';
+const ADMIN_EMAIL = 'admin@hiresession.com';
 
 module.exports = {
   up: (queryInterface) => {
