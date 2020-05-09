@@ -216,10 +216,7 @@ async function getTimes(employeeId, date){
         raw:true
     })
 
-    const returnObj = {
-        available:[],
-        unavailable: []
-    }
+    const returnObj = [];
 
     if(!setting){
         return returnObj
@@ -232,9 +229,10 @@ async function getTimes(employeeId, date){
 
     for(let i in interviews){
 
-        returnObj.unavailable.push({
+        returnObj.push({
             startTime:interviews[i].startTime,
-            endTime:interviews[i].endTime
+            endTime:interviews[i].endTime,
+            available:false
         });
         checkArr.push(interviews[i].endTime)
     }
@@ -248,7 +246,7 @@ async function getTimes(employeeId, date){
 
 
         const availableTime =  createTimes(duration, settingData.durationType, minutes, setting.SettingDurations[i].endTime, [], setting.SettingDurations[i].dataValues.startTime, checkArr);
-        returnObj.available.push(availableTime);
+        returnObj.push(availableTime);
     }
 
     return returnObj;
@@ -298,7 +296,8 @@ async function getTimesForDay(req, res) {
 
         returnArray.push({
             startTime:startTime2,
-            endTime:newTime
+            endTime:newTime,
+            available:true
         })
     }
 
