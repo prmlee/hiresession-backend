@@ -103,8 +103,6 @@ async function createEvent(req, res){
 
             const ids = req.body.userId.split(',');
 
-            console.log('aaaaaaaaaaaaaa', typeof req.body.userId)
-            console.log('aaaaaaaaaaaaaa', ids )
             for(let i in ids){
 
                 await AttachedEmployees.create({
@@ -212,10 +210,12 @@ async  function updateEvent(req, res){
                     paranoid: true
                 })
 
-                for(let i in req.body.userId){
+                const ids = req.body.userId.split(',');
+
+                for(let i in ids){
 
                     await AttachedEmployees.create({
-                        userId:req.body.userId[i],
+                        userId:ids[i],
                         EventId:req.body.id,
                     })
                 }
