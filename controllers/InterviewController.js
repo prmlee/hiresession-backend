@@ -35,7 +35,7 @@ async function createInterview(req, res){
     });
 
 
-    await mailer.send(
+     mailer.send(
         res.locals.user.email,
         'sheduleEmail',
         {
@@ -45,7 +45,7 @@ async function createInterview(req, res){
             meetingId:meetingData.data.id,
         }
         );
-    await mailer.send(
+     mailer.send(
         currentEmployee.email,
         'sheduleEmail',
         {
