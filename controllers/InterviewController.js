@@ -55,7 +55,6 @@ async function createInterview(req, res){
             meetingId:meetingData.data.id,
         }
     );
-    return  res.send(true);
 
     try {
 
