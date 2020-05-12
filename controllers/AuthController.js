@@ -101,7 +101,7 @@ async function candidateRegister(req, res) {
                 role:req.body.role,
                 email:req.body.email,
                 password:HASHED_PASSWORD,
-                status:0
+                status:2
             });
 
             const token = await createResetPassToken(req.body.email);
@@ -244,7 +244,7 @@ async function employeeRegister(req, res) {
                 role:req.body.role,
                 email:req.body.email,
                 password:HASHED_PASSWORD,
-                status:0
+                status:2
             });
 
             const token = await createResetPassToken(req.body.email);
