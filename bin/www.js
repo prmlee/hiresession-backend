@@ -4,7 +4,19 @@ const fs = require('fs');
 const app = require('../app');
 const config = require('../config');
 
-const server = http.createServer(app);
+const isProduction = config.env === 'production';
+
+const sslOptions = isProduction ? {
+  key: fs.readFileSync('config/sslcert/e296519865852cb9.pem'),
+  cert: fs.readFileSync('config/sslcert/e296519865852cb9.crt')
+} : null;
+
+
+
+const server = isProduction ?
+    https.createServer(sslOptions, app)
+    :
+    http.createServer(app);
 
 
 server.listen(config.port, onListening);
