@@ -48,6 +48,18 @@ module.exports = {
       note: {
         type: Sequelize.TEXT
       },
+      meetingId:{
+        type: Sequelize.STRING,
+        allowNull:false
+      },
+      startUrl:{
+        type: Sequelize.STRING,
+        allowNull:false
+      },
+      joinUrl:{
+        type: Sequelize.STRING,
+        allowNull:false
+      },
       status: {
         type: Sequelize.ENUM,
         values: ['interviewed', 'canceled','upcoming']

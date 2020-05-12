@@ -34,19 +34,32 @@
         border-radius: 3px;
     ">
         <tr>
-        </tr>
-        <tr>
             <td colspan="2">
-                <p style="margin-bottom: 48px">
-                    Please, click on the link bellow to reset your password.
-                </p>
+                <a href="{{startUrl}}" style="color: #2247ff; text-decoration: none">
+                   Start Url
+                </a>
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <a href="{{resetPassFormUrl}}" style="color: #2247ff; text-decoration: none">
-                    {{resetPassFormUrl}}
+
+                <a href="{{joinUrl}}" style="color: #2247ff; text-decoration: none">
+                    Join Url
                 </a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+              <span>
+               password: {{password}}
+              </span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+              <span>
+               Meeting Id: {{meetingId}}
+              </span>
             </td>
         </tr>
         <tr>

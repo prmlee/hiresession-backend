@@ -34,22 +34,6 @@ module.exports = {
       endTime: {
         type: Sequelize.TIME
       },
-      meetingId:{
-        type: Sequelize.STRING,
-        allowNull:false
-      },
-      startUrl:{
-        type: Sequelize.STRING,
-        allowNull:false
-      },
-      joinUrl:{
-        type: Sequelize.STRING,
-        allowNull:false
-      },
-      status:{
-        type: Sequelize.STRING,
-        allowNull:false
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

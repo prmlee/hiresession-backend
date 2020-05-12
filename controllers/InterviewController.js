@@ -1,7 +1,9 @@
 const httpStatus = require('http-status');
 const path = require('path');
 const {validationResult} = require('express-validator/check');
-
+const {createMeeting, updateMeeting} = require('../services/zoom-service')
+const mailer = require('../services/mail-sender');
+const configs = require('../config');
 const {User, Candidates, Employees, Interviews} = require('../models');
 
 
@@ -14,6 +16,47 @@ async function createInterview(req, res){
             .json(errors.array());
     }
 
+    const  meetingData = await createMeeting(req.body);
+    if((await meetingData).status !== 200) {
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: meetingData.message
+        });
+    }
+
+    console.log(res.locals.user.email)
+
+    const currentEmployee = await  User.findOne({
+        attributes:['email'],
+        where: {
+            id: req.body.employeeId
+        },
+        raw: true,
+    });
+
+
+    await mailer.send(
+        res.locals.user.email,
+        'sheduleEmail',
+        {
+            startUrl: meetingData.data.start_url,
+            joinUrl:meetingData.data.join_url,
+            password: meetingData.data.password,
+            meetingId:meetingData.data.id,
+        }
+        );
+    await mailer.send(
+        currentEmployee.email,
+        'sheduleEmail',
+        {
+            startUrl: meetingData.data.start_url,
+            joinUrl:meetingData.data.join_url,
+            password: meetingData.data.password,
+            meetingId:meetingData.data.id,
+        }
+    );
+    return  res.send(true);
+
     try {
 
         await Interviews.create({
@@ -23,6 +66,9 @@ async function createInterview(req, res){
             date:req.body.date,
             startTime:req.body.startTime,
             endTime:req.body.endTime,
+            startUrl:meetingData.data.start_url,
+            joinUrl:meetingData.data.join_url,
+            meetingId:meetingData.data.id,
             status:3,
             note:req.body.note || '',
         });

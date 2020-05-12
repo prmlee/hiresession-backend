@@ -10,6 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
     note: DataTypes.TEXT,
+    startUrl: DataTypes.STRING,
+    meetingId: DataTypes.STRING,
+    joinUrl: DataTypes.STRING,
     status: {
       type: DataTypes.ENUM,
       values: ['interviewed', 'canceled','upcoming']

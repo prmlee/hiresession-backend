@@ -41,7 +41,7 @@ const config = convict({
   },
   emailHost: {
     doc: 'Host of email',
-    default: 'DEFAULT_EMAIL_HOST',
+    default: 'smtp.office365.com',
     arg: 'emailHost',
     env: 'EMAIL_HOST'
   },

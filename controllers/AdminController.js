@@ -72,20 +72,13 @@ async function createEvent(req, res){
                 message: "End Time is required"
             })
         }
-        const  meetingData = await createMeeting(req.body);
+       // const  meetingData = await createMeeting(req.body);
 
-        if((await meetingData).status !== 200){
-            return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: meetingData.message
+        if(req.file){
+            const filePath = `/var/www/html/uploads/events/${req.file.filename}`
+            await  fs.unlink(filePath, function (err) {
+                console.log(err);
             });
-
-            if(req.file){
-                const filePath = `/var/www/html/uploads/events/${req.file.filename}`
-                await  fs.unlink(filePath, function (err) {
-                    console.log(err);
-                });
-            }
         }
 
         try {
@@ -95,10 +88,6 @@ async function createEvent(req, res){
                 eventLogo:req.file.filename,
                 startTime:req.body.startTime,
                 endTime:req.body.endTime,
-                startUrl:meetingData.data.start_url,
-                joinUrl:meetingData.data.join_url,
-                status:meetingData.data.status,
-                meetingId:meetingData.data.id,
             })
 
             const ids = req.body.userId.split(',');
@@ -201,8 +190,6 @@ async  function updateEvent(req, res){
         try {
 
             if(req.body.userId){
-
-
                 await AttachedEmployees.destroy( {
                     where: {
                         EventId:req.body.id
