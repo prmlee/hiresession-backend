@@ -172,9 +172,9 @@ async  function updateEvent(req, res){
                     console.log(err);
                 });
             }
-        }
 
-        updatedObj.eventLogo = req.file.filename;
+            updatedObj.eventLogo = req.file.filename;
+        }
 
         if(err){
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
