@@ -101,7 +101,18 @@ async function candidateRegister(req, res) {
                 role:req.body.role,
                 email:req.body.email,
                 password:HASHED_PASSWORD,
+                status:0
             });
+
+            const token = await createResetPassToken(req.body.email);
+
+            await mailer.send(
+                req.body.email,
+                'activationEmail',
+                {
+                    resetPassFormUrl: `${configs.frontAppUrl}/activation/${token}`
+                }
+            );
 
              const filename = (req.file)?req.file.filename:'';
 
@@ -113,6 +124,7 @@ async function candidateRegister(req, res) {
                 graduationYear:req.body.graduationYear || 0,
                 desiredJobTitle:req.body.desiredJobTitle || '',
                 industryInterested:req.body.industryInterested || '',
+                zipCode:req.body.zipCode || '',
                 resume:filename,
             })
 
@@ -232,7 +244,18 @@ async function employeeRegister(req, res) {
                 role:req.body.role,
                 email:req.body.email,
                 password:HASHED_PASSWORD,
+                status:0
             });
+
+            const token = await createResetPassToken(req.body.email);
+
+            await mailer.send(
+                req.body.email,
+                'activationEmail',
+                {
+                    resetPassFormUrl: `${configs.frontAppUrl}/activation/${token}`
+                }
+            );
 
             const profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:'';
             const companyLogo = (req.files && req.files.companyLogo)?req.files.companyLogo[0].filename:'';
@@ -242,6 +265,8 @@ async function employeeRegister(req, res) {
                 JobTitle:req.body.JobTitle || '',
                 companyName:req.body.companyName || '',
                 videoUrl:req.body.videoUrl || '',
+                city:req.body.city || '',
+                state:req.body.state || '',
                 profileImg: profileImg || '',
                 companyImg:companyLogo || '',
             })
@@ -267,6 +292,43 @@ async function employeeRegister(req, res) {
             });
         }
     })
+}
+
+
+async function activation(req, res){
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json(errors.array());
+    }
+
+    try {
+
+        const decodedToken = await verifyToken(req.body.token);
+
+        await  User.update({
+            status: 1
+        }, {
+            where: {
+                email: decodedToken.email
+            },
+            paranoid: true
+        })
+
+        return res.status(httpStatus.OK).json({
+            success : true,
+            message : "Your account successfully activated!"
+        });
+
+    }catch (e) {
+        console.log(e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success : false,
+            message : e
+        });
+    }
 }
 
 async function login(req, res){
@@ -478,4 +540,4 @@ async function changePassword(req, res) {
 
 
 
-module.exports = {candidateRegister, employeeRegister, login, adminLogin, resetPassword, resetPassEmail, changePassword};
+module.exports = {candidateRegister, employeeRegister, login, adminLogin, resetPassword, resetPassEmail, changePassword, activation};

@@ -25,6 +25,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull:true
       },
+      zipCode: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
       highDeagree:{
         type: Sequelize.STRING,
         allowNull:true

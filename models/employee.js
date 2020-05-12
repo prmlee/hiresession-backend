@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     companyImg: DataTypes.STRING,
     videoUrl: DataTypes.STRING,
     JobTitle: DataTypes.STRING,
+    city: DataTypes.STRING,
+    state: DataTypes.STRING,
   }, {});
 
   Employee.associate = function(models) {

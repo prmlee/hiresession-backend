@@ -49,6 +49,13 @@ router
     );
 
 router
+    .route('/activation')
+    .put(
+       [check('token').exists()],
+        AuthController.activation
+    );
+
+router
     .route('/changePassword')
     .put(
         isUserLoggedIn,

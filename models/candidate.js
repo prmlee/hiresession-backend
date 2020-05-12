@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     highDeagree: DataTypes.STRING,
     desiredJobTitle: DataTypes.STRING,
     resume: DataTypes.STRING,
+    zipCode: DataTypes.STRING,
     industryInterested:{
       type: DataTypes.ENUM,
       values: ['html', 'css']
