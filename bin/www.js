@@ -7,7 +7,7 @@ const config = require('../config');
 const isProduction = config.env === 'production';
 
 const sslOptions = isProduction ? {
-  key: fs.readFileSync('config/sslcert/e296519865852cb9.pem'),
+  key: fs.readFileSync('config/sslcert/cerificate.key'),
   cert: fs.readFileSync('config/sslcert/e296519865852cb9.crt')
 } : null;
 
