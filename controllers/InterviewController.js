@@ -5,7 +5,7 @@ const {createMeeting, updateMeeting} = require('../services/zoom-service')
 const mailer = require('../services/mail-sender');
 const configs = require('../config');
 const {User, Candidates, Employees, Interviews} = require('../models');
-
+const moment = require('moment');
 
 async function createInterview(req, res){
 
@@ -57,12 +57,12 @@ async function createInterview(req, res){
     );
 
     try {
-
+const date  =  moment(req.body.date).format('YYYY-MM-DD')
         await Interviews.create({
             employeeId:req.body.employeeId,
             candidateId:req.body.candidateId,
             eventId:req.body.eventId,
-            date:req.body.date,
+            date:date,
             startTime:req.body.startTime,
             endTime:req.body.endTime,
             startUrl:meetingData.data.start_url,
