@@ -291,7 +291,7 @@ async function getCompanies(req, res){
                 ]
             },
             {
-                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime',  'status'],
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime',],
                 model:Events,
                 as:'events',
             }
@@ -443,7 +443,7 @@ async function getArchivedCompanies(req, res){
                 as:'employee'
             },
             {
-                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime',  'status'],
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime'],
                 model:Events,
                 as:'events',
             }
@@ -490,7 +490,7 @@ async function getCandidates(req, res){
                         ],
                     },
                     {
-                        attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime',  'status'],
+                        attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime'],
                         model:Events,
                         as:'events',
                     }
@@ -673,7 +673,7 @@ async function activities(req, res){
                 ],
             },
             {
-                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'status'],
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime'],
                 model:Events,
                 as:'events',
             }

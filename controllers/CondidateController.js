@@ -344,7 +344,7 @@ async function getInterviews(req, res){
                 ],
             },
             {
-                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime',  'status'],
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime',],
                 model:Events,
                 as:'events',
             }
