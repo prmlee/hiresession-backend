@@ -266,7 +266,6 @@ async function getCompanies(req, res){
                 as:'employee'
             },
             {
-                attributes :['id', 'date', 'startTime', 'endTime', 'note', 'status', 'rating'],
                 model:Interviews,
                 as:'interview',
                 include:[
