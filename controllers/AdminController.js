@@ -162,8 +162,6 @@ async  function updateEvent(req, res){
             raw: true,
         })
 
-
-
         const updatedObj  = req.body;
 
         if(req.file){
@@ -196,7 +194,7 @@ async  function updateEvent(req, res){
                 })
 
                 const ids = req.body.userId.split(',');
-
+                console.log(ids)
                 for(let i in ids){
 
                     await AttachedEmployees.create({
@@ -205,6 +203,9 @@ async  function updateEvent(req, res){
                     })
                 }
             }
+
+
+            console.log(updatedObj);
 
             await Events.update({
                 ...updatedObj
