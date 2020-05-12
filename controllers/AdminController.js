@@ -271,7 +271,7 @@ async function getCompanies(req, res){
                 as:'interview',
                 include:[
                     {
-                        attributes :['id', 'firstName', 'lastName', 'email','status', 'role'],
+
                         model:User,
                         as:'Candidate',
                         where:{
@@ -285,7 +285,6 @@ async function getCompanies(req, res){
                         ],
                     },
                     {
-                        attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime',  'status'],
                         model:Events,
                         as:'events',
                     }
