@@ -192,9 +192,9 @@ async  function updateEvent(req, res){
                     },
                     paranoid: true
                 })
-
+                console.log('ffffffffffff',req.body.userId)
                 const ids = req.body.userId.split(',');
-                console.log(ids)
+                console.log('aaaaaa',ids)
                 for(let i in ids){
 
                     await AttachedEmployees.create({
