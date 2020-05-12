@@ -120,7 +120,7 @@ async  function updateEvent(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, 'uploads/events');
+            callback(null, '/var/www/html/uploads/events');
         },
 
         filename: function (req, file, callback) {
