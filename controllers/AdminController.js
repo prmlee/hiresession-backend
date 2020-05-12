@@ -155,7 +155,7 @@ async  function updateEvent(req, res){
         }
 
         const event = await Events.findOne({
-            attributes:['id','meetingId', 'eventLogo'],
+            attributes:['id','eventLogo'],
             where: {
                 id: req.body.id
             },
@@ -165,8 +165,6 @@ async  function updateEvent(req, res){
 
 
         const updatedObj  = req.body;
-
-        const  meetingData = await updateMeeting(updatedObj, event.meetingId);
 
         if(req.file){
 
