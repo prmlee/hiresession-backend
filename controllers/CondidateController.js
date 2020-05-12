@@ -174,7 +174,7 @@ async function getSingleEmployee(req, res){
                 as:'SupportingDocuments'
             },
             {
-                attributes :['employeeId'],
+                attributes :['eventId'],
                 model:employeeSettings,
                 as:'employeeSettings'
             }
