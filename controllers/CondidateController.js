@@ -172,6 +172,11 @@ async function getSingleEmployee(req, res){
                 attributes :['docName','fileSize'],
                 model:SupportingDocuments,
                 as:'SupportingDocuments'
+            },
+            {
+                attributes :['employeeId'],
+                model:employeeSettings,
+                as:'employeeSettings'
             }
         ],
         where: {
