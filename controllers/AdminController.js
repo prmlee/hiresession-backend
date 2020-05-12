@@ -204,7 +204,7 @@ async  function updateEvent(req, res){
                 }
             }
 
-
+            delete updatedObj.userId;
             console.log(updatedObj);
 
             await Events.update({
