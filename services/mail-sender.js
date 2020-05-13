@@ -8,24 +8,6 @@ const configs = require('../config');
 
 const isProduction = configs.env === 'production';
 
-const transport = Promise.promisifyAll(
-  nodeMailer.createTransport(
-    smtpTransport({
-      host: configs.emailHost,
-      port:  587,
-      secure: isProduction,
-      tls: {
-          rejectUnauthorized: false
-      },
-      auth: {
-        user: configs.email,
-        pass: configs.emailPass
-      }
-    })
-  )
-);
-
-
 function send(to, tmp, replacements = {}, subject = `Welcome to ${configs.appName}`, from = configs.email) {
   const templatePath = `../templates/${tmp}/index.html`;
   return fs.readFileAsync(`${__dirname}/${templatePath}`, {encoding: 'utf-8'})
@@ -34,7 +16,7 @@ function send(to, tmp, replacements = {}, subject = `Welcome to ${configs.appNam
 
       const mailOptions = {
           host: configs.emailHost,
-          port: isProduction ? 465 : 587,
+          port:  587,
           secure: isProduction,
           tls: {
               rejectUnauthorized: false
