@@ -14,7 +14,7 @@ async function profile(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, '/var/www/html/uploads/candidate');
+            callback(null, 'uploads/candidate');
         },
 
         filename: function (req, file, callback) {
@@ -75,6 +75,15 @@ async function profile(req, res){
                 });
             }
 
+        }else{
+            Candidates.update({
+                ...updatedObj
+            }, {
+                where: {
+                    userId: res.locals.user.id
+                },
+                paranoid: true
+            })
         }
 
         if(err){
