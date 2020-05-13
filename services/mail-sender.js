@@ -12,7 +12,7 @@ const transport = Promise.promisifyAll(
   nodeMailer.createTransport(
     smtpTransport({
       host: configs.emailHost,
-      port: isProduction ? 465 : 587,
+      port:  587,
       secure: isProduction,
       tls: {
           rejectUnauthorized: false
