@@ -35,7 +35,11 @@ async function profile(req, res){
         if(req.body.email){
             const user = await User.findOne({
                 where: {
-                    email: req.body.email
+                    email: {
+                        [Op.eq]:req.body.email,
+                        [Op.not]:res.locals.user.email
+                    },
+
                 },
                 raw: true,
             });
