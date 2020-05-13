@@ -122,6 +122,20 @@ async function changeStatus(req, res){
 async function changeCronStatus(req, res){
 
 
+    const  interview = await Interviews.findAll({
+        where: {
+            date:{
+                [Op.lte]: moment().subtract(0, 'days').toDate(),
+            },
+            startTime:{
+                [Op.lte]: moment().subtract(0, 'date').toDate(),
+            },
+        },
+        raw:true
+    })
+
+    console.log(interview)
+
     try {
         await  Interviews.update({
             status: 1
