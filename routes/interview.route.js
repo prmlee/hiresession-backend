@@ -24,6 +24,10 @@ router
     );
 
 router
+    .route('/changeCronStatus')
+    .get(InterviewController.changeCronStatus);
+
+router
     .route('/changeRating')
     .put(
         isLoggedEmployer,

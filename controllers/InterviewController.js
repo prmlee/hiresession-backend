@@ -6,6 +6,7 @@ const mailer = require('../services/mail-sender');
 const configs = require('../config');
 const {User, Candidates, Employees, Interviews} = require('../models');
 const moment = require('moment');
+const {Op} = require('sequelize');
 
 async function createInterview(req, res){
 
@@ -118,6 +119,37 @@ async function changeStatus(req, res){
     }
 }
 
+async function changeCronStatus(req, res){
+
+
+    try {
+        await  Interviews.update({
+            status: 1
+        }, {
+            where: {
+               date:{
+                   [Op.lte]: moment().subtract(0, 'days').toDate(),
+               },
+                startTime:{
+                    [Op.lte]: moment().subtract(0, 'date').toDate(),
+                },
+            }
+        })
+
+        return res.status(httpStatus.OK).json({
+            success : true,
+            message : "Status successfully changed"
+        });
+
+    }catch (e) {
+        console.log(e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success : false,
+            message : e
+        });
+    }
+}
+
 async function changeRating(req, res){
 
 
@@ -152,4 +184,4 @@ async function changeRating(req, res){
     }
 }
 
-module.exports = {createInterview, changeStatus, changeRating};
+module.exports = {createInterview, changeStatus, changeRating, changeCronStatus};
