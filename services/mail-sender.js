@@ -17,8 +17,7 @@ function send(to, tmp, replacements = {}, subject = `Welcome to ${configs.appNam
       const mailOptions = {
           host: configs.emailHost,
           port:  587,
-          secure: true,
-          tls: true,
+          secure: false,
           auth: {
               user: configs.email,
               pass: configs.emailPass
