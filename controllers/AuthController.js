@@ -447,7 +447,7 @@ async function resetPassEmail(req, res){
 
     try{
         const success =  await mailer.send(req.body.email, 'resetPassEmail', {resetPassFormUrl: `${configs.frontAppUrl}/reset-password/${token}`});
-
+console.log(success)
         return res.status(httpStatus.OK).json({
             success : true,
             message : "Please check your email"
