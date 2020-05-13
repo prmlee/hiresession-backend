@@ -271,14 +271,19 @@ async function employeeRegister(req, res) {
                 companyImg:companyLogo || '',
             })
 
-            for(let i in req.files.supportingDocs){
+            if( req.files && req.files.supportingDocs){
 
-                await SupportingDocuments.create({
-                    userId:createdUser.dataValues.id,
-                    docName: req.files.supportingDocs[i].filename,
-                    fileSize: req.files.supportingDocs[i].size
-                })
+                for(let i in req.files.supportingDocs){
+
+                    await SupportingDocuments.create({
+                        userId:createdUser.dataValues.id,
+                        docName: req.files.supportingDocs[i].filename,
+                        fileSize: req.files.supportingDocs[i].size
+                    })
+                }
             }
+
+
 
             return  res.status(httpStatus.OK).json({
                 success: true,
