@@ -85,7 +85,6 @@ async function createEvent(req, res){
 
             if(req.body.userId){
                 const ids = req.body.userId.split(',');
-console.log(event.dataValues.id)
                 for(let i in ids){
 
                     await AttachedEmployees.create({
@@ -334,15 +333,37 @@ async function archiveCompany(req, res){
     }
 
     try {
-        await  User.update({
-            status: 2
-        }, {
-            where: {
-                id: req.body.id,
-                status:1
-            },
-            paranoid: true
-        })
+
+        const  id = req.body.id;
+
+        if(Array.isArray(id)){
+
+            for(let i in id){
+
+                await  User.update({
+                    status: 2
+                }, {
+                    where: {
+                        id: id[i],
+                        status:1
+                    },
+                    paranoid: true
+                })
+            }
+
+        }else{
+           await  User.update({
+                status: 2
+            }, {
+                where: {
+                    id: req.body.id,
+                    status:1
+                },
+                paranoid: true
+            })
+        }
+
+
 
         return res.status(httpStatus.OK).json({
             success : true,
