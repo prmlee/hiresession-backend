@@ -515,7 +515,7 @@ async function getCandidates(req, res){
         ],
         where:{
             role:1,
-            status:2
+            status:1
         },
     });
 
