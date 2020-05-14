@@ -5,7 +5,7 @@ const {User, Events, Employees, AttachedEmployees} = require('../models');
 async function getEvent(req, res){
 
     const events = await Events.findAll({
-        attributes: ['id', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
+        attributes: ['id', 'eventName','bizaboLink','eventLogo', 'date', 'startTime', 'endTime'],
         include:[
             {
                 attributes: ['id'],
