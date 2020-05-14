@@ -230,7 +230,7 @@ async function getFirstDate(employeeId){
 
     }
 
-    return  new Date();
+    return  moment(new Date()).format("YYYY-MM-DD");
 }
 
 async function getTimes(employeeId, date){
