@@ -29,6 +29,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull:true
       },
+      profileImg: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      specialNeeds: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
       highDeagree:{
         type: Sequelize.STRING,
         allowNull:true
@@ -46,9 +54,8 @@ module.exports = {
         allowNull:true
       },
       industryInterested: {
-        type: Sequelize.ENUM,
-        values: ['html', 'css'],
-        defaultValue: 'html'
+        type: Sequelize.STRING,
+        allowNull:true
       },
       createdAt: {
         allowNull: false,

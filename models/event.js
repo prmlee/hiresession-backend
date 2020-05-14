@@ -4,7 +4,6 @@ module.exports = (sequelize, DataTypes) => {
   const saltRounds = 10;
 
   const Events = sequelize.define('Events', {
-    userId: DataTypes.INTEGER,
     eventName: DataTypes.STRING,
     eventLogo: DataTypes.STRING,
     date: DataTypes.DATE,

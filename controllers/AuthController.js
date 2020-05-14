@@ -13,7 +13,7 @@ async function candidateRegister(req, res) {
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, '/var/www/html/uploads/candidate');
+            callback(null, 'uploads/candidate');
         },
 
         filename: function (req, file, callback) {
@@ -28,7 +28,13 @@ async function candidateRegister(req, res) {
         storage,
         limits:{fileSize:1000000},
 
-    }).single('resume');
+    }).fields([
+        {
+            name: 'profileImg', maxCount: 1
+        }, {
+            name: 'resume', maxCount: 1
+        }
+    ]);
 
 
     upload(req, res, async (err) => {
@@ -116,6 +122,9 @@ async function candidateRegister(req, res) {
 
              const filename = (req.file)?req.file.filename:'';
 
+            const profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:'';
+            const resume = (req.files && req.files.resume)?req.files.resume[0].filename:'';
+
             await Candidates.create({
                 userId:createdUser.dataValues.id,
                 major:req.body.major || '',
@@ -125,7 +134,9 @@ async function candidateRegister(req, res) {
                 desiredJobTitle:req.body.desiredJobTitle || '',
                 industryInterested:req.body.industryInterested || '',
                 zipCode:req.body.zipCode || '',
-                resume:filename,
+                specialNeeds:req.body.specialNeeds || '',
+                resume,
+                profileImg,
             })
 
             return  res.status(httpStatus.OK).json({

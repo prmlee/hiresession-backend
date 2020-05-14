@@ -9,11 +9,10 @@ module.exports = (sequelize, DataTypes) => {
     highDeagree: DataTypes.STRING,
     desiredJobTitle: DataTypes.STRING,
     resume: DataTypes.STRING,
+    profileImg: DataTypes.STRING,
+    specialNeeds: DataTypes.TEXT,
     zipCode: DataTypes.STRING,
-    industryInterested:{
-      type: DataTypes.ENUM,
-      values: ['html', 'css']
-    },
+    industryInterested:DataTypes.STRING,
   }, {});
 
   Candidate.associate = function(models) {
