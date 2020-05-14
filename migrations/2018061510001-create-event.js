@@ -16,6 +16,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull:true
       },
+      bizaboLink:{
+        type: Sequelize.STRING,
+        allowNull:true
+      },
       date: {
         type: Sequelize.DATEONLY
       },

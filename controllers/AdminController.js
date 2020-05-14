@@ -77,6 +77,7 @@ async function createEvent(req, res){
         try {
           const event =  await Events.create({
                 eventName:req.body.eventName,
+                bizaboLink:req.body.bizaboLink,
                 date:req.body.date,
                 eventLogo:req.file.filename,
                 startTime:req.body.startTime,
