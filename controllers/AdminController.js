@@ -650,7 +650,7 @@ async function deleteCandidate(req, res){
 async function getArchivedCandidates(req, res){
 
     const CompanyList = await User.findAll({
-        attributes :['firstName', 'lastName', 'status', 'role'],
+        attributes :['id','firstName', 'lastName', 'status', 'role'],
         include : [
             {
                 model:Candidates,
