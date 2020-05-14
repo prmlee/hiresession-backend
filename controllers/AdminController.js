@@ -535,15 +535,37 @@ async function archiveCandidate(req, res){
     }
 
     try {
-        await  User.update({
-            status: 2
-        }, {
-            where: {
-                id: req.body.id,
-                status:1
-            },
-            paranoid: true
-        })
+
+        const  id = req.body.id;
+
+        if(Array.isArray(id)){
+
+            for(let i in id){
+
+                await  User.update({
+                    status: 2
+                }, {
+                    where: {
+                        id: id[i],
+                        status:1
+                    },
+                    paranoid: true
+                })
+            }
+
+        }else{
+            await  User.update({
+                status: 2
+            }, {
+                where: {
+                    id: req.body.id,
+                    status:1
+                },
+                paranoid: true
+            })
+        }
+
+
 
         return res.status(httpStatus.OK).json({
             success : true,
