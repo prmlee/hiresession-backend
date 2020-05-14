@@ -68,7 +68,7 @@ async function createEvent(req, res){
        // const  meetingData = await createMeeting(req.body);
 /*
         if(req.file){
-            const filePath = `/var/www/html/uploads/events/${req.file.filename}`
+            const filePath = `/var/www/html/uploads/events/${req.file.filename}`eventId
             await  fs.unlink(filePath, function (err) {
                 console.log(err);
             });
@@ -278,6 +278,7 @@ async function getCompanies(req, res){
                         ],
                     },
                     {
+                        attributes :['id','eventName', 'bizaboLink', 'eventLogo', 'date', 'startTime', 'endTime'],
                         model:Events,
                         as:'events',
                     }
