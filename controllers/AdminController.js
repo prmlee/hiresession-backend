@@ -38,13 +38,6 @@ async function createEvent(req, res){
             })
         }
 
-        if(!req.body.userId){
-            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                success: false,
-                message: "Employeer is required"
-            })
-        }
-
         if(!req.body.eventName){
             return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
                 success: false,
@@ -73,13 +66,13 @@ async function createEvent(req, res){
             })
         }
        // const  meetingData = await createMeeting(req.body);
-
+/*
         if(req.file){
             const filePath = `/var/www/html/uploads/events/${req.file.filename}`
             await  fs.unlink(filePath, function (err) {
                 console.log(err);
             });
-        }
+        }*/
 
         try {
           const event =  await Events.create({
@@ -90,16 +83,17 @@ async function createEvent(req, res){
                 endTime:req.body.endTime,
             })
 
-            const ids = req.body.userId.split(',');
+            if(req.body.userId){
+                const ids = req.body.userId.split(',');
+console.log(event.dataValues.id)
+                for(let i in ids){
 
-            for(let i in ids){
-
-                await AttachedEmployees.create({
-                    userId:ids[i],
-                    EventId:event.dataValues.id,
-                })
+                    await AttachedEmployees.create({
+                        userId:ids[i],
+                        EventId:event.dataValues.id,
+                    })
+                }
             }
-
 
             return  res.status(httpStatus.OK).json({
                 success: true,
@@ -107,7 +101,7 @@ async function createEvent(req, res){
             });
 
         }catch (e) {
-            console.log(e)
+            console.log('aaa',e)
             return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
                 success: false,
                 message: e.message
