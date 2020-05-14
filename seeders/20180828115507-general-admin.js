@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
+
 const password = 'changeThePass123';
 
 const HASHED_PASSWORD = bcrypt.hashSync(password, saltRounds);

@@ -19,6 +19,7 @@ router
     .route('/changeStatus')
     .put(
         isLoggedEmployer,
+
         [check('id').exists().isInt(), check('status').exists().isInt()],
         InterviewController.changeStatus
     );

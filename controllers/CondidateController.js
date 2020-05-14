@@ -197,15 +197,34 @@ async function getSingleEmployee(req, res){
         },
     });
 
-    const date  = new Date();
+    const date  = await  getFirstDate(req.params.id);
 
     const times = await  getTimes(req.params.id, date);
 
     return  res.status(httpStatus.OK).json({
         success:true,
-        data:{singleCompany,times},
+        data:{singleCompany,times, date},
 
     })
+}
+
+async function getFirstDate(employeeId){
+
+    const settings =  await employeeSettings.findAll({
+        where: {
+            employeeId,
+        },
+        raw:true
+    });
+
+
+    const datesArr = [];
+
+    for(let i in settings){
+        datesArr.push(settings[i].date)
+    }
+
+    return datesArr.reduce(function (a, b) { return a < b ? a : b; });
 }
 
 async function getTimes(employeeId, date){
