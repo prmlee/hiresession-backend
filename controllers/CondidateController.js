@@ -224,7 +224,13 @@ async function getFirstDate(employeeId){
         datesArr.push(settings[i].date)
     }
 
-    return datesArr.reduce(function (a, b) { return a < b ? a : b; });
+    if(datesArr.length>0){
+
+        return datesArr.reduce(function (a, b) { return a < b ? a : b; });
+
+    }
+
+    return  new Date();
 }
 
 async function getTimes(employeeId, date){
