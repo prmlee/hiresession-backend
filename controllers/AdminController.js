@@ -285,6 +285,7 @@ async function getCompanies(req, res){
                 ]
             },
             {
+                attributes :['id','eventName', 'bizaboLink', 'eventLogo', 'date', 'startTime', 'endTime'],
                 model:Events,
                 as:'events',
             }
