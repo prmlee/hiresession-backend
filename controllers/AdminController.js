@@ -187,7 +187,11 @@ async  function updateEvent(req, res){
                     paranoid: true
                 })
 
-                const ids = req.body.userId.split(',');
+                let ids = req.body.userId;
+
+                if(!Array.isArray(req.body.userId)){
+                     ids = req.body.userId.split(',');
+                }
 
                 for(let i in ids){
 
@@ -451,7 +455,7 @@ async function deleteCompany(req, res){
 async function getArchivedCompanies(req, res){
 
     const CompanyList = await User.findAll({
-        attributes :['firstName', 'lastName', 'status', 'role'],
+        attributes :['id','firstName','email', 'lastName', 'status', 'role'],
         include : [
             {
                 attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
@@ -654,7 +658,7 @@ async function deleteCandidate(req, res){
 async function getArchivedCandidates(req, res){
 
     const CompanyList = await User.findAll({
-        attributes :['id','firstName', 'lastName', 'status', 'role'],
+        attributes :['id','firstName', 'email', 'lastName', 'status', 'role'],
         include : [
             {
                 model:Candidates,
