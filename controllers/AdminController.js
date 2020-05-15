@@ -255,7 +255,7 @@ async function getLoggedInAdmin(req, res){
 
 async function getCompanies(req, res){
 
-    const CompanyList = await User.findAll({
+    const CompanyList = await User.findAndCountAll({
         attributes :['id', 'firstName', 'lastName', 'email','status', 'role'],
         include : [
             {
@@ -302,7 +302,8 @@ async function getCompanies(req, res){
 
     res.status(httpStatus.OK).json({
         success:true,
-        data:CompanyList
+        data:CompanyList.rows,
+        count:CompanyList.count
     })
 }
 
@@ -454,7 +455,7 @@ async function deleteCompany(req, res){
 
 async function getArchivedCompanies(req, res){
 
-    const CompanyList = await User.findAll({
+    const CompanyList = await User.findAndCountAll({
         attributes :['id','firstName','email', 'lastName', 'status', 'role'],
         include : [
             {
@@ -480,13 +481,14 @@ async function getArchivedCompanies(req, res){
 
     res.status(httpStatus.OK).json({
         success:true,
-        data:CompanyList
+        data:CompanyList.rows,
+        count:CompanyList.count
     })
 }
 
 async function getCandidates(req, res){
 
-    const CompanyList = await User.findAll({
+    const CompanyList = await User.findAndCountAll({
         attributes :['id','firstName', 'lastName','email', 'status', 'role'],
         include : [
             {
@@ -529,7 +531,8 @@ async function getCandidates(req, res){
 
     res.status(httpStatus.OK).json({
         success:true,
-        data:CompanyList
+        data:CompanyList.rows,
+        count:CompanyList.count
     })
 }
 
@@ -657,7 +660,7 @@ async function deleteCandidate(req, res){
 
 async function getArchivedCandidates(req, res){
 
-    const CompanyList = await User.findAll({
+    const CompanyList = await User.findAndCountAll({
         attributes :['id','firstName', 'email', 'lastName', 'status', 'role'],
         include : [
             {
@@ -677,7 +680,8 @@ async function getArchivedCandidates(req, res){
 
     res.status(httpStatus.OK).json({
         success:true,
-        data:CompanyList
+        data:CompanyList.rows,
+        count:CompanyList.count
     })
 }
 
@@ -686,7 +690,7 @@ async function activities(req, res){
     const limit = 10;
     const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
-    const interviewList = await Interviews.findAll({
+    const interviewList = await Interviews.findAndCountAll({
         include : [
             {
                 attributes :['firstName', 'lastName', 'status', 'role'],
@@ -729,7 +733,8 @@ async function activities(req, res){
 
     return  res.status(httpStatus.OK).json({
         success:true,
-        data:interviewList
+        data:interviewList.rows,
+        count:interviewList.count
     })
 }
 
