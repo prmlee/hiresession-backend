@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Events.associate = function(models) {
     Events.hasMany(models.AttachedEmployees, {as:'attachedEmployees', foreignKey:'EventId', sourceKey:'id'});
+    Events.hasMany(models.AttachedEmployees, {as:'involvedEmployers', foreignKey:'EventId', sourceKey:'id'});
   };
 
 
