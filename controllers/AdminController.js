@@ -264,7 +264,7 @@ async function getCompanies(req, res){
                 as:'interview',
                 include:[
                     {
-
+                        attributes :['id', 'firstName', 'lastName', 'email','status', 'role'],
                         model:User,
                         as:'Candidate',
                         where:{
@@ -462,7 +462,12 @@ async function getArchivedCompanies(req, res){
                 attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime'],
                 model:Events,
                 as:'events',
-            }
+            },
+            {
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime'],
+                model:Interviews,
+                as:'interview',
+            },
         ],
         where:{
             role:2,
