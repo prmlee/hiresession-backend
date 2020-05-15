@@ -33,20 +33,22 @@ async function getEvent(req, res){
         ]
     });
 
-    const involvedEmployers = [];
+
 
     for(let i in events){
+        const involvedEmployers = [];
 
         for(let j in events[i]['attachedEmployees']){
             involvedEmployers.push(events[i]['attachedEmployees'][j]['employeeId'])
         }
+
+        events[i]['involvedEmployers'] = involvedEmployers;
     }
 
 
     return  res.status(httpStatus.OK).json({
         success:true,
-        data:events,
-        involvedEmployers
+        data:events
     })
 }
 
