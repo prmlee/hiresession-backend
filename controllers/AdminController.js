@@ -732,7 +732,7 @@ async function activities(req, res){
 async  function getEvents(req, res){
 
     const events = await Events.findAll({
-        attributes: ['id', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
+        attributes: ['id', 'bizaboLink', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
         raw:true
     });
 
