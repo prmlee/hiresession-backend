@@ -39,11 +39,17 @@ async function getEvent(req, res){
         const involvedEmployers = [];
 
         for(let j in events[i]['attachedEmployees']){
-            involvedEmployers.push(events[i]['attachedEmployees'][j]['employeeId'])
+            if(typeof events[i]['attachedEmployees'][j] !== 'undefined'){
+
+                involvedEmployers.push(events[i]['attachedEmployees'][j]['dataValues']['employeeId']);
+                console.log(events[i]['attachedEmployees'][j]['dataValues']['employeeId']);
+            }
         }
 
-        events[i]['involvedEmployers'] = involvedEmployers;
+        events[i]['dataValues']['involvedEmployers'] = involvedEmployers;
     }
+
+
 
 
     return  res.status(httpStatus.OK).json({
