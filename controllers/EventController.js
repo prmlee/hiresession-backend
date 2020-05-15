@@ -8,7 +8,7 @@ async function getEvent(req, res){
         attributes: ['id', 'eventName','bizaboLink','eventLogo', 'date', 'startTime', 'endTime'],
         include:[
             {
-                attributes: ['id'],
+                attributes: ['id',['userId','employeeId']],
                 model:AttachedEmployees,
                 as:'attachedEmployees',
                 include:[
