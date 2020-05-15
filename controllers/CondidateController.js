@@ -380,7 +380,7 @@ async function getInterviews(req, res){
     const limit = 10;
     const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
-    const interviewList = await Interviews.findAll({
+    const interviewList = await Interviews.findAndCountAll({
         include : [
             {
                 attributes :['firstName', 'lastName', 'status', 'role'],
