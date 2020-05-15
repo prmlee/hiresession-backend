@@ -664,7 +664,11 @@ async function getArchivedCandidates(req, res){
                 attributes :['id', 'date', 'startTime', 'endTime', 'note', 'status', 'rating'],
                 model:Interviews,
                 as:'interviews',
-            }
+            },
+            {
+                model:Interviews,
+                as:'interview',
+            },
         ],
         where:{
             role:1,
