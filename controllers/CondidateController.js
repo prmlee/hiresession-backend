@@ -404,7 +404,13 @@ async function getInterviews(req, res){
             }
         ],
         limit,
-        offset
+        offset,
+        where:{
+            candidateId:res.locals.user.id
+        },
+        order: [
+            ['date', 'ASC'],
+        ],
     });
 
     return  res.status(httpStatus.OK).json({
