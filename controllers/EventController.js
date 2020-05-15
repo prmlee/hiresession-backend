@@ -8,11 +8,6 @@ async function getEvent(req, res){
         attributes: ['id', 'eventName','bizaboLink','eventLogo', 'date', 'startTime', 'endTime'],
         include:[
             {
-                attributes: [['userId','employeeId']],
-                model:AttachedEmployees,
-                as:'involvedEmployers'
-            },
-            {
                 attributes: ['id',['userId','employeeId']],
                 model:AttachedEmployees,
                 as:'attachedEmployees',
@@ -38,9 +33,20 @@ async function getEvent(req, res){
         ]
     });
 
+    const involvedEmployers = [];
+
+    for(let i in events){
+
+        for(let j in events[i]['attachedEmployees']){
+            involvedEmployers.push(events[i]['attachedEmployees'][j]['employeeId'])
+        }
+    }
+
+
     return  res.status(httpStatus.OK).json({
         success:true,
-        data:events
+        data:events,
+        involvedEmployers
     })
 }
 
