@@ -14,7 +14,7 @@ async function profile(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, 'uploads/candidate');
+            callback(null, '/var/www/html/uploads/candidate');
         },
 
         filename: function (req, file, callback) {
@@ -28,7 +28,13 @@ async function profile(req, res){
         storage,
         limits:{fileSize:1000000},
 
-    }).single('resume');
+    }).fields([
+        {
+            name: 'profileImg', maxCount: 1
+        }, {
+            name: 'resume', maxCount: 1
+        }
+    ]);
 
     uploads(req, res, async (err) => {
 
@@ -61,10 +67,13 @@ async function profile(req, res){
                     userId: res.locals.user.id
                 },
                 raw: true,
-            })
+            });
+
+            updatedObj.profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:'';
+            updatedObj.resume = (req.files && req.files.resume)?req.files.resume[0].filename:'';
 
             Candidates.update({
-                resume:req.file.filename
+                ...updatedObj
             }, {
                 where: {
                     userId: res.locals.user.id
@@ -72,8 +81,15 @@ async function profile(req, res){
                 paranoid: true
             })
 
-            if(candidate.resume){
+            if(candidate.resume && updatedObj.resume){
                 const filePath = `/var/www/html/uploads/candidate/${candidate.resume}`
+                await  fs.unlink(filePath, function (err) {
+                    console.log(err);
+                });
+            }
+
+            if(candidate.profileImg && updatedObj.profileImg){
+                const filePath = `/var/www/html/uploads/candidate/${candidate.profileImg}`
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });
