@@ -79,7 +79,7 @@ async function createEvent(req, res){
                 eventName:req.body.eventName,
                 bizaboLink:req.body.bizaboLink,
                 date:req.body.date,
-                eventLogo:req.file.filename,
+                eventLogo:req.file.filename || "",
                 startTime:req.body.startTime,
                 endTime:req.body.endTime,
             })
