@@ -415,7 +415,8 @@ async function getInterviews(req, res){
 
     return  res.status(httpStatus.OK).json({
         success:true,
-        data:interviewList
+        data:interviewList.rows,
+        count:interviewList.count,
     })
 }
 
