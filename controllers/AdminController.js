@@ -464,7 +464,6 @@ async function getArchivedCompanies(req, res){
                 as:'events',
             },
             {
-                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime'],
                 model:Interviews,
                 as:'interview',
             },
