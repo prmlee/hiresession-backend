@@ -185,7 +185,6 @@ async function getSettings(req, res){
             where: {
                 employeeId
             },
-            raw:true
         })
 
         return  res.status(httpStatus.OK).json({
