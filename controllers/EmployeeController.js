@@ -176,6 +176,12 @@ async function getSettings(req, res){
         const employeeId = res.locals.user.id;
 
         const settings = await employeeSettings.findOne({
+            include: [
+                {
+                    model:SettingDurations,
+                    as:'SettingDurations'
+                }
+            ],
             where: {
                 employeeId
             },
@@ -278,6 +284,7 @@ async function getAttachedFiles(req, res){
         data:AttachedFiles
     })
 }
+
 
 async function getInterviews(req, res){
 
