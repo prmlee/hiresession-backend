@@ -42,6 +42,30 @@ router
     );
 
 router
+    .route('/addFavorit')
+    .post(
+        [
+      check('employeeId').exists().isInt()
+        ],
+        isLoggedCandidate,
+        CandidateController.addFavorit
+    );
+
+router
+    .route('/getFavorit')
+    .get(
+        isLoggedCandidate,
+        CandidateController.getFavorit
+    );
+
+router
+    .route('/deleteFavorite/:employeeId')
+    .delete(
+        isLoggedCandidate,
+        CandidateController.deleteFavorit
+    );
+
+router
     .route('/getTimesForDay/:id/:date')
     .get(
         isLoggedCandidate,

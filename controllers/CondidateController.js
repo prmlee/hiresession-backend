@@ -8,7 +8,7 @@ const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 const {Op} = require('sequelize');
 
-const { User, Candidates, SupportingDocuments, Employees, Interviews, Events, employeeSettings, SettingDurations } = require('../models');
+const { User, Candidates, SupportingDocuments, Employees, Interviews, Events, employeeSettings, SettingDurations, Favorits } = require('../models');
 
 async function profile(req, res){
 
@@ -433,4 +433,65 @@ async function getCompanies(req, res){
     })
 }
 
-module.exports = { profile, sheduleInterview, getLoggedInUser, getSingleEmployee, getInterviews, getCompanies, getTimesForDay }
+async function addFavorit(req, res){
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json({validation: errors.array()});
+    }
+
+  await  Favorits.create({
+      candidateId: res.locals.user.id,
+      employeeId:req.body.employeeId,
+    });
+
+    res.status(httpStatus.OK).json({
+        success:true,
+    })
+}
+
+async function deleteFavorit(req, res){
+
+    await  Favorits.destroy({
+
+        where:{
+            candidateId: res.locals.user.id,
+            employeeId:req.params.employeeId,
+        }
+    });
+
+    res.status(httpStatus.OK).json({
+        success:true,
+    })
+}
+
+async function getFavorit(req, res){
+
+    const favorit =  await Favorits.findAll({
+        where: {
+            candidateId: res.locals.user.id,
+        },
+        raw:true
+    });
+
+    res.status(httpStatus.OK).json({
+        success:true,
+        data:favorit
+    })
+}
+
+module.exports = {
+    profile,
+    sheduleInterview,
+    getLoggedInUser,
+    getSingleEmployee,
+    getInterviews,
+    getCompanies,
+    getTimesForDay,
+    addFavorit,
+    getFavorit,
+    deleteFavorit
+}
