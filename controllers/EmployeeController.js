@@ -135,32 +135,79 @@ async function settings(req, res){
 
     const employeeId = res.locals.user.id;
 
+    const settings = await employeeSettings.findOne({
+        where: {
+            employeeId
+        },
+        raw:true
+    })
+
     try{
-        const employeeSetting =  await employeeSettings.create({
-            employeeId,
-            eventId: req.body.eventId,
-            date: req.body.date,
-            startTimeFrom: req.body.startTimeFrom,
-            startTimeTo: req.body.startTimeTo,
-            endTimeFrom: req.body.endTimeFrom,
-            endTimeTo: req.body.endTimeTo,
-            duration: req.body.duration,
-            durationType: req.body.durationType,
+
+        if(!settings){
+
+            const employeeSetting =  await employeeSettings.create({
+                employeeId,
+                eventId: req.body.eventId,
+                date: req.body.date,
+                startTimeFrom: req.body.startTimeFrom,
+                startTimeTo: req.body.startTimeTo,
+                endTimeFrom: req.body.endTimeFrom,
+                endTimeTo: req.body.endTimeTo,
+                duration: req.body.duration,
+                durationType: req.body.durationType,
+            });
+
+            for(let i in req.body.times){
+
+                await SettingDurations.create({
+                    settingId:employeeSetting.dataValues.id,
+                    startTime: req.body.times[i].startTime,
+                    endTime: req.body.times[i].endTime
+                })
+            }
+
+            return  res.status(httpStatus.OK).json({
+                success: true,
+                message:"Settings successfully created",
+            });
+        }
+
+        await SettingDurations.destroy( {
+            where: {
+                settingId:settings.id
+            },
+            paranoid: true
         });
 
         for(let i in req.body.times){
 
             await SettingDurations.create({
-                settingId:employeeSetting.dataValues.id,
+                settingId:settings.id,
                 startTime: req.body.times[i].startTime,
                 endTime: req.body.times[i].endTime
             })
         }
 
+        const updatedObj = req.body;
+
+        delete updatedObj.times
+
+        await employeeSettings.update({
+            ...updatedObj
+        }, {
+            where: {
+                id:settings.id
+            },
+            paranoid: true
+        })
+
         return  res.status(httpStatus.OK).json({
             success: true,
             message:"Settings successfully created",
         });
+
+
     }catch (e) {
 
         return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
