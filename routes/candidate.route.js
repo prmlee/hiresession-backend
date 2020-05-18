@@ -59,7 +59,7 @@ router
     );
 
 router
-    .route('/deleteFavorite/:employeeId')
+    .route('/deleteFavorit/:employeeId')
     .delete(
         isLoggedCandidate,
         CandidateController.deleteFavorit

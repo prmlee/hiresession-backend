@@ -198,8 +198,7 @@ async  function updateEvent(req, res){
                     await AttachedEmployees.create({
                         userId:ids[i],
                         EventId:req.body.id,
-                    })
-                }
+                    })                }
             }
 
             delete updatedObj.userId;
@@ -254,6 +253,8 @@ async function getLoggedInAdmin(req, res){
 }
 
 async function getCompanies(req, res){
+    const limit = 10;
+    const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
     const CompanyList = await User.findAndCountAll({
         attributes :['id', 'firstName', 'lastName', 'email','status', 'role'],
@@ -298,6 +299,8 @@ async function getCompanies(req, res){
             role:2,
             status:1
         },
+        limit,
+        offset,
     });
 
     res.status(httpStatus.OK).json({
@@ -455,6 +458,9 @@ async function deleteCompany(req, res){
 
 async function getArchivedCompanies(req, res){
 
+    const limit = 10;
+    const offset = req.params.page ? (req.params.page - 1) * limit : 0;
+
     const CompanyList = await User.findAndCountAll({
         attributes :['id','firstName','email', 'lastName', 'status', 'role'],
         include : [
@@ -477,6 +483,8 @@ async function getArchivedCompanies(req, res){
             role:2,
             status:2
         },
+        limit,
+        offset,
     });
 
     res.status(httpStatus.OK).json({
@@ -487,6 +495,9 @@ async function getArchivedCompanies(req, res){
 }
 
 async function getCandidates(req, res){
+
+    const limit = 10;
+    const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
     const CompanyList = await User.findAndCountAll({
         attributes :['id','firstName', 'lastName','email', 'status', 'role'],
@@ -523,6 +534,8 @@ async function getCandidates(req, res){
                 ]
             }
         ],
+        limit,
+        offset,
         where:{
             role:1,
             status:1
