@@ -256,7 +256,7 @@ async function getCompanies(req, res){
     const limit = 10;
     const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
-    const CompanyList = await User.findAndCountAll({
+    const CompanyList = await User.findAll({
         attributes :['id', 'firstName', 'lastName', 'email','status', 'role'],
         include : [
             {
@@ -305,8 +305,8 @@ async function getCompanies(req, res){
 
     res.status(httpStatus.OK).json({
         success:true,
-        data:CompanyList.rows,
-        count:CompanyList.count
+        data:CompanyList.rows || CompanyList,
+        count:CompanyList.count || 10
     })
 }
 
