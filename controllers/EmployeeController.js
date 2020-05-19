@@ -137,7 +137,8 @@ async function settings(req, res){
 
     const settings = await employeeSettings.findOne({
         where: {
-            employeeId
+            employeeId,
+            eventId: req.body.eventId
         },
         raw:true
     })
