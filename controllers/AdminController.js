@@ -272,9 +272,6 @@ async function getCompanies(req, res){
                         attributes :['id', 'firstName', 'lastName', 'email','status', 'role'],
                         model:User,
                         as:'Candidate',
-                        where:{
-                            role:1
-                        },
                         include : [
                             {
                                 model:Candidates,
@@ -299,8 +296,8 @@ async function getCompanies(req, res){
             role:2,
             status:1
         },
-        limit,
         offset,
+        limit,
     });
 
     res.status(httpStatus.OK).json({
@@ -515,9 +512,6 @@ async function getCandidates(req, res){
                         attributes :['id', 'status', 'role'],
                         model:User,
                         as:'Company',
-                        where:{
-                            role:2
-                        },
                         include : [
                             {
                                 attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
