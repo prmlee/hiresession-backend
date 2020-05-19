@@ -348,6 +348,11 @@ async function getTimesForDay(req, res) {
         if(b=== 60){
             startTime[0] = (parseInt(startTime[0]) +1).toString();
             startTime[1] = '00';
+        }else if(b>60){
+
+            startTime[0] = (parseInt(startTime[0]) +1).toString();
+            let mins = b%60;
+            startTime[1] = mins;
         }else{
             startTime[1] = b;
         }
