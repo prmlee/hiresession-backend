@@ -223,7 +223,7 @@ async function getSettings(req, res){
     try {
         const employeeId = res.locals.user.id;
 
-        const settings = await employeeSettings.findOne({
+        const settings = await employeeSettings.findAll({
             include: [
                 {
                     model:SettingDurations,
