@@ -214,7 +214,7 @@ async function getSingleEmployee(req, res){
     });
 
 
-    const date  = await  getFirstDate(req.params.id);
+    const date  = await  getFirstDate(req.params.id, singleCompany.dataValues.employeeSettings.eventId);
 
     const times = await  getTimes(req.params.id, date, singleCompany.dataValues.employeeSettings.eventId);
 
@@ -225,11 +225,12 @@ async function getSingleEmployee(req, res){
     })
 }
 
-async function getFirstDate(employeeId){
+async function getFirstDate(employeeId, eventId){
 
     const settings =  await employeeSettings.findAll({
         where: {
             employeeId,
+            eventId
         },
         raw:true
     });
