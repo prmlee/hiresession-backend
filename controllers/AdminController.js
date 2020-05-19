@@ -303,7 +303,7 @@ async function getCompanies(req, res){
     res.status(httpStatus.OK).json({
         success:true,
         data:CompanyList.rows,
-        count:CompanyList.count
+        count:CompanyList.rows.length
     })
 }
 
@@ -539,7 +539,7 @@ async function getCandidates(req, res){
     res.status(httpStatus.OK).json({
         success:true,
         data:CompanyList.rows,
-        count:CompanyList.count
+        count:CompanyList.rows.length
     })
 }
 
