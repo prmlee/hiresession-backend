@@ -66,7 +66,7 @@ router
     );
 
 router
-    .route('/getTimesForDay/:id/:date')
+    .route('/getTimesForDay/:employeeId/:date/:eventId')
     .get(
         isLoggedCandidate,
         CandidateController.getTimesForDay

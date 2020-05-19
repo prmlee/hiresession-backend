@@ -320,7 +320,7 @@ async function getTimes(employeeId, date, eventId){
 async function getTimesForDay(req, res) {
 
     try{
-        const times = await getTimes(req.params.id,  req.params.date);
+        const times = await getTimes(req.params.employeeId,  req.params.date, req.params.eventId);
         return res.status(httpStatus.OK).json({
             success:true,
             data:times
