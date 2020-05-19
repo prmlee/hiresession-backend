@@ -213,9 +213,10 @@ async function getSingleEmployee(req, res){
         },
     });
 
+
     const date  = await  getFirstDate(req.params.id);
 
-    const times = await  getTimes(req.params.id, date);
+    const times = await  getTimes(req.params.id, date, singleCompany.dataValues.employeeSettings.eventId);
 
     return  res.status(httpStatus.OK).json({
         success:true,
@@ -249,12 +250,13 @@ async function getFirstDate(employeeId){
     return  moment(new Date()).format("YYYY-MM-DD");
 }
 
-async function getTimes(employeeId, date){
+async function getTimes(employeeId, date, eventId){
 
 
     const setting =  await employeeSettings.findOne({
         where: {
             employeeId,
+            eventId,
             date: moment(date).format("YYYY-MM-DD")
         },
         include : [
@@ -270,6 +272,7 @@ async function getTimes(employeeId, date){
     const interviews = await Interviews.findAll({
         where:{
             employeeId,
+            eventId,
             date: moment(date).format("YYYY-MM-DD")
         },
         raw:true
