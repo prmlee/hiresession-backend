@@ -150,15 +150,15 @@ async function settings(req, res){
                 employeeId,
                 eventId: req.body.eventId,
                 date: req.body.date,
-                startTimeFrom: req.body.startTimeFrom,
-                startTimeTo: req.body.startTimeTo,
-                endTimeFrom: req.body.endTimeFrom,
-                endTimeTo: req.body.endTimeTo,
                 duration: req.body.duration,
                 durationType: req.body.durationType,
             });
 
             for(let i in req.body.times){
+
+                if(req.body.durationType === 1 && (req.body.times[i].startTime>60 ||  req.body.times[i].endTime>60)){
+                    continue;
+                }
 
                 await SettingDurations.create({
                     settingId:employeeSetting.dataValues.id,
