@@ -25,7 +25,7 @@ async function createEvent(req, res){
 
     const uploads = multer({
         storage,
-        limits:{fileSize:1000000},
+        limits:{fileSize:16000000},
 
     }).single('eventLogo');
 
@@ -126,7 +126,7 @@ async  function updateEvent(req, res){
 
     const uploads = multer({
         storage,
-        limits:{fileSize:1000000},
+        limits:{fileSize:16000000},
 
     }).single('eventLogo');
 

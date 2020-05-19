@@ -25,7 +25,7 @@ async function profile(req, res) {
 
     const profileImg = multer({
         storage,
-        limits:{fileSize:1000000},
+        limits:{fileSize:16000000},
 
     }).single('companyLogo');
 

@@ -36,4 +36,12 @@ router
         InterviewController.changeRating
     );
 
+router
+    .route('/changeNotes')
+    .put(
+        isLoggedEmployer,
+        [check('id').exists().isInt(), check('notes').exists()],
+        InterviewController.changeNotes
+    );
+
 module.exports = router;

@@ -194,4 +194,38 @@ async function changeRating(req, res){
     }
 }
 
-module.exports = {createInterview, changeStatus, changeRating, changeCronStatus};
+async function changeNotes(req, res){
+
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json(errors.array());
+    }
+
+    try {
+        await  Interviews.update({
+            note: req.body.notes
+        }, {
+            where: {
+                id: req.body.id
+            },
+            paranoid: true
+        })
+
+        return res.status(httpStatus.OK).json({
+            success : true,
+            message : "Notes successfully changed"
+        });
+
+    }catch (e) {
+        console.log(e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success : false,
+            message : e
+        });
+    }
+}
+
+module.exports = {createInterview, changeStatus, changeRating, changeCronStatus, changeNotes};

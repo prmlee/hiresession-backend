@@ -26,7 +26,7 @@ async function candidateRegister(req, res) {
 
     const upload = multer({
         storage,
-        limits:{fileSize:1000000},
+        limits:{fileSize:16000000},
 
     }).fields([
         {
@@ -170,7 +170,7 @@ async function employeeRegister(req, res) {
 
     const profileImg = multer({
         storage,
-        limits:{fileSize:1000000},
+        limits:{fileSize:16000000},
 
     }).fields([
         {
