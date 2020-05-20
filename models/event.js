@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     date: DataTypes.DATE,
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
+    location: DataTypes.STRING,
 
 
   }, {});

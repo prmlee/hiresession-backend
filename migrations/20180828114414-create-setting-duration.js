@@ -20,7 +20,6 @@ module.exports = {
       startTime: {
         type: Sequelize.TIME
       },
-
       endTime: {
         type: Sequelize.TIME
       },
