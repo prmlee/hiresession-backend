@@ -37,7 +37,7 @@ async function profile(req, res){
     ]);
 
     uploads(req, res, async (err) => {
-        console.log('files',req.files)
+
 
         if(req.body.email){
             const user = await User.findOne({
@@ -61,7 +61,7 @@ async function profile(req, res){
 
         const updatedObj  = req.body;
 
-        if(req.file){
+        if(req.files){
 
             const candidate = await Candidates.findOne({
                 where: {
