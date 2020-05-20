@@ -37,6 +37,7 @@ async function profile(req, res){
     ]);
 
     uploads(req, res, async (err) => {
+        console.log('files',req.files)
 
         if(req.body.email){
             const user = await User.findOne({
