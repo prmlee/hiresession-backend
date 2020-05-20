@@ -1,11 +1,12 @@
 const httpStatus = require('http-status');
 
-const {User, Events, Employees, AttachedEmployees} = require('../models');
+const {User, Events, Employees, AttachedEmployees, employeeSettings, SettingDurations} = require('../models');
+const {Op} = require('sequelize');
 
 async function getEvent(req, res){
 
     const events = await Events.findAll({
-        attributes: ['id', 'eventName','bizaboLink','eventLogo', 'date', 'startTime', 'endTime'],
+        attributes: ['id', 'eventName','bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime'],
         include:[
             {
                 attributes: ['id',['userId','employeeId']],
@@ -16,17 +17,25 @@ async function getEvent(req, res){
                         attributes :['id', 'firstName', 'lastName', 'status', 'role'],
                         model:User,
                         as:'Company',
-                        where:{
-                            role:2
-                        },
                         include : [
                             {
                                 attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
                                 model:Employees,
                                 as:'employee'
-                            }
+                            },
+
                         ],
-                    }
+                    },
+                    {
+                        model:employeeSettings,
+                        as:'employeeSettings',
+                        include:[
+                            {
+                                model:SettingDurations,
+                                as:'SettingDurations',
+                            },
+                        ],
+                    },
                 ]
             },
 

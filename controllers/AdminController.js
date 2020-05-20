@@ -271,14 +271,14 @@ async function getCompanies(req, res){
                         ],
                     },
                     {
-                        attributes :['id','eventName', 'bizaboLink', 'eventLogo', 'date', 'startTime', 'endTime'],
+                        attributes :['id','eventName', 'bizaboLink', 'eventLogo', 'location', 'date', 'startTime', 'endTime'],
                         model:Events,
                         as:'events',
                     }
                 ]
             },
             {
-                attributes :['id','eventName', 'bizaboLink', 'eventLogo', 'date', 'startTime', 'endTime'],
+                attributes :['id','eventName', 'bizaboLink', 'location', 'eventLogo', 'date', 'startTime', 'endTime'],
                 model:Events,
                 as:'events',
             }
@@ -739,7 +739,7 @@ async function activities(req, res){
 async  function getEvents(req, res){
 
     const events = await Events.findAll({
-        attributes: ['id', 'bizaboLink', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
+        attributes: ['id', 'bizaboLink', 'location', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
         raw:true
     });
 
@@ -752,7 +752,7 @@ async  function getEvents(req, res){
 async  function getSingleEvent(req, res){
 
     const events = await Events.findOne({
-        attributes: ['id', 'bizaboLink', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
+        attributes: ['id', 'bizaboLink', 'location', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
         include:[
             {
                 attributes: ['id'],

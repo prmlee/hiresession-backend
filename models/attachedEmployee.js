@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   AttachedEmployees.associate = function(models) {
     AttachedEmployees.hasOne(models.Events, {as:'events', foreignKey:'id', sourceKey:'EventId'});
     AttachedEmployees.hasOne(models.User, {as:'Company', foreignKey:'id', sourceKey:'userId'})
+    AttachedEmployees.hasOne(models.employeeSettings, {as:'employeeSettings', foreignKey:'employeeId', sourceKey:'userId'})
 
   };
 
