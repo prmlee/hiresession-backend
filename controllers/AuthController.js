@@ -130,6 +130,7 @@ async function candidateRegister(req, res) {
                 major:req.body.major || '',
                 shcool:req.body.shcool || '',
                 highDeagree:req.body.highDeagree || '',
+                phone:req.body.phone || '',
                 graduationYear:req.body.graduationYear || 0,
                 desiredJobTitle:req.body.desiredJobTitle || '',
                 industryInterested:req.body.industryInterested || '',

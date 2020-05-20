@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     desiredJobTitle: DataTypes.STRING,
     resume: DataTypes.STRING,
     profileImg: DataTypes.STRING,
+    phone: DataTypes.STRING,
     specialNeeds: DataTypes.TEXT,
     zipCode: DataTypes.STRING,
     industryInterested:DataTypes.STRING,

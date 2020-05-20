@@ -53,6 +53,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull:true
       },
+      phone:{
+        type: Sequelize.STRING,
+        allowNull:true
+      },
       industryInterested: {
         type: Sequelize.STRING,
         allowNull:true
