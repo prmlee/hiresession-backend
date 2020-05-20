@@ -7,7 +7,7 @@ const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 
 
-const {Candidates, User, employeeSettings, Employees, Events, Interviews, SettingDurations} = require('../models');
+const {Candidates, User, employeeSettings, Employees, Events, Interviews, SettingDurations, SupportingDocuments} = require('../models');
 
 async function profile(req, res) {
 
@@ -27,14 +27,24 @@ async function profile(req, res) {
         storage,
         limits:{fileSize:16000000},
 
-    }).single('companyLogo');
+    }).fields([
+        {
+            name: 'profileImg', maxCount: 1
+        }, {
+            name: 'companyLogo', maxCount: 1
+        },
+        {
+            name: 'supportingDocs', supportingDocs: 20
+        }
+    ]);
 
     profileImg(req, res, async (err) => {
 
         if(req.body.email){
             const user = await User.findOne({
-                where: {
-                    email: req.body.email
+                email: {
+                    [Op.eq]:req.body.email,
+                    [Op.not]:res.locals.user.email
                 },
                 raw: true,
             });
@@ -54,11 +64,14 @@ async function profile(req, res) {
             raw: true,
         })
 
+
         if(req.file){
 
+            updatedObj.profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:'';
+            updatedObj.companyImg = (req.files && req.files.companyLogo)?req.files.companyLogo[0].filename:'';
+
             Employees.update({
-                companyImg:req.file.filename,
-                companyName: req.body.companyName || employee.companyName
+                ...updatedObj
             }, {
                 where: {
                     userId: res.locals.user.id
@@ -72,6 +85,26 @@ async function profile(req, res) {
                     console.log(err);
                 });
             }
+
+            if(employee.profileImg){
+                const filePath = `/var/www/html/uploads/employeer/${employee.profileImg}`
+                await  fs.unlink(filePath, function (err) {
+                    console.log(err);
+                });
+            }
+
+            if( req.files && req.files.supportingDocs){
+
+                for(let i in req.files.supportingDocs){
+
+                    await SupportingDocuments.create({
+                        userId:res.locals.user.id,
+                        docName: req.files.supportingDocs[i].filename,
+                        fileSize: req.files.supportingDocs[i].size
+                    })
+                }
+            }
+
         }else{
 
             Employees.update({
@@ -120,7 +153,36 @@ async function profile(req, res) {
             });
         }
     })
+}
 
+async function deleteSupportingDocs(req, res){
+
+
+    const docs = await SupportingDocuments.findOne({
+        where: {
+            id: req.params.id
+        },
+        raw: true,
+    })
+
+    if(docs.docName){
+        const filePath = `/var/www/html/uploads/employeer/${docs.docName}`
+        await  fs.unlink(filePath, function (err) {
+            console.log(err);
+        });
+    }
+
+    await SupportingDocuments.destroy({
+
+        where:{
+            id: req.params.id
+        }
+    });
+
+    return  res.status(httpStatus.OK).json({
+        success: true,
+        message:"document successfully deleted",
+    });
 }
 
 async function settings(req, res){
@@ -297,9 +359,12 @@ async function getLoggedInUser(req, res){
                     {
                         model:Employees,
                         as:'employee'
-                    }
+                    },
+                    {
+                        model:SupportingDocuments,
+                        as:'SupportingDocuments'
+                    },
                 ],
-                raw: true,
             });
 
             delete currentEmployee.password;

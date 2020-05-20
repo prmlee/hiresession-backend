@@ -2,8 +2,6 @@ const httpStatus = require('http-status');
 const path = require('path');
 const multer = require('multer')
 const {validationResult} = require('express-validator/check');
-const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
-const {createMeeting, updateMeeting} = require('../services/zoom-service')
 var fs = require('fs');
 
 
@@ -65,14 +63,6 @@ async function createEvent(req, res){
                 message: "End Time is required"
             })
         }
-       // const  meetingData = await createMeeting(req.body);
-/*
-        if(req.file){
-            const filePath = `/var/www/html/uploads/events/${req.file.filename}`eventId
-            await  fs.unlink(filePath, function (err) {
-                console.log(err);
-            });
-        }*/
 
         try {
           const event =  await Events.create({
@@ -81,6 +71,7 @@ async function createEvent(req, res){
                 date:req.body.date,
                 eventLogo:req.file?req.file.filename : "",
                 startTime:req.body.startTime,
+                location:req.body.location?req.body.location:'',
                 endTime:req.body.endTime,
             })
 
