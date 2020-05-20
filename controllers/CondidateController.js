@@ -72,7 +72,7 @@ async function profile(req, res){
 
             updatedObj.profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:'';
             updatedObj.resume = (req.files && req.files.resume)?req.files.resume[0].filename:'';
-
+            console.log(updatedObj);
             Candidates.update({
                 ...updatedObj
             }, {
