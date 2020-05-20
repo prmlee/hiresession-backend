@@ -213,10 +213,15 @@ async function getSingleEmployee(req, res){
         },
     });
 
+    let date = moment(new Date()).format("YYYY-MM-DD")
+    let times = [];
 
-    const date  = await  getFirstDate(req.params.id, singleCompany.dataValues.employeeSettings.eventId);
+    if(singleCompany){
 
-    const times = await  getTimes(req.params.id, date, singleCompany.dataValues.employeeSettings.eventId);
+         date  = await  getFirstDate(req.params.id, singleCompany.dataValues.employeeSettings.eventId);
+         times = await  getTimes(req.params.id, date, singleCompany.dataValues.employeeSettings.eventId);
+
+    }
 
     return  res.status(httpStatus.OK).json({
         success:true,
