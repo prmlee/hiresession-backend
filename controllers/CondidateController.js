@@ -258,7 +258,6 @@ async function getFirstDate(employeeId, eventId){
 
 async function getTimes(employeeId, date, eventId){
 
-
     const setting =  await employeeSettings.findOne({
         where: {
             employeeId,
@@ -348,11 +347,17 @@ async function getTimesForDay(req, res) {
         startTime[0]+ duration;
         newTime =  startTime.join(":")
     }else {
-        const b  = parseInt(startTime[1]) + parseInt(duration)
+
+        let b  = parseInt(startTime[1]) + parseInt(duration)
 
         if(b=== 60){
             startTime[0] = (parseInt(startTime[0]) +1).toString();
             startTime[1] = '00';
+
+            if(startTime[0]<10){
+                startTime[0] = '0'+startTime[0];
+            }
+
         }else if(b>60){
 
             startTime[0] = (parseInt(startTime[0]) +1).toString();
@@ -362,6 +367,11 @@ async function getTimesForDay(req, res) {
             }
             startTime[1] = mins;
         }else{
+
+            if(b<10){
+                b = '0'+b
+            }
+
             startTime[1] = b;
         }
 
