@@ -216,7 +216,7 @@ async function getSingleEmployee(req, res){
     let date = moment(new Date()).format("YYYY-MM-DD")
     let times = [];
 
-    if(singleCompany.dataValues){
+    if(singleCompany.dataValues && singleCompany.dataValues.employeeSettings){
 
          date  = await  getFirstDate(req.params.id, singleCompany.dataValues.employeeSettings.eventId);
          times = await  getTimes(req.params.id, date, singleCompany.dataValues.employeeSettings.eventId);
