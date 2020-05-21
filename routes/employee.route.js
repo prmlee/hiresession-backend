@@ -24,6 +24,13 @@ router
     );
 
 router
+    .route('/deleteSupportingDocs/:id')
+    .delete(
+        isLoggedEmployer,
+        EmployeeController.deleteSupportingDocs
+    );
+
+router
     .route('/settings')
     .post(
         isLoggedEmployer,

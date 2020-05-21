@@ -432,4 +432,4 @@ async function getInterviews(req, res){
     })
 }
 
-module.exports = {getLoggedInUser, settings, profile, getSettings, updateSettings, getAttachedFiles, getInterviews};
+module.exports = {getLoggedInUser, settings, deleteSupportingDocs, profile, getSettings, updateSettings, getAttachedFiles, getInterviews};
