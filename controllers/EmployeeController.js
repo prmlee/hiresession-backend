@@ -67,8 +67,8 @@ async function profile(req, res) {
 
         if(req.files){
 
-            updatedObj.profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:'';
-            updatedObj.companyImg = (req.files && req.files.companyLogo)?req.files.companyLogo[0].filename:'';
+            updatedObj.profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:employee.profileImg;
+            updatedObj.companyImg = (req.files && req.files.companyLogo)?req.files.companyLogo[0].filename:employee.companyLogo;
 
         }
 
