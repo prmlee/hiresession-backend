@@ -164,7 +164,7 @@ async function createInterview(req, res){
         }
 
         mailer.send(
-           'vahagn.dev@gmail.com',
+            currentEmployee.email,
             'sheduleEmailEmployee',
             employeeReplacement
         );
