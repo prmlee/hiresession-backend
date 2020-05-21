@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     startUrl: DataTypes.STRING,
     meetingId: DataTypes.STRING,
     joinUrl: DataTypes.STRING,
+    attachedFile: DataTypes.STRING,
     status: {
       type: DataTypes.ENUM,
       values: ['interviewed', 'canceled','upcoming']
