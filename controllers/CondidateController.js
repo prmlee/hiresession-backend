@@ -366,6 +366,11 @@ async function getTimesForDay(req, res) {
             if(mins<10){
                 mins = '0'+mins
             }
+
+            if(startTime[0]<10){
+                startTime[0] = '0'+startTime[0];
+            }
+
             startTime[1] = mins;
         }else{
 
@@ -373,7 +378,9 @@ async function getTimesForDay(req, res) {
                 b = '0'+b
             }
 
+
             startTime[1] = b;
+
         }
 
         newTime = startTime.join(":")
