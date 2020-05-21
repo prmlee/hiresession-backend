@@ -44,9 +44,9 @@ async function getEvent(req, res){
 
     for(let i in events){
         const involvedEmployers = [];
-
-        if(!events[i]['attachedEmployees']){
-            delete  events[i];
+        if(typeof events[i]['dataValues']['attachedEmployees'] === 'undefined' || events[i]['dataValues']['attachedEmployees'].length === 0){
+            events.splice(i);
+            continue;
         }
 
         for(let j in events[i]['attachedEmployees']){
@@ -59,8 +59,6 @@ async function getEvent(req, res){
 
         events[i]['dataValues']['involvedEmployers'] = involvedEmployers;
     }
-
-
 
 
     return  res.status(httpStatus.OK).json({
