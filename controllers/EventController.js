@@ -45,7 +45,7 @@ async function getEvent(req, res){
     for(let i in events){
         const involvedEmployers = [];
 
-        if(events[i]['attachedEmployees'].length === 0){
+        if(!events[i]['attachedEmployees']){
             delete  events[i];
         }
 
