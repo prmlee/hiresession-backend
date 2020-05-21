@@ -45,7 +45,10 @@ async function getEvent(req, res){
     for(let i in events){
         const involvedEmployers = [];
 
-
+        if(typeof events[i]['dataValues']['attachedEmployees'] === 'undefined' || events[i]['dataValues']['attachedEmployees'].length === 0){
+            events.splice(i);
+            continue;
+        }
 
         for(let j in events[i]['attachedEmployees']){
             if(typeof events[i]['attachedEmployees'][j] !== 'undefined'){
