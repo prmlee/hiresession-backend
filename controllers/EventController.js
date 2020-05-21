@@ -45,6 +45,10 @@ async function getEvent(req, res){
     for(let i in events){
         const involvedEmployers = [];
 
+        if(events[i]['attachedEmployees'].length === 0){
+            delete  events[i];
+        }
+
         for(let j in events[i]['attachedEmployees']){
             if(typeof events[i]['attachedEmployees'][j] !== 'undefined'){
 
