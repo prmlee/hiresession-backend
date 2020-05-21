@@ -29,19 +29,17 @@ async function getEvent(req, res){
                     {
                         model:employeeSettings,
                         as:'employeeSettings',
-                        include:[
-                            {
-                                model:SettingDurations,
-                                as:'SettingDurations',
-                            },
-                        ],
+                        where:{
+                            eventId:{
+                                [Op.col]: 'attachedEmployees.eventId'
+                            }
+                        }
                     },
                 ]
             },
 
         ]
     });
-
 
 
     for(let i in events){
