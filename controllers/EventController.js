@@ -19,7 +19,7 @@ async function getEvent(req, res){
                         as:'Company',
                         include : [
                             {
-                                attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+                                attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl','state'],
                                 model:Employees,
                                 as:'employee'
                             },
