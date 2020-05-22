@@ -33,7 +33,14 @@ async function getEvent(req, res){
                             eventId:{
                                 [Op.col]: 'attachedEmployees.eventId'
                             }
-                        }
+                        },
+                        include : [
+                            {
+                                model:SettingDurations,
+                                as:'SettingDurations'
+                            },
+
+                        ],
                     },
                 ]
             },
