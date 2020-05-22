@@ -81,20 +81,6 @@ async function profile(req, res) {
             paranoid: true
         })
 
-        if(employee.companyImg){
-            const filePath = `/var/www/html/uploads/employeer/${employee.companyImg}`
-            await  fs.unlink(filePath, function (err) {
-                console.log(err);
-            });
-        }
-
-        if(employee.profileImg){
-            const filePath = `/var/www/html/uploads/employeer/${employee.profileImg}`
-            await  fs.unlink(filePath, function (err) {
-                console.log(err);
-            });
-        }
-
         if( req.files && req.files.supportingDocs){
 
             for(let i in req.files.supportingDocs){
