@@ -134,6 +134,7 @@ async function profile(req, res) {
 async function getattachedEmployeers(req, res){
 
     const events = await Events.findAll({
+        attributes: ['id', 'eventName','bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime'],
         include:[
             {
                 attributes: ['id',['userId','employeeId']],
