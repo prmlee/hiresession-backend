@@ -160,6 +160,23 @@ async function getattachedEmployeers(req, res){
         ]
     });
 
+    for(let i in events){
+        const involvedEmployers = [];
+
+
+
+        for(let j in events[i]['attachedEmployees']){
+            if(typeof events[i]['attachedEmployees'][j] !== 'undefined'){
+
+                involvedEmployers.push(events[i]['attachedEmployees'][j]['dataValues']['employeeId']);
+                console.log(events[i]['attachedEmployees'][j]['dataValues']['employeeId']);
+            }
+        }
+
+        events[i]['dataValues']['involvedEmployers'] = involvedEmployers;
+    }
+
+
     return  res.status(httpStatus.OK).json({
         success:true,
         data:events
