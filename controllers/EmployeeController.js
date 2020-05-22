@@ -7,7 +7,7 @@ const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 
 
-const {Candidates, User, employeeSettings, Employees, Events, Interviews, SettingDurations, SupportingDocuments} = require('../models');
+const {Candidates, User, employeeSettings, Employees, Events, Interviews, AttachedEmployees, SettingDurations, SupportingDocuments} = require('../models');
 
 async function profile(req, res) {
 
@@ -128,6 +128,40 @@ async function profile(req, res) {
                 message: e.message
             });
         }
+    })
+}
+
+async function getattachedEmployeers(req, res){
+
+    const events = await Events.findAll({
+        include:[
+            {
+                attributes: ['id',['userId','employeeId']],
+                model:AttachedEmployees,
+                as:'attachedEmployees',
+                include:[
+                    {
+                        attributes :['id', 'firstName', 'lastName', 'status', 'role'],
+                        model:User,
+                        as:'Company',
+                        include : [
+                            {
+                                attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl','state'],
+                                model:Employees,
+                                as:'employee'
+                            },
+
+                        ],
+                    },
+                ]
+            },
+
+        ]
+    });
+
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:events
     })
 }
 
@@ -418,4 +452,4 @@ async function getInterviews(req, res){
     })
 }
 
-module.exports = {getLoggedInUser, settings, deleteSupportingDocs, profile, getSettings, updateSettings, getAttachedFiles, getInterviews};
+module.exports = {getLoggedInUser, getattachedEmployeers, settings, deleteSupportingDocs, profile, getSettings, updateSettings, getAttachedFiles, getInterviews};
