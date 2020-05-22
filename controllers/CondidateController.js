@@ -14,7 +14,7 @@ async function profile(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, 'uploads/candidate');
+            callback(null, '/var/www/html/uploads/candidate');
         },
 
         filename: function (req, file, callback) {
