@@ -281,6 +281,7 @@ async function employeeRegister(req, res) {
                 state:req.body.state || '',
                 profileImg: profileImg || '',
                 companyImg:companyLogo || '',
+                phone:req.body.phone || '',
             })
 
             if( req.files && req.files.supportingDocs){

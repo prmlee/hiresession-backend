@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     JobTitle: DataTypes.STRING,
     city: DataTypes.STRING,
     state: DataTypes.STRING,
+    phone: DataTypes.STRING,
   }, {});
 
   Employee.associate = function(models) {

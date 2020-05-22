@@ -14,7 +14,7 @@ async function profile(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, '/var/www/html/uploads/candidate');
+            callback(null, 'uploads/candidate');
         },
 
         filename: function (req, file, callback) {
@@ -82,6 +82,19 @@ async function profile(req, res){
                 paranoid: true
             })
 
+            if(candidate.resume && updatedObj.resume && updatedObj.resume !== ''){
+                const filePath = `uploads/candidate/${candidate.resume}`
+                await  fs.unlink(filePath, function (err) {
+                    console.log(err);
+                });
+            }
+
+            if(candidate.profileImg && updatedObj.profileImg && updatedObj.profileImg !== ''){
+                const filePath = `uploads/candidate/${candidate.profileImg}`
+                await  fs.unlink(filePath, function (err) {
+                    console.log(err);
+                });
+            }
 
         }else{
             Candidates.update({

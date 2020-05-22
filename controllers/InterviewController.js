@@ -135,6 +135,7 @@ async function createInterview(req, res){
                 city:currentEmployee.dataValues.employee.city,
                 state:currentEmployee.dataValues.employee.state,
                 videoUrl:currentEmployee.dataValues.employee.videoUrl,
+                phone:currentEmployee.dataValues.employee.phone,
                 SupportingDocuments:currentEmployee.dataValues.SupportingDocument,
             }
         );
