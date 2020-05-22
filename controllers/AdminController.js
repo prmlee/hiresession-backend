@@ -170,7 +170,6 @@ async  function updateEvent(req, res){
 
         try {
 
-            if(req.body.userId){
                 await AttachedEmployees.destroy( {
                     where: {
                         EventId:req.body.id
@@ -189,11 +188,11 @@ async  function updateEvent(req, res){
                     await AttachedEmployees.create({
                         userId:ids[i],
                         EventId:req.body.id,
-                    })                }
-            }
+                    })
+                }
+
 
             delete updatedObj.userId;
-            console.log(updatedObj);
 
             await Events.update({
                 ...updatedObj
