@@ -169,7 +169,6 @@ async  function updateEvent(req, res){
         }
 
         try {
-
                 await AttachedEmployees.destroy( {
                     where: {
                         EventId:req.body.id
@@ -177,6 +176,7 @@ async  function updateEvent(req, res){
                     paranoid: true
                 })
 
+            if(req.body.userId){
                 let ids = req.body.userId;
 
                 if(!Array.isArray(req.body.userId)){
@@ -188,11 +188,11 @@ async  function updateEvent(req, res){
                     await AttachedEmployees.create({
                         userId:ids[i],
                         EventId:req.body.id,
-                    })
-                }
-
+                    })                }
+            }
 
             delete updatedObj.userId;
+            console.log(updatedObj);
 
             await Events.update({
                 ...updatedObj
