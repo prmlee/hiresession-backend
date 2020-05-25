@@ -76,6 +76,28 @@ async function createInterview(req, res){
             })
         }
 
+        const interview = await Interviews.findAll({
+            where: {
+                employeeId: req.body.employeeId,
+                candidateId: req.body.candidateId,
+                eventId: req.body.eventId,
+                date: req.body.date,
+            },
+            raw:true
+        });
+
+        if(interview){
+            for(let i in interview){
+                if(interview[i].startTime === req.body.startTime){
+                    return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+                        success: false,
+                        message: "You already registered this time"
+                    })
+                }
+            }
+
+        }
+
         const  meetingData = await createMeeting(req.body);
         if((await meetingData).status !== 200) {
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
