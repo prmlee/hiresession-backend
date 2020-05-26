@@ -8,6 +8,23 @@ const configs = require('../config');
 
 const isProduction = configs.env === 'production';
 
+const transport = Promise.promisifyAll(
+  nodeMailer.createTransport(
+    smtpTransport({
+      host: configs.emailHost,
+      port: isProduction ? 465 : 587,
+      secure: isProduction,
+      tls: {
+          rejectUnauthorized: false
+      },
+      auth: {
+        user: configs.email,
+        pass: configs.emailPass
+      }
+    })
+  )
+);
+
 function send(to, tmp, replacements = {}, subject = `Welcome to ${configs.appName}`, from = configs.email) {
   const templatePath = `../templates/${tmp}/index.html`;
   return fs.readFileAsync(`${__dirname}/${templatePath}`, {encoding: 'utf-8'})
@@ -15,23 +32,14 @@ function send(to, tmp, replacements = {}, subject = `Welcome to ${configs.appNam
       const template = handlebars.compile(file);
 
       const mailOptions = {
-          host: configs.emailHost,
-          port:  587,
-          secure: false,
-          auth: {
-              user: configs.email,
-              pass: configs.emailPass
-          },
         to,
         from: `${configs.appName} <${from}>`,
         subject,
-        html: template(replacements),
-          onError: (e) => console.log(e),
-          onSuccess: (i) => console.log(i)
+        html: template(replacements)
       };
 
 
-      return nodeoutlook.sendEmail(mailOptions);
+      return transport.sendMailAsync(mailOptions);
     });
 }
 
