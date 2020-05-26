@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
     note: DataTypes.TEXT,
+    employeeNote: DataTypes.TEXT,
     startUrl: DataTypes.STRING,
     meetingId: DataTypes.STRING,
     joinUrl: DataTypes.STRING,

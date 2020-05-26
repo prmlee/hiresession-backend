@@ -22,6 +22,15 @@ router
     );
 
 router
+    .route('/updateEmployeeNote')
+    .put(
+        isLoggedEmployer,
+
+        [check('id').exists().isInt(), check('employeeNote').exists()],
+        InterviewController.updateEmployeeNote
+    );
+
+router
     .route('/changeCronStatus')
     .get(InterviewController.changeCronStatus);
 

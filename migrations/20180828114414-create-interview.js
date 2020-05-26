@@ -48,6 +48,9 @@ module.exports = {
       note: {
         type: Sequelize.TEXT
       },
+      employeeNote: {
+        type: Sequelize.TEXT
+      },
       meetingId:{
         type: Sequelize.STRING,
         allowNull:false

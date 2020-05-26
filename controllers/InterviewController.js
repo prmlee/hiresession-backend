@@ -206,6 +206,7 @@ async function createInterview(req, res){
                 meetingId:meetingData.data.id,
                 status:3,
                 note:req.body.note || '',
+                employeeNote:req.body.employeeNote || '',
                 attachedFile:req.file?req.file.filename: '',
             });
 
@@ -220,6 +221,39 @@ async function createInterview(req, res){
             });
         }
     });
+}
+
+async function updateEmployeeNote(req, res){
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res
+            .status(httpStatus.UNPROCESSABLE_ENTITY)
+            .json(errors.array());
+    }
+
+    try {
+        await  Interviews.update({
+            employeeNote: req.body.employeeNote
+        }, {
+            where: {
+                id: req.body.id
+            },
+            paranoid: true
+        })
+
+        return res.status(httpStatus.OK).json({
+            success : true,
+            message : "Status successfully changed"
+        });
+
+    }catch (e) {
+        console.log(e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success : false,
+            message : e
+        });
+    }
 }
 
 async function changeStatus(req, res){
@@ -365,4 +399,4 @@ async function changeNotes(req, res){
     }
 }
 
-module.exports = {createInterview, changeStatus, changeRating, changeCronStatus, changeNotes};
+module.exports = {createInterview, changeStatus, changeRating, changeCronStatus, changeNotes, updateEmployeeNote};
