@@ -77,4 +77,12 @@ router
         isLoggedEmployer,
         EmployeeController.getInterviews
     );
+
+router
+    .route('/getSettingInterviews/:id')
+    .get(
+        isLoggedEmployer,
+        EmployeeController.getSettingInterviews
+    );
+
 module.exports = router;

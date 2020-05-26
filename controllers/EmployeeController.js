@@ -469,5 +469,31 @@ async function getInterviews(req, res){
         count:interviewList.count,
     })
 }
+async function getSettingInterviews(req,res){
 
-module.exports = {getLoggedInUser, getattachedEmployeers, settings, deleteSupportingDocs, profile, getSettings, updateSettings, getAttachedFiles, getInterviews};
+    const settings = await employeeSettings.findAll({
+        include: [
+            {
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime'],
+                model:Events,
+                as:'events',
+                include: [
+                    {
+                        model:Interviews,
+                        as:'interview'
+                    },
+                ],
+            }
+        ],
+        where: {
+            id:req.params.id
+        },
+    });
+
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:settings,
+    })
+}
+
+module.exports = {getLoggedInUser, getSettingInterviews, getattachedEmployeers, settings, deleteSupportingDocs, profile, getSettings, updateSettings, getAttachedFiles, getInterviews};
