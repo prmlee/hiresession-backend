@@ -13,7 +13,7 @@ const transport = Promise.promisifyAll(
     smtpTransport({
       host: configs.emailHost,
       port:587,
-      secure: isProduction,
+      secure: false,
       tls: {
           rejectUnauthorized: false
       },
