@@ -25,7 +25,14 @@ async function createEvent(req, res){
         storage,
         limits:{fileSize:16000000},
 
-    }).single('eventLogo');
+    }).fields([
+        {
+            name: 'eventLogo', maxCount: 1
+        },
+        {
+            name: 'pdfFile', maxCount: 1
+        }
+    ]);
 
     uploads(req, res, async (err) => {
 
@@ -64,12 +71,16 @@ async function createEvent(req, res){
             })
         }
 
+        const eventLogo = (req.files && req.files.eventLogo)? req.files.eventLogo[0].filename:'';
+        const pdfFile = (req.files && req.files.pdfFile)? req.files.pdfFile[0].filename:'';
+
         try {
           const event =  await Events.create({
                 eventName:req.body.eventName,
                 bizaboLink:req.body.bizaboLink,
                 date:req.body.date,
-                eventLogo:req.file?req.file.filename : "",
+                eventLogo,
+                pdfFile,
                 startTime:req.body.startTime,
                 location:req.body.location?req.body.location:'',
                 endTime:req.body.endTime,
@@ -105,7 +116,7 @@ async  function updateEvent(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-            callback(null, '/var/www/html/uploads/events');
+            callback(null, 'uploads/events');
         },
 
         filename: function (req, file, callback) {
@@ -119,11 +130,16 @@ async  function updateEvent(req, res){
         storage,
         limits:{fileSize:16000000},
 
-    }).single('eventLogo');
+    }).fields([
+        {
+            name: 'eventLogo', maxCount: 1
+        },
+        {
+            name: 'pdfFile', maxCount: 1
+        }
+    ]);
 
     uploads(req, res, async (err) => {
-
-
 
         if(err){
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
@@ -147,18 +163,42 @@ async  function updateEvent(req, res){
             raw: true,
         })
 
+        if(!event){
+            return res.status(httpStatus.FORBIDDEN).json({
+                success:false,
+                message:"Event does not found!"
+            })
+        }
+
         const updatedObj  = req.body;
 
-        if(req.file){
+        if(req.files){
 
-            if(event.eventLogo){
-                const filePath = `/var/www/html/uploads/events/${event.eventLogo}`
+            updatedObj.eventLogo = (req.files && req.files.eventLogo)? req.files.eventLogo[0].filename:'';
+            updatedObj.pdfFile = (req.files && req.files.pdfFile)? req.files.pdfFile[0].filename:'';
+
+            if(event.eventLogo && updatedObj.eventLogo !== ''){
+                const filePath = `uploads/events/${event.eventLogo}`
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });
             }
 
-            updatedObj.eventLogo = req.file.filename;
+            if(updatedObj.eventLogo === ''){
+                delete updatedObj.eventLogo;
+            }
+
+            if(event.pdfFile && updatedObj.pdfFile !== ''){
+                const filePath = `uploads/events/${event.pdfFile}`
+                await  fs.unlink(filePath, function (err) {
+                    console.log(err);
+                });
+            }
+
+              if(updatedObj.pdfFile === ''){
+                delete updatedObj.pdfFile;
+            }
+
         }
 
         if(err){
@@ -270,14 +310,14 @@ async function getCompanies(req, res){
                         ],
                     },
                     {
-                        attributes :['id','eventName', 'bizaboLink', 'eventLogo', 'location', 'date', 'startTime', 'endTime'],
+                        attributes :['id','eventName', 'pdfFile', 'bizaboLink', 'eventLogo', 'location', 'date', 'startTime', 'endTime'],
                         model:Events,
                         as:'events',
                     }
                 ]
             },
             {
-                attributes :['id','eventName', 'bizaboLink', 'location', 'eventLogo', 'date', 'startTime', 'endTime'],
+                attributes :['id','eventName', 'pdfFile', 'bizaboLink', 'location', 'eventLogo', 'date', 'startTime', 'endTime'],
                 model:Events,
                 as:'events',
             }
@@ -738,7 +778,7 @@ async function activities(req, res){
 async  function getEvents(req, res){
 
     const events = await Events.findAll({
-        attributes: ['id', 'bizaboLink', 'location', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
+        attributes: ['id', 'bizaboLink', 'pdfFile', 'location', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
         raw:true
     });
 
@@ -751,7 +791,7 @@ async  function getEvents(req, res){
 async  function getSingleEvent(req, res){
 
     const events = await Events.findOne({
-        attributes: ['id', 'bizaboLink', 'location', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
+        attributes: ['id', 'bizaboLink', 'pdfFile', 'location', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
         include:[
             {
                 attributes: ['id'],

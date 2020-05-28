@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     eventName: DataTypes.STRING,
     bizaboLink: DataTypes.STRING,
     eventLogo: DataTypes.STRING,
+    pdfFile: DataTypes.STRING,
     date: DataTypes.DATE,
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
