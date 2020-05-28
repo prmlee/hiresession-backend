@@ -434,7 +434,7 @@ async function getInterviews(req, res){
     const interviewList = await Interviews.findAndCountAll({
         include : [
             {
-                attributes :['firstName', 'lastName', 'status', 'role'],
+                attributes :['firstName', 'lastName', 'status', 'role', 'email'],
                 model:User,
                 as:'Candidate',
                 where:{
