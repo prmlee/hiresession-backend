@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Amazvol</title>
+    <title>Hiresession</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900"
           rel="stylesheet">
     <style>
@@ -23,6 +23,7 @@
     padding: 50px;
     font: 16px Montserrat;
     color: #545454;">
+    <h3 style="line-height: 1.5; margin-top: 150px">Thank you for scheduling your interview with  {{companyName}}</h3>
     <table style="
         background-color: #fff;
         max-width: 1140px;
@@ -35,73 +36,52 @@
     ">
         <tr>
             <td colspan="2">
-                <span> {{name}}</span>
-            </td>
-            <td colspan="2">
               <span>
-              {{companyName}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
-              {{JobTitle}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
-              {{phone}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
-              {{city}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
-              {{state}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
-              {{videoUrl}}
+                {{date}}
               </span>
             </td>
         </tr>
         <tr>
-            <script>
-                alert('aaaaaa');
-            </script>
+            <td colspan="2">
+              <span>
+              {{time}}
+              </span>
+            </td>
         </tr>
         <tr>
             <td colspan="2">
-                <a href="{{startUrl}}" style="color: #2247ff; text-decoration: none">
-                   Start Url
-                </a>
+                <p> Please use this URL to  <a href="{{startUrl}}" style="color: #2247ff; text-decoration: none">Start</a>/   <a href="{{joinUrl}}" style="color: #2247ff; text-decoration: none">Join</a> the meeting</p>
             </td>
-            <td colspan="2">
-
-                <a href="{{joinUrl}}" style="color: #2247ff; text-decoration: none">
-                    Join Url
-                </a>
-            </td>
+        </tr>
+        <tr>
             <td colspan="2">
               <span>
-               password: {{password}}
+              Your meeting ID is: {{meetingId}}
               </span>
             </td>
+        <tr>
+        </tr>
+        <tr>
             <td colspan="2">
               <span>
-               Meeting Id: {{meetingId}}
+                Your meeting password is:  {{password}}
               </span>
             </td>
         </tr>
-
         <tr>
             <td>
                 <p style="line-height: 1.5; margin-top: 150px">
-                    Regards, <br/>
-                    Hiresession Team <br/>
+                    If you have multiple interviews, it would be best to login to your HireSessions account and view all your interviews with meeting credentials and links under the "Interview" tab.  You can also schedule additional interviews the day of the event.
+
+                    If you have any questions, please contact support@hiresessions.com.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p style="line-height: 1.5; margin-top: 150px">
+                    Best, Regards, <br/>
+                    The HireSessions Team<br/>
                 </p>
             </td>
         </tr>

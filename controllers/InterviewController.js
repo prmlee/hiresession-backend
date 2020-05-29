@@ -106,7 +106,7 @@ async function createInterview(req, res){
             });
         }
 
-        console.log(res.locals.user.email)
+        const date  =  moment(req.body.date).format('YYYY-MM-DD')
 
         const currentEmployee = await  User.findOne({
             include : [
@@ -127,59 +127,33 @@ async function createInterview(req, res){
         const candidateData = await Candidates.findOne({
 
             where: {
-                userId: res.locals.user.id
+                userId: req.body.candidateId
             },
             raw: true,
         });
 
-     /*   let html = '';
-
-        for(let i in currentEmployee.dataValues.SupportingDocuments){
-            html += `<td>
-                         <a href="https://hiresessions.com/https:/hiresessions.com/uploads/employeer/${currentEmployee.dataValues.SupportingDocuments[i].docName}">
-                             ${ currentEmployee.dataValues.SupportingDocuments[i].docName}
-                         </a>
-                    </td>`
-        }*/
-
 
         mailer.send(
-            res.locals.user.email,
+            'vahagn.dev@gmail.com',
             'sheduleEmailCandidates',
             {
                 startUrl: meetingData.data.start_url,
                 joinUrl:meetingData.data.join_url,
                 password: meetingData.data.password,
                 meetingId:meetingData.data.id,
-                companyName:currentEmployee.dataValues.employee.companyName,
-                name:`${currentEmployee.firstName} ${currentEmployee.lastName}`,
-                JobTitle:currentEmployee.dataValues.employee.JobTitle,
-                city:currentEmployee.dataValues.employee.city,
-                state:currentEmployee.dataValues.employee.state,
-                videoUrl:currentEmployee.dataValues.employee.videoUrl,
-                phone:currentEmployee.dataValues.employee.phone,
-                SupportingDocuments:currentEmployee.dataValues.SupportingDocument,
-            }
+                date,
+                time: req.body.startTime,
+                companyName:currentEmployee.dataValues.employee.companyName
+            },
+            'Interview Confirmation Details'
         );
 
 
         const employeeReplacement =  {
-            startUrl: meetingData.data.start_url,
-            joinUrl:meetingData.data.join_url,
-            password: meetingData.data.password,
-            meetingId:meetingData.data.id,
-            name:`${res.locals.user.firstName} ${res.locals.user.lastName}`,
-            email:res.locals.user.email,
             shcool:candidateData.shcool,
-            phone:candidateData.phone,
             major:candidateData.major,
-            graduationYear:candidateData.graduationYear,
-            desiredJobTitle:candidateData.desiredJobTitle,
-            industryInterested:candidateData.industryInterested,
-            highDeagree:candidateData.highDeagree,
-            note:req.body.note || '',
-            attachedFile:req.file?`https://hiresessions.com/https:/hiresessions.com/uploads/interview/${req.file.filename}`:'',
-            resume:''
+            date,
+            time: req.body.startTime
         };
 
         if(req.body.shareResume){
@@ -189,11 +163,12 @@ async function createInterview(req, res){
         mailer.send(
             currentEmployee.email,
             'sheduleEmailEmployee',
-            employeeReplacement
+            employeeReplacement,
+            'Interview Confirmation Details'
         );
 
         try {
-            const date  =  moment(req.body.date).format('YYYY-MM-DD')
+
             await Interviews.create({
                 employeeId:req.body.employeeId,
                 candidateId:req.body.candidateId,

@@ -114,7 +114,7 @@ async function candidateRegister(req, res) {
 
             await mailer.send(
                 req.body.email,
-                'activationEmail',
+                'activationEmailCandidate',
                 {
                     resetPassFormUrl: `${configs.frontAppUrl}/activation/${token}`
                 }
@@ -263,7 +263,7 @@ async function employeeRegister(req, res) {
 
             await mailer.send(
                 req.body.email,
-                'activationEmail',
+                'activationEmailEmployee',
                 {
                     resetPassFormUrl: `${configs.frontAppUrl}/activation/${token}`
                 }

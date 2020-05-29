@@ -48,7 +48,6 @@ async function getEvent(req, res){
         ]
     });
 
-
     for(let i in events){
         const involvedEmployers = [];
 

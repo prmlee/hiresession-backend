@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Amazvol</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900"
+          rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+    </style>
+
+</head>
+<body>
+<div style="
+    min-width: 100vh;
+    min-height: 100vh;
+    padding: 50px;
+    font: 16px Montserrat;
+    color: #545454;">
+    <table style="
+        background-color: #fff;
+        max-width: 1140px;
+        width: 100%;
+        margin: 50px auto;
+        padding: 40px 50px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    ">
+        <tr>
+            <td>
+                <p>
+                    Thank you for creating your account on HireSessions.  Please click the link below to activate your account.
+                </p>
+                <p>
+                    Once your account is activated, please login and set your schedule for the day under the setting tab.
+                </p>
+                <p>
+                    The event is from 10:00am to 4:00pm.  You can make yourself available for the entire day or set hours in between 10:00am and 4:00pm.
+                </p>
+                <p>
+                    Also, please set the duration of your interviews.  It is defaulted at 10 mins.  Recommended duration is between 6-10 minutes.
+                </p>
+                <p>
+                    ****Once time and duration are set, they cannot be changed.
+
+                    The day of the event, you will need to login and view your Interviews.
+                    Here you will be able to manage all your interviews, take notes and rank the candidates.
+
+                    Click this link to activate your account:
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <a href="{{resetPassFormUrl}}" style="color: #2247ff; text-decoration: none">
+                    {{resetPassFormUrl}}
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <p style="line-height: 1.5; margin-top: 150px">
+                If you have any questions or need assistance, please contact support@hiresessions.com.
+            </p>
+        </tr>
+        <tr>
+            <td>
+                <p style="line-height: 1.5; margin-top: 150px">
+                    Best, Regards, <br/>
+                    The HireSessions Team <br/>
+                </p>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

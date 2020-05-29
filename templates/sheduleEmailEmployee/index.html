@@ -23,6 +23,7 @@
     padding: 50px;
     font: 16px Montserrat;
     color: #545454;">
+    <h3 style="line-height: 1.5; margin-top: 150px">The following candidate has scheduled on interview:</h3>
     <table style="
         background-color: #fff;
         max-width: 1140px;
@@ -35,11 +36,13 @@
     ">
         <tr>
             <td colspan="2">
-                <span> {{name}}</span>
+              <span>
+                {{date}}
+              </span>
             </td>
             <td colspan="2">
               <span>
-              {{email}}
+              {{time}}
               </span>
             </td>
             <td colspan="2">
@@ -49,67 +52,26 @@
             </td>
             <td colspan="2">
               <span>
-              {{phone}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
               {{major}}
               </span>
             </td>
-            <td colspan="2">
-              <span>
-              {{graduationYear}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
-              {{desiredJobTitle}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
-              {{industryInterested}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
-              {{highDeagree}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
-              {{note}}
-              </span>
-            </td>
-            <td colspan="2">
-                <a href="{{attachedFile}}" target="_blank" download="{{resume}}">{{attachedFile}}</a>
-            </td>
-            <td colspan="2">
-                <a href="{{resume}}" target="_blank" download="{{resume}}">{{resume}}</a>
-            </td>
         </tr>
+      <tr>
+          <td>
+              <p style="line-height: 1.5; margin-top: 150px">
+                  To view all your interviews,kindly login to your HireSessions account.
+                  Your meeting credentials and links can be viewed under the "Interview" tab.
+                  You will also be able to take notes and rank all the candidates you meet.
+              </p>
+              <p style="line-height: 1.5; margin-top: 150px"></p>
+          </td>
+      </tr>
         <tr>
-            <td colspan="2">
-                <a href="{{startUrl}}" style="color: #2247ff; text-decoration: none">
-                    Start Url
-                </a>
-            </td>
-            <td colspan="2">
-
-                <a href="{{joinUrl}}" style="color: #2247ff; text-decoration: none">
-                    Join Url
-                </a>
-            </td>
-            <td colspan="2">
-              <span>
-               password: {{password}}
-              </span>
-            </td>
-            <td colspan="2">
-              <span>
-               Meeting Id: {{meetingId}}
-              </span>
+            <td>
+                <p style="line-height: 1.5; margin-top: 150px">
+                    Best, Regards, <br/>
+                    The HireSessions Team<br/>
+                </p>
             </td>
         </tr>
     </table>
