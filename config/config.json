@@ -18,8 +18,8 @@
   "production": {
     "username": "root",
     "password": "Hiresession1234$",
-    "database": "Hiresession",
-    "host": "3.83.230.150",
+    "database": "hiresession",
+    "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false
   }
