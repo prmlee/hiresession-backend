@@ -2,14 +2,17 @@ const axios = require('axios');
 const moment = require('moment');
 const configs = require('../config');
 const jwt = require('jsonwebtoken');
+const {ZoomUsers} = require('../models');
 
-async function createMeeting(body) {
+async function createMeeting(body, email) {
 
-    const url =  `https://api.zoom.us/v2/users/${configs.zoomEmail}/meetings`;
+    const userEmail = await createUser(email);
+
+    const url =  `https://api.zoom.us/v2/users/${userEmail}/meetings`;
 
     const data = await normaliseData(body);
     const token = generateJWT();
-console.log(token)
+
     const headers =  {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -23,6 +26,7 @@ console.log(token)
             data,
         });
 
+
         return {
             data: response.data,
             status:200
@@ -30,7 +34,7 @@ console.log(token)
     }catch (e) {
         return {
             status:200,
-            message:e.msg,
+            message:e.message,
         }
     }
 }
@@ -78,7 +82,8 @@ function generateJWT(){
 async  function normaliseData(data){
 
     const dateTime = data.date+'T'+data.startTime;
-    const date = moment(dateTime).format('YYYY-MM-DDTHH:mm:ss')
+
+   // const date = moment(dateTime).format('YYYY-MM-DDTHH:mm:ss')
     const durationMin =  moment.utc(moment(data.endTime,"HH:mm:ss").diff(moment(data.startTime,"HH:mm:ss"))).format("mm");
     const durationhours =  moment.utc(moment(data.endTime,"HH:mm:ss").diff(moment(data.startTime,"HH:mm:ss"))).format("HH");
     const duration = parseInt(durationMin)+parseInt((durationhours*60));
@@ -86,7 +91,7 @@ async  function normaliseData(data){
     return  {
         topic: data.eventName,
         type: 2,
-        start_time: date,
+        start_time: dateTime,
         timezone: configs.zoomTimezone,
          duration,
         settings: {
@@ -101,6 +106,58 @@ async  function normaliseData(data){
             approval_type: 1,
             registration_type: 1,
             registrants_email_notification: true
+        }
+    }
+}
+
+async function createUser(email){
+
+    const url =  'https://api.zoom.us/v2/users';
+    const token = generateJWT();
+
+    const headers =  {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+
+    const user = await ZoomUsers.findOne({
+        where: {
+            email
+        },
+        raw:true
+    })
+
+    if(user !== null){
+        return user.email;
+    }
+
+    const data = {
+        "action": "custCreate",
+        "user_info": {
+            email,
+            "type": 1
+        }
+    }
+
+    try{
+        const response = await axios({
+            method: 'post',
+            url,
+            headers,
+            data,
+        });
+
+
+
+        await ZoomUsers.create({
+            email
+        });
+
+        return email;
+    }catch (e) {
+        return {
+            status:200,
+            message:e.msg,
         }
     }
 }

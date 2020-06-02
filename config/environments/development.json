@@ -1,5 +1,5 @@
 {
-  "appName": "hiresession",
+  "appName": "HireSession",
   "frontAppUrl": "http://localhost:3000",
   "jwtSecret": "oxZnqJX0xuvlfYrgDT9UmraGOcdu3h0GdNn6xT_0n8sbkaTDUKSBltmNEE3ScXFol40UdLSsYZAlWeRygeNdMA",
   "tokenExpiration": 7,
@@ -8,7 +8,7 @@
   "emailPass" : "Pa$$word1",
   "zoomEmail" : "razmikbortorian188@gmail.com",
   "zoomTimezone" : "America/New_York",
-  "zoomApiKey": "ekVdBzJoQ_mMA0bJIGB1Iw",
-  "zoomApiSecret": "YjcdauczpH6WMBSHhMs1qbe2wHWuUiXefEbf"
+  "zoomApiKey": "BwJEg-JdSTWu-u353N-Zcg",
+  "zoomApiSecret": "92SMfjTebRhaL05PDgYiQBDDNTxztZFuFz4W"
 
 }

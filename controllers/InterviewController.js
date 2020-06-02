@@ -98,16 +98,6 @@ async function createInterview(req, res){
 
         }
 
-        const  meetingData = await createMeeting(req.body);
-        if((await meetingData).status !== 200) {
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: meetingData.message
-            });
-        }
-
-        const date  =  moment(req.body.date).format('YYYY-MM-DD')
-
         const currentEmployee = await  User.findOne({
             include : [
                 {
@@ -123,6 +113,18 @@ async function createInterview(req, res){
                 id: req.body.employeeId
             },
         });
+
+        const  meetingData = await createMeeting(req.body,currentEmployee.dataValues.email);
+
+
+        if((await meetingData).status !== 200) {
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                success: false,
+                message: meetingData.message
+            });
+        }
+
+        const date  =  moment(req.body.date).format('YYYY-MM-DD')
 
         const candidateData = await Candidates.findOne({
 
