@@ -8,6 +8,7 @@ const router = express.Router();
 router
     .route('/create')
     .post(
+        isLoggedCandidate,
         InterviewController.createInterview
     );
 
