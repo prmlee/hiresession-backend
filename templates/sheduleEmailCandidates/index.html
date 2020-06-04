@@ -23,34 +23,30 @@
     padding: 50px;
     font: 16px Montserrat;
     color: #545454;">
-    <h3 style="line-height: 1.5; margin-top: 150px">Thank you for scheduling your interview with  {{companyName}}</h3>
+    <h3 style="line-height: 1.5; margin-top: 50px">Thank you for scheduling your interview with  {{companyName}}</h3>
     <table style="
         background-color: #fff;
-        max-width: 1140px;
+        max-width: 800px;
         width: 100%;
-        margin: 50px auto;
-        padding: 40px 50px;
+        margin-top: 40px;
+        padding-left: 30px;
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;
+        line-height: 1.6;
     ">
         <tr>
-            <td colspan="2">
+            <td>
               <span>
-                {{date}}
+                Date: {{date}}
+                  <br/>
+                  Time: {{time}}
               </span>
             </td>
         </tr>
         <tr>
-            <td colspan="2">
-              <span>
-              {{time}}
-              </span>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <p> Please use this URL to <a href="{{joinUrl}}" style="color: #2247ff; text-decoration: none">Join</a> the meeting</p>
+            <td>
+                <p style="line-height: 1.5; margin-top: 40px"> Please use this URL to <a href="{{joinUrl}}" style="color: #2247ff; text-decoration: none">Join</a> the meeting</p>
             </td>
         </tr>
         <tr>
@@ -70,7 +66,7 @@
         </tr>
         <tr>
             <td>
-                <p style="line-height: 1.5; margin-top: 150px">
+                <p style="line-height: 1.5; margin-top: 30px">
                     If you have multiple interviews, it would be best to login to your HireSessions account and view all your interviews with meeting credentials and links under the "Interview" tab.  You can also schedule additional interviews the day of the event.
 
                     If you have any questions, please contact support@hiresessions.com.
@@ -79,7 +75,7 @@
         </tr>
         <tr>
             <td>
-                <p style="line-height: 1.5; margin-top: 150px">
+                <p style="line-height: 1.5; margin-top: 50px">
                     Best regards, <br/>
                     The HireSessions Team<br/>
                 </p>
