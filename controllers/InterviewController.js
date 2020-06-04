@@ -15,8 +15,8 @@ async function createInterview(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-           // callback(null, '/var/www/html/uploads/interview');
-            callback(null, 'uploads/interview');
+           callback(null, '/var/www/html/uploads/interview');
+            //callback(null, 'uploads/interview');
         },
 
         filename: function (req, file, callback) {
