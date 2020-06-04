@@ -13,6 +13,11 @@ async function createMeeting(body, email) {
     const data = await normaliseData(body);
     const token = generateJWT();
 
+
+    console.log('====================================================');
+    console.log('zoom: ', email, userEmail, body);
+    console.log('====================================================');
+
     const headers =  {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -32,6 +37,11 @@ async function createMeeting(body, email) {
             status:200
         };
     }catch (e) {
+
+        console.log('====================================================');
+        console.log('zoom: ', e);
+        console.log('====================================================');
+
         return {
             status:200,
             message:e.message,
