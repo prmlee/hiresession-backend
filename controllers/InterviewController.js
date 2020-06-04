@@ -15,8 +15,8 @@ async function createInterview(req, res){
 
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
-           callback(null, '/var/www/html/uploads/interview');
-            //callback(null, 'uploads/interview');
+            callback(null, '/var/www/html/uploads/interview');
+           // callback(null, 'uploads/interview');
         },
 
         filename: function (req, file, callback) {
@@ -134,10 +134,7 @@ async function createInterview(req, res){
             raw: true,
         });
 
-        console.log(1111111111111111111111111, req, res, res.locals);
-        console.log(22222222222222222222222, res, res.locals);
-        console.log(333333333333333333333, res.locals);
-        console.log('====================================================');
+
 
         mailer.send(
             res.locals.user.email,
