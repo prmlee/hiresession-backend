@@ -157,14 +157,16 @@ async function createUser(email){
             data,
         });
 
-
-
         await ZoomUsers.create({
             email
         });
 
         return email;
     }catch (e) {
+        console.log('====================================================');
+        console.log('zoom create user error: ', e);
+        console.log('====================================================');
+
         return {
             status:200,
             message:e.msg,
