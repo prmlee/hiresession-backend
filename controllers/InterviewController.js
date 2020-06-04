@@ -134,10 +134,6 @@ async function createInterview(req, res){
             raw: true,
         });
 
-        console.log('====================================================');
-        console.log('meetingData: ', meetingData);
-        console.log('====================================================');
-
         mailer.send(
             res.locals.user.email,
             'sheduleEmailCandidates',
