@@ -136,7 +136,7 @@ async function createInterview(req, res){
 
 
         mailer.send(
-            'vahagn.dev@gmail.com',
+            res.locals.user.email,
             'sheduleEmailCandidates',
             {
                 startUrl: meetingData.data.start_url,
