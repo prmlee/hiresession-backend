@@ -134,8 +134,6 @@ async function createInterview(req, res){
             raw: true,
         });
 
-
-
         mailer.send(
             res.locals.user.email,
             'sheduleEmailCandidates',
