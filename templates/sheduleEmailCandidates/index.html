@@ -23,7 +23,7 @@
     padding: 50px;
     font: 16px Montserrat;
     color: #545454;">
-    <h3 style="line-height: 1.5; margin-top: 50px">Thank you for scheduling your interview with  {{companyName}}</h3>
+    <h3 style="line-height: 1.5;">Thank you for scheduling your interview with  {{companyName}}</h3>
     <table style="
         background-color: #fff;
         max-width: 800px;
@@ -38,22 +38,20 @@
         <tr>
             <td>
               <span>
-                Date: {{date}}
-                  <br/>
-                  Time: {{time}}
+                Your interview is on {{date}} at {{time}}
               </span>
             </td>
         </tr>
         <tr>
             <td>
-                <p style="line-height: 1.5; margin-top: 40px"> Please use this URL to <a href="{{joinUrl}}" style="color: #2247ff; text-decoration: none">Join</a> the meeting</p>
+                <p style="line-height: 1.5; margin-top: 18px"> Please use this URL to <a href="{{joinUrl}}" style="color: #2247ff; text-decoration: none">Join</a> the meeting</p>
             </td>
         </tr>
         <tr>
             <td colspan="2">
-              <span>
+              <p style="line-height: 1.5; margin-top: 18px">
               Your meeting ID is: {{meetingId}}
-              </span>
+              </p>
             </td>
         <tr>
         </tr>
