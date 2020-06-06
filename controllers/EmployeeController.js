@@ -427,8 +427,7 @@ async function getAttachedFiles(req, res){
 
 
 async function getInterviews(req, res){
-
-    const limit = 10;
+    const limit = req.params.page ?  10 : undefined;
     const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
     const interviewList = await Interviews.findAndCountAll({
