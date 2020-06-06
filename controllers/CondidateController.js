@@ -113,13 +113,14 @@ async function profile(req, res){
 
         try {
             await  User.update({
+                resume: null,
                 ...updatedObj
             }, {
                 where: {
                     email: res.locals.user.email
                 },
                 paranoid: true
-            })
+            });
 
             let token  = null;
 
