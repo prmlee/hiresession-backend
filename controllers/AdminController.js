@@ -139,6 +139,8 @@ async  function updateEvent(req, res){
         }
     ]);
 
+    const requestPDFFile = req.body.pdfFile || '';
+
     uploads(req, res, async (err) => {
 
         if(err){
@@ -174,7 +176,7 @@ async  function updateEvent(req, res){
 
         if(req.files){
             updatedObj.eventLogo = (req.files && req.files.eventLogo)? req.files.eventLogo[0].filename:'';
-            updatedObj.pdfFile = (req.files && req.files.pdfFile)? req.files.pdfFile[0].filename:'';
+            updatedObj.pdfFile = (req.files && req.files.pdfFile)? req.files.pdfFile[0].filename:requestPDFFile;
 
             if(event.eventLogo && updatedObj.eventLogo !== ''){
                 const filePath = `/var/www/html/uploads/events/${event.eventLogo}`
@@ -193,11 +195,6 @@ async  function updateEvent(req, res){
                     console.log(err);
                 });
             }
-
-              if(updatedObj.pdfFile === ''){
-                delete updatedObj.pdfFile;
-            }
-
         }
 
         if(err){
@@ -240,7 +237,7 @@ async  function updateEvent(req, res){
                     id: req.body.id
                 },
                 paranoid: true
-            })
+            });
 
             return  res.status(httpStatus.OK).json({
                 success: true,
