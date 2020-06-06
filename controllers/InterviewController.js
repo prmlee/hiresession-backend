@@ -293,6 +293,9 @@ async function changeCronStatus(req, res){
         });
 
         return res.status(httpStatus.OK).json({
+            prevDate: moment().subtract(1, 'days').subtract(subtractOffset, 'minute').format('YYYY-MM-DD'),
+            currentDate: moment().subtract(subtractOffset, 'minute').format('YYYY-MM-DD'),
+            currentTime: moment().subtract(subtractOffset, 'minute').format('HH:mm:ss'),
             success : true,
             message : "Status successfully changed"
         });
