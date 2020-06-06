@@ -184,14 +184,12 @@ async function getattachedEmployeers(req, res){
 }
 
 async function deleteSupportingDocs(req, res){
-
-
     const docs = await SupportingDocuments.findOne({
         where: {
             id: req.params.id
         },
         raw: true,
-    })
+    });
 
     if(docs.docName){
         const filePath = `/var/www/html/uploads/employeer/${docs.docName}`
@@ -425,7 +423,6 @@ async function getAttachedFiles(req, res){
     })
 }
 
-
 async function getInterviews(req, res){
     const limit = req.params.page ?  10 : undefined;
     const offset = req.params.page ? (req.params.page - 1) * limit : 0;
@@ -468,6 +465,7 @@ async function getInterviews(req, res){
         count:interviewList.count,
     })
 }
+
 async function getSettingInterviews(req,res){
 
     const settings = await employeeSettings.findAll({
