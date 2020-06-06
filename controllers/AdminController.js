@@ -173,7 +173,6 @@ async  function updateEvent(req, res){
         const updatedObj  = req.body;
 
         if(req.files){
-
             updatedObj.eventLogo = (req.files && req.files.eventLogo)? req.files.eventLogo[0].filename:'';
             updatedObj.pdfFile = (req.files && req.files.pdfFile)? req.files.pdfFile[0].filename:'';
 

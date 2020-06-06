@@ -11,14 +11,12 @@ const {Op} = require('sequelize');
 const { User, Candidates, SupportingDocuments, Employees, Interviews, Events, employeeSettings, SettingDurations, Favorits } = require('../models');
 
 async function profile(req, res){
-
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
             callback(null, '/var/www/html/uploads/candidate');
         },
 
         filename: function (req, file, callback) {
-
             callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
 
         }
@@ -37,8 +35,6 @@ async function profile(req, res){
     ]);
 
     uploads(req, res, async (err) => {
-
-
         if(req.body.email){
             const user = await User.findOne({
                 where: {
@@ -61,8 +57,7 @@ async function profile(req, res){
 
         const updatedObj  = req.body;
 
-        if(req.files){
-
+        if(req.files) {
             const candidate = await Candidates.findOne({
                 where: {
                     userId: res.locals.user.id
@@ -80,24 +75,26 @@ async function profile(req, res){
                     userId: res.locals.user.id
                 },
                 paranoid: true
-            })
+            });
 
             if(candidate.resume && updatedObj.resume && updatedObj.resume !== ''){
-                const filePath = `uploads/candidate/${candidate.resume}`
+                const filePath = `uploads/candidate/${candidate.resume}`;
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });
             }
 
             if(candidate.profileImg && updatedObj.profileImg && updatedObj.profileImg !== ''){
-                const filePath = `uploads/candidate/${candidate.profileImg}`
+                const filePath = `uploads/candidate/${candidate.profileImg}`;
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });
             }
 
-        }else{
+        }
+        else {
             Candidates.update({
+                resume: '',
                 ...updatedObj
             }, {
                 where: {
@@ -107,7 +104,7 @@ async function profile(req, res){
             })
         }
 
-        if(err){
+        if (err) {
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
                 success:false,
                 message:err
@@ -454,7 +451,6 @@ async function getInterviews(req, res){
         count:interviewList.count,
     })
 }
-
 
 async function getCompanies(req, res){
 
