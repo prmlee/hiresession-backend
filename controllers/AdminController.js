@@ -283,7 +283,7 @@ async function getLoggedInAdmin(req, res){
 }
 
 async function getCompanies(req, res){
-    const limit = 10;
+    const limit = req.params.page ?  10 : undefined;
     const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
     const CompanyList = await User.findAndCountAll({
@@ -484,8 +484,7 @@ async function deleteCompany(req, res){
 }
 
 async function getArchivedCompanies(req, res){
-
-    const limit = 10;
+    const limit = req.params.page ?  10 : undefined;
     const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
     const CompanyList = await User.findAndCountAll({
@@ -522,8 +521,7 @@ async function getArchivedCompanies(req, res){
 }
 
 async function getCandidates(req, res){
-
-    const limit = 10;
+    const limit = req.params.page ?  10 : undefined;
     const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
     const CompanyList = await User.findAndCountAll({
