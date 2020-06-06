@@ -34,6 +34,8 @@ async function profile(req, res){
         }
     ]);
 
+    const requestResume = req.body.resume || '';
+
     uploads(req, res, async (err) => {
         if(req.body.email){
             const user = await User.findOne({
@@ -91,17 +93,17 @@ async function profile(req, res){
                 });
             }
 
-        }
-        else {
             Candidates.update({
-                resume: null,
-                ...updatedObj
+                ...updatedObj,
+                resume: requestResume,
             }, {
                 where: {
                     userId: res.locals.user.id
                 },
                 paranoid: true
             })
+        }
+        else {
         }
 
         if (err) {
@@ -112,8 +114,7 @@ async function profile(req, res){
         }
 
         try {
-            await  User.update({
-                resume: null,
+            await User.update({
                 ...updatedObj
             }, {
                 where: {
