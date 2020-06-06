@@ -130,6 +130,7 @@ async function profile(req, res){
             }
 
             return  res.status(httpStatus.OK).json({
+                updatedObj,
                 success: true,
                 message:"Updated successfully",
                 token
