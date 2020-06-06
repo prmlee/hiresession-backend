@@ -92,7 +92,8 @@ async function profile(req, res){
                     console.log(err);
                 });
             }
-
+        }
+        else {
             Candidates.update({
                 ...updatedObj,
                 resume: requestResume,
@@ -102,8 +103,6 @@ async function profile(req, res){
                 },
                 paranoid: true
             })
-        }
-        else {
         }
 
         if (err) {
