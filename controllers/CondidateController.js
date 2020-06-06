@@ -65,8 +65,8 @@ async function profile(req, res){
                 raw: true,
             });
 
-            updatedObj.profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:candidate.profileImg;
-            updatedObj.resume = (req.files && req.files.resume)?req.files.resume[0].filename:candidate.resume;
+            updatedObj.profileImg = (req.files && req.files.profileImg) ? req.files.profileImg[0].filename : candidate.profileImg;
+            updatedObj.resume = (req.files && req.files.resume) ? req.files.resume[0].filename : candidate.resume;
             console.log(updatedObj);
             Candidates.update({
                 ...updatedObj
@@ -94,7 +94,7 @@ async function profile(req, res){
         }
         else {
             Candidates.update({
-                resume: '',
+                resume: null,
                 ...updatedObj
             }, {
                 where: {
