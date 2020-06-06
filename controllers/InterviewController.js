@@ -1,9 +1,8 @@
 const httpStatus = require('http-status');
 const path = require('path');
 const {validationResult} = require('express-validator/check');
-const {createMeeting, updateMeeting} = require('../services/zoom-service')
+const {createMeeting} = require('../services/zoom-service');
 const mailer = require('../services/mail-sender');
-const configs = require('../config');
 const moment = require('moment');
 const multer = require('multer');
 const {Op} = require('sequelize');
@@ -216,7 +215,7 @@ async function updateEmployeeNote(req, res){
                 id: req.body.id
             },
             paranoid: true
-        })
+        });
 
         return res.status(httpStatus.OK).json({
             success : true,
@@ -233,8 +232,6 @@ async function updateEmployeeNote(req, res){
 }
 
 async function changeStatus(req, res){
-
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res
@@ -250,7 +247,7 @@ async function changeStatus(req, res){
                 id: req.body.id
             },
             paranoid: true
-        })
+        });
 
         return res.status(httpStatus.OK).json({
             success : true,
@@ -267,31 +264,33 @@ async function changeStatus(req, res){
 }
 
 async function changeCronStatus(req, res){
-
     try {
+        const ESTOffset = 240;
+        const currentOffset = new Date().getTimezoneOffset();
+        const subtractOffset = Math.abs(currentOffset - ESTOffset);
 
         await  Interviews.update({
             status: 1
         }, {
             where: {
                 date:{
-                    [Op.lte]: moment().subtract(1, 'days').toDate(),
+                    [Op.lte]: moment().subtract(1, 'days').subtract(subtractOffset, 'minute').format('YYYY-MM-DD'),
                 },
             }
-        })
+        });
 
        await  Interviews.update({
             status: 1
         }, {
             where: {
                date:{
-                   [Op.lte]: moment().subtract(0, 'days').toDate(),
+                   [Op.lte]: moment().subtract(subtractOffset, 'minute').format('YYYY-MM-DD'),
                },
                 startTime:{
-                    [Op.lte]: moment().subtract(0, 'date').toDate(),
+                    [Op.lte]: moment().subtract(subtractOffset, 'minute').format('HH:mm:ss'),
                 },
             }
-        })
+        });
 
         return res.status(httpStatus.OK).json({
             success : true,
@@ -308,8 +307,6 @@ async function changeCronStatus(req, res){
 }
 
 async function changeRating(req, res){
-
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res
@@ -325,7 +322,7 @@ async function changeRating(req, res){
                 id: req.body.id
             },
             paranoid: true
-        })
+        });
 
         return res.status(httpStatus.OK).json({
             success : true,
@@ -359,7 +356,7 @@ async function changeNotes(req, res){
                 id: req.body.id
             },
             paranoid: true
-        })
+        });
 
         return res.status(httpStatus.OK).json({
             success : true,
