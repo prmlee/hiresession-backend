@@ -80,7 +80,13 @@ const config = convict({
     default: '',
     arg: 'zoomApiSecret',
     env: 'zoomApiSecret'
-  }
+  },
+  bcc: {
+    doc: 'employer activation email bcc',
+    default: 'DEFAULT_BCC',
+    arg: 'bcc',
+    env: 'bcc'
+  },
 });
 
 const env = config.get('env');
