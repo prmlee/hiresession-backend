@@ -1,12 +1,9 @@
 const nodeMailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
-const nodeoutlook = require('nodejs-nodemailer-outlook')
 const handlebars = require('handlebars');
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 const configs = require('../config');
-
-const isProduction = configs.env === 'production';
 
 const transport = Promise.promisifyAll(
   nodeMailer.createTransport(
@@ -25,17 +22,24 @@ const transport = Promise.promisifyAll(
   )
 );
 
-function send(to, tmp, replacements = {}, subject = `Welcome to ${configs.appName}`, from = configs.email) {
+function sendWithBcc(to, tmp, replacements, bcc) {
+  return send(to, tmp, replacements, `Welcome to ${configs.appName}`, configs.email, bcc);
+}
+
+function send(to, tmp, replacements = {}, subject = `Welcome to ${configs.appName}`, from = configs.email, bcc) {
   const templatePath = `../templates/${tmp}/index.html`;
   return fs.readFileAsync(`${__dirname}/${templatePath}`, {encoding: 'utf-8'})
     .then(file => {
       const template = handlebars.compile(file);
 
+      const bccProps = bcc ? {bcc} : {};
+
       const mailOptions = {
         to,
         from: `${configs.appName} <${from}>`,
         subject,
-        html: template(replacements)
+        html: template(replacements),
+        ...bccProps,
       };
 
 
@@ -45,5 +49,5 @@ function send(to, tmp, replacements = {}, subject = `Welcome to ${configs.appNam
 
 
 
-module.exports = {send};
+module.exports = {send, sendWithBcc};
 

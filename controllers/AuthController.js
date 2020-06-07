@@ -166,7 +166,7 @@ async function employeeRegister(req, res) {
             callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
 
         }
-    })
+    });
 
 
     const profileImg = multer({
@@ -261,12 +261,13 @@ async function employeeRegister(req, res) {
 
             const token = await createResetPassToken(req.body.email);
 
-            await mailer.send(
+            await mailer.sendWithBcc(
                 req.body.email,
                 'activationEmailEmployee',
                 {
                     resetPassFormUrl: `${configs.frontAppUrl}/activation/${token}`
-                }
+                },
+                configs.bcc,
             );
 
             const profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:'';
@@ -312,7 +313,6 @@ async function employeeRegister(req, res) {
     })
 }
 
-
 async function activation(req, res){
 
     const errors = validationResult(req);
@@ -333,7 +333,7 @@ async function activation(req, res){
                 email: decodedToken.email
             },
             paranoid: true
-        })
+        });
 
         return res.status(httpStatus.OK).json({
             success : true,
@@ -554,8 +554,5 @@ async function changePassword(req, res) {
         });
     }
 }
-
-
-
 
 module.exports = {candidateRegister, employeeRegister, login, adminLogin, resetPassword, resetPassEmail, changePassword, activation};
