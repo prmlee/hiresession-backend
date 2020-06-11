@@ -15,6 +15,14 @@
     "dialect": "mysql",
     "operatorsAliases": false
   },
+  "staging": {
+    "username": "root",
+    "password": "Hiresession1234$",
+    "database": "hiresession",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  },
   "production": {
     "username": "root",
     "password": "Hiresession1234$",
