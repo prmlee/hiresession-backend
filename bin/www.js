@@ -13,7 +13,7 @@ const sslOptions =  {
 
 
 
-const server = https.createServer(sslOptions, app)
+const server = isProduction ? https.createServer(sslOptions, app) : http.createServer(app);
 
 
 
