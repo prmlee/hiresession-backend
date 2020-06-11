@@ -6,9 +6,12 @@
   "scripts": {
     "lint": "eslint --ignore-path .eslintignore .",
     "start": " nodemon ./bin/www",
+    "start:staging": " NODE_ENV=staging PORT=8000 node ./bin/www",
     "start:prod": " NODE_ENV=production PORT=8000 node ./bin/www",
     "migrate": "sequelize db:migrate",
     "seeder": "sequelize db:seed:all",
+    "seeder:staging": "sequelize db:seed:all --env staging",
+    "migrate:staging": "sequelize db:migrate --env staging",
     "seeder:prod": "sequelize db:seed:all --env production",
     "migrate:prod": "sequelize db:migrate --env production"
   },
