@@ -91,6 +91,8 @@ const config = convict({
 
 const env = config.get('env');
 
+console.log(1111111, env);
+
 config.loadFile(path.join(__dirname, `environments/${env}.json`));
 
 config.validate();
