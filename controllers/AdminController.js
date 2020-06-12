@@ -3,7 +3,7 @@ const path = require('path');
 const multer = require('multer')
 const {validationResult} = require('express-validator/check');
 var fs = require('fs');
-
+const {LIMIT_UPLOAD_FILE_SIZE} = require('../config/constants');
 
 const {User, Candidates, Employees, SupportingDocuments, Admin, Events, Interviews, AttachedEmployees} = require('../models');
 
@@ -23,7 +23,7 @@ async function createEvent(req, res){
 
     const uploads = multer({
         storage,
-        limits:{fileSize:16000000},
+        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZE},
 
     }).fields([
         {
@@ -128,7 +128,7 @@ async  function updateEvent(req, res){
 
     const uploads = multer({
         storage,
-        limits:{fileSize:16000000},
+        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZEs},
 
     }).fields([
         {

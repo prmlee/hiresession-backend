@@ -7,6 +7,7 @@ var fs = require('fs');
 const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 const {Op} = require('sequelize');
+const {LIMIT_UPLOAD_FILE_SIZE} = require('../config/constants');
 
 const { User, Candidates, SupportingDocuments, Employees, Interviews, Events, employeeSettings, SettingDurations, Favorits } = require('../models');
 
@@ -24,7 +25,7 @@ async function profile(req, res){
 
     const uploads = multer({
         storage,
-        limits:{fileSize:16000000},
+        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZE},
 
     }).fields([
         {

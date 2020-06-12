@@ -6,7 +6,7 @@ const mailer = require('../services/mail-sender');
 const moment = require('moment');
 const multer = require('multer');
 const {Op} = require('sequelize');
-
+const {LIMIT_UPLOAD_FILE_SIZE} = require('../config/constants');
 
 const {User, Candidates, Employees, Interviews, SupportingDocuments} = require('../models');
 
@@ -27,7 +27,7 @@ async function createInterview(req, res){
 
     const upload = multer({
         storage,
-        limits:{fileSize:16000000},
+        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZE},
 
     }).single('attachedFile');
 
