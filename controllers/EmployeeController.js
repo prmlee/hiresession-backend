@@ -5,7 +5,7 @@ var fs = require('fs');
 const path = require('path');
 const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
-
+const {LIMIT_UPLOAD_FILE_SIZE} = require('../config/constants');
 
 const {Candidates, User, employeeSettings, Employees, Events, Interviews, AttachedEmployees, SettingDurations, SupportingDocuments} = require('../models');
 
@@ -25,7 +25,7 @@ async function profile(req, res) {
 
     const profileImg = multer({
         storage,
-        limits:{fileSize:16000000},
+        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZE},
 
     }).fields([
         {
