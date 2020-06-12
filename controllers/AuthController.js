@@ -1,3 +1,5 @@
+import { LIMIT_UPLOAD_FILE_SIZE } from '../config/constants';
+
 const bcrypt = require('bcrypt');
 const httpStatus = require('http-status');
 const path = require('path');
@@ -6,6 +8,7 @@ const {validationResult} = require('express-validator/check');
 const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
 const mailer = require('../services/mail-sender');
 const configs = require('../config');
+const {LIMIT_UPLOAD_FILE_SIZE} = require('../config/constants');
 
 const {User, Candidates, Employees, SupportingDocuments, Admin} = require('../models');
 
@@ -21,12 +24,12 @@ async function candidateRegister(req, res) {
             callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
 
         }
-    })
+    });
 
 
     const upload = multer({
         storage,
-        limits:{fileSize:16000000},
+        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZE},
 
     }).fields([
         {
@@ -171,7 +174,7 @@ async function employeeRegister(req, res) {
 
     const profileImg = multer({
         storage,
-        limits:{fileSize:16000000},
+        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZE},
 
     }).fields([
         {
@@ -296,8 +299,6 @@ async function employeeRegister(req, res) {
                     })
                 }
             }
-
-
 
             return  res.status(httpStatus.OK).json({
                 success: true,
