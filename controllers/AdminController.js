@@ -8,14 +8,12 @@ const {LIMIT_UPLOAD_FILE_SIZE} = require('../config/constants');
 const {User, Candidates, Employees, SupportingDocuments, Admin, Events, Interviews, AttachedEmployees} = require('../models');
 
 async function createEvent(req, res){
-
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
             callback(null, '/var/www/html/uploads/events');
         },
 
         filename: function (req, file, callback) {
-
             callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
 
         }
@@ -84,7 +82,8 @@ async function createEvent(req, res){
                 startTime:req.body.startTime,
                 location:req.body.location?req.body.location:'',
                 endTime:req.body.endTime,
-            })
+                timezoneOffset:req.body.timezoneOffset || 240,
+            });
 
             if(req.body.userId){
                 const ids = req.body.userId.split(',');
@@ -355,7 +354,6 @@ async function getOnlyCompanies(req, res){
         data:CompanyList
     })
 }
-
 
 async function archiveCompany(req, res){
 
@@ -772,7 +770,7 @@ async function activities(req, res){
 async  function getEvents(req, res){
 
     const events = await Events.findAll({
-        attributes: ['id', 'bizaboLink', 'pdfFile', 'location', 'eventName','eventLogo', 'date', 'startTime', 'endTime'],
+        attributes: ['id', 'bizaboLink', 'pdfFile', 'location', 'eventName','eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset'],
         raw:true
     });
 
