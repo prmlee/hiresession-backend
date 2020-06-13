@@ -26,7 +26,6 @@ async function createMeeting(body, email) {
             data,
         });
 
-
         return {
             data: response.data,
             status:200
@@ -72,7 +71,6 @@ async function updateMeeting(body, meetingId){
 }
 
 function generateJWT(){
-
     const payload = {
         iss: configs.zoomApiKey,
         exp: ((new Date()).getTime() + 5000)
@@ -111,7 +109,8 @@ async  function normaliseData(data){
     }
 }
 
-async function createUser(email){
+async function createUser(email) {
+    console.log('createUser zoom: ', email);
 
     const url =  'https://api.zoom.us/v2/users';
     const token = generateJWT();
@@ -126,7 +125,7 @@ async function createUser(email){
             email
         },
         raw:true
-    })
+    });
 
     if(user !== null){
         return user.email;
@@ -138,7 +137,7 @@ async function createUser(email){
             email,
             "type": 1
         }
-    }
+    };
 
     try{
         const response = await axios({
@@ -148,14 +147,15 @@ async function createUser(email){
             data,
         });
 
-
-
         await ZoomUsers.create({
             email
         });
 
+        console.log('createUser zoom done: ', response, email);
+
         return email;
     }catch (e) {
+        console.log('createUser zoom error: ', e);
         return {
             status:200,
             message:e.msg,
