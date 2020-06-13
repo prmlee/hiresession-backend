@@ -19,8 +19,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       values: ['interviewed', 'canceled','upcoming']
     },
-    rating:DataTypes.INTEGER
-
+    rating:DataTypes.INTEGER,
+    timezoneOffset: {
+      type: DataTypes.INTEGER,
+      defaultValue: 240, // EST TIME
+    },
   }, {});
 
   Interviews.associate = function(models) {

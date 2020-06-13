@@ -32,6 +32,7 @@ async function createMeeting(body, email) {
             status:200
         };
     }catch (e) {
+        console.log('Create meeting error: ', e);
         return {
             status:200,
             message:e.message,

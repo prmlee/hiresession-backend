@@ -11,7 +11,6 @@ const {LIMIT_UPLOAD_FILE_SIZE} = require('../config/constants');
 const {User, Candidates, Employees, Interviews, SupportingDocuments} = require('../models');
 
 async function createInterview(req, res){
-
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
             callback(null, '/var/www/html/uploads/interview');
@@ -23,7 +22,7 @@ async function createInterview(req, res){
             callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
 
         }
-    })
+    });
 
     const upload = multer({
         storage,
