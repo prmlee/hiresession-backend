@@ -751,7 +751,7 @@ async function activities(req, res){
                 ],
             },
             {
-                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime'],
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset'],
                 model:Events,
                 as:'events',
             }
