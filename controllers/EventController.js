@@ -5,7 +5,7 @@ const {Op} = require('sequelize');
 
 async function getEvent(req, res){
     const events = await Events.findAll({
-        attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime'],
+        attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset'],
         include:[
             {
                 attributes: ['id',['userId','employeeId']],
@@ -50,8 +50,6 @@ async function getEvent(req, res){
     for(let i in events){
         const involvedEmployers = [];
 
-
-
         for(let j in events[i]['attachedEmployees']){
             if(typeof events[i]['attachedEmployees'][j] !== 'undefined'){
 
@@ -62,10 +60,7 @@ async function getEvent(req, res){
 
         events[i]['dataValues']['involvedEmployers'] = involvedEmployers;
     }
-
-
-
-
+    
     return  res.status(httpStatus.OK).json({
         success:true,
         data:events
