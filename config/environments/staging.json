@@ -6,9 +6,9 @@
   "emailHost" : "smtp.office365.com",
   "email" : "support@hiresessions.com",
   "emailPass" : "Pa$$word1",
-  "zoomEmail" : "cuonghuynhvan@gmail.com",
+  "zoomEmail" : "jeff@hiresessions.com",
   "zoomTimezone" : "America/New_York",
-  "zoomApiKey": "AILSlATNQIO_hYs6N19V0g",
-  "zoomApiSecret": "M8KDkJZsLoHIjbXz6MbY5M1fF4Ib6UK1lAUd",
+  "zoomApiKey": "BwJEg-JdSTWu-u353N-Zcg",
+  "zoomApiSecret": "92SMfjTebRhaL05PDgYiQBDDNTxztZFuFz4W",
   "bcc": "cuonghuynhvan@gmail.com"
 }
