@@ -2,13 +2,13 @@
   "appName": "HireSessions",
   "frontAppUrl": "http://ec2-user@ec2-3-235-66-198.compute-1.amazonaws.com",
   "jwtSecret": "oxZnqJX0xuvlfYrgDT9UmraGOcdu3h0GdNn6xT_0n8sbkaTDUKSBltmNEE3ScXFol40UdLSsYZAlWeRygeNdMA",
-  "tokenExpiration": 1,
+  "tokenExpiration": 7,
   "emailHost" : "smtp.office365.com",
-  "email" : "support@hiresessions.com",
-  "emailPass" : "Pa$$word1",
-  "zoomEmail" : "jeff@hiresessions.com",
+  "email" : "cuonghuynhvan@gmail.com",
+  "emailPass" : "Pa$$word1HireSessions",
+  "zoomEmail" : "cuonghuynhvan@gmail.com",
   "zoomTimezone" : "America/New_York",
-  "zoomApiKey": "BwJEg-JdSTWu-u353N-Zcg",
-  "zoomApiSecret": "92SMfjTebRhaL05PDgYiQBDDNTxztZFuFz4W",
-  "bcc": "support@hiresessions.com"
+  "zoomApiKey": "AILSlATNQIO_hYs6N19V0g",
+  "zoomApiSecret": "M8KDkJZsLoHIjbXz6MbY5M1fF4Ib6UK1lAUd",
+  "bcc": "cuonghuynhvan@gmail.com"
 }
