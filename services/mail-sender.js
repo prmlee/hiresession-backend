@@ -11,7 +11,9 @@ const transport = Promise.promisifyAll(
       host: configs.emailHost,
       port:587,
       secure: false,
+      requireTLS: true,
       tls: {
+          ciphers: 'SSLv3',
           rejectUnauthorized: false
       },
       auth: {

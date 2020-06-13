@@ -163,7 +163,7 @@ async  function updateEvent(req, res){
                 id: req.body.id
             },
             raw: true,
-        })
+        });
 
         if(!event){
             return res.status(httpStatus.FORBIDDEN).json({

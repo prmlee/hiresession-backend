@@ -216,7 +216,6 @@ async function employeeRegister(req, res) {
             })
         }
 
-
         if(!req.body.password || !req.body.confirmPassword || (req.body.password !== req.body.confirmPassword)){
             return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
                 success: false,
