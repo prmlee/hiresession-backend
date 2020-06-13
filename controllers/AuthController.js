@@ -1,5 +1,3 @@
-import { LIMIT_UPLOAD_FILE_SIZE } from '../config/constants';
-
 const bcrypt = require('bcrypt');
 const httpStatus = require('http-status');
 const path = require('path');
