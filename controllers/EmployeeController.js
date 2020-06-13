@@ -62,7 +62,7 @@ async function profile(req, res) {
                 userId: res.locals.user.id
             },
             raw: true,
-        })
+        });
 
 
         if(req.files){
@@ -79,7 +79,7 @@ async function profile(req, res) {
                 userId: res.locals.user.id
             },
             paranoid: true
-        })
+        });
 
         if( req.files && req.files.supportingDocs){
 
