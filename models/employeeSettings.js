@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     eventId: DataTypes.INTEGER,
     date: DataTypes.STRING,
     duration: DataTypes.INTEGER,
+    timezoneOffset: {
+      type: DataTypes.INTEGER,
+      defaultValue: 240, // EST TIME
+    },
     durationType:  {
       type: DataTypes.ENUM,
       values: ['Min', 'Hours']
