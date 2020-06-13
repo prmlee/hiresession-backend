@@ -12,8 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
     location: DataTypes.STRING,
-
-
+    timezoneOffset: {
+      type: Sequelize.INTEGER,
+      defaultValue: 240, // EST TIME
+    },
   }, {});
 
   Events.associate = function(models) {
