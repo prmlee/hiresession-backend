@@ -128,7 +128,7 @@ async  function updateEvent(req, res){
 
     const uploads = multer({
         storage,
-        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZEs},
+        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZE},
 
     }).fields([
         {
