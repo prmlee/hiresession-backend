@@ -37,10 +37,6 @@ module.exports = {
       endTime: {
         type: Sequelize.TIME
       },
-      timezoneOffset: {
-        type: Sequelize.INTEGER,
-        defaultValue: 240, // EST TIME
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
