@@ -60,7 +60,7 @@ async function getEvent(req, res){
 
         events[i]['dataValues']['involvedEmployers'] = involvedEmployers;
     }
-    
+
     return  res.status(httpStatus.OK).json({
         success:true,
         data:events

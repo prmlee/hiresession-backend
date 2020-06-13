@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     endTime: DataTypes.TIME,
     location: DataTypes.STRING,
     timezoneOffset: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       defaultValue: 240, // EST TIME
     },
   }, {});
