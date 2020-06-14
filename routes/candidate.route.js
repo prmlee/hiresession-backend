@@ -86,4 +86,11 @@ router
         CandidateController.updateInterview
     );
 
+router
+  .route('/interviews/:id')
+  .delete(
+    isLoggedCandidate,
+    CandidateController.deleteInterview
+  );
+
 module.exports = router;
