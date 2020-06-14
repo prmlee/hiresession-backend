@@ -8,7 +8,7 @@ module.exports = {
       'timezoneOffset',
       {
         type: Sequelize.INTEGER,
-        defaultValue: 240, // EST TIME
+        defaultValue: 300, // EST TIME
       }
     );
 
