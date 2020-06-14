@@ -142,6 +142,7 @@ async function createInterview(req, res){
                 meetingId:meetingData.data.id,
                 date,
                 time: req.body.startTime,
+                timezoneName: req.body.timezoneName,
                 companyName:currentEmployee.dataValues.employee.companyName
             },
             'Interview Confirmation Details'
@@ -152,7 +153,8 @@ async function createInterview(req, res){
             shcool:candidateData.shcool,
             major:candidateData.major,
             date,
-            time: req.body.startTime
+            time: req.body.startTime,
+            timezoneName: req.body.timezoneName,
         };
 
         if(req.body.shareResume){
