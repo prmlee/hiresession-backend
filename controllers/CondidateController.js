@@ -488,6 +488,18 @@ async function getInterviews(req, res) {
   })
 }
 
+async function deleteInterview(req, res) {
+  await Interviews.destroy({
+    where: {
+      id: req.params.id,
+    },
+  });
+
+  res.status(httpStatus.OK).json({
+    success: true,
+  })
+}
+
 async function getCompanies(req, res) {
 
   const CompanyList = await Employees.findAll({
@@ -562,4 +574,5 @@ module.exports = {
   addFavorit,
   getFavorit,
   deleteFavorit,
-}
+  deleteInterview,
+};
