@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     rating:DataTypes.INTEGER,
     timezoneOffset: {
       type: DataTypes.INTEGER,
-      defaultValue: 240, // EST TIME
+      defaultValue: 300, // EST TIME
     },
     timezoneName: {
       type: DataTypes.STRING,

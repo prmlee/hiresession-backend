@@ -241,7 +241,7 @@ async function settings(req, res){
                 date: req.body.date,
                 duration: req.body.duration,
                 durationType: req.body.durationType,
-                timezoneOffset: req.body.timezoneOffset || 240,
+                timezoneOffset: req.body.timezoneOffset || 300,
                 timezoneName:req.body.timezoneName || 'EST',
             });
 
