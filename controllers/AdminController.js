@@ -527,7 +527,7 @@ async function getCandidates(req, res){
                 as:'candidate'
             },
             {
-                attributes :['id', 'date', 'startTime', 'endTime', 'note', 'status', 'rating'],
+                attributes :['id', 'date', 'startTime', 'endTime', 'note', 'status', 'rating', 'timezoneOffset', 'timezoneName'],
                 model:Interviews,
                 as:'interviews',
                 include:[
@@ -544,7 +544,7 @@ async function getCandidates(req, res){
                         ],
                     },
                     {
-                        attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime'],
+                        attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
                         model:Events,
                         as:'events',
                     }
