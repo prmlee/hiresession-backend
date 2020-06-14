@@ -72,12 +72,18 @@ router
         CandidateController.getTimesForDay
     );
 
+router
+  .route('/getInterviews/:page?')
+  .get(
+    isLoggedCandidate,
+    CandidateController.getInterviews
+  );
 
 router
-    .route('/getInterviews/:page?')
-    .get(
+    .route('/interviews/:id')
+    .patch(
         isLoggedCandidate,
-        CandidateController.getInterviews
+        CandidateController.updateInterview
     );
 
 module.exports = router;

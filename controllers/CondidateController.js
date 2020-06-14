@@ -156,6 +156,43 @@ async function sheduleInterview(req, res) {
   }
 }
 
+async function updateInterview(req, res){
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json({validation: errors.array()});
+  }
+
+  const updatedObj  = req.body;
+
+  console.log('Update interview:', req.params, updatedObj);
+
+  try {
+    await  Interviews.update({
+      ...updatedObj
+    }, {
+      where: {
+        id: req.params.id
+      },
+      paranoid: true
+    });
+
+    return  res.status(httpStatus.OK).json({
+      success: true,
+      message:"Updated successfully"
+    });
+
+  }catch (e) {
+    return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: e.message
+    });
+  }
+}
+
 async function getLoggedInUser(req, res) {
 
   try {
@@ -516,6 +553,7 @@ async function getFavorit(req, res) {
 module.exports = {
   profile,
   sheduleInterview,
+  updateInterview,
   getLoggedInUser,
   getSingleEmployee,
   getInterviews,
