@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 240, // EST TIME
     },
+    timezoneName: {
+      type: DataTypes.STRING,
+      defaultValue: 'EST',
+    },
   }, {});
 
   Events.associate = function(models) {

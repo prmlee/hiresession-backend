@@ -242,6 +242,7 @@ async function settings(req, res){
                 duration: req.body.duration,
                 durationType: req.body.durationType,
                 timezoneOffset: req.body.timezoneOffset || 240,
+                timezoneName:req.body.timezoneName || 'EST',
             });
 
             for(let i in req.body.times){
@@ -445,7 +446,7 @@ async function getInterviews(req, res){
                 ],
             },
             {
-                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset'],
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
                 model:Events,
                 as:'events',
             }
@@ -472,7 +473,7 @@ async function getSettingInterviews(req,res){
     const settings = await employeeSettings.findAll({
         include: [
             {
-                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset'],
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
                 model:Events,
                 as:'events',
                 include: [

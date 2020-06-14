@@ -5,7 +5,7 @@ const {Op} = require('sequelize');
 
 async function getEvent(req, res){
     const events = await Events.findAll({
-        attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset'],
+        attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
         include:[
             {
                 attributes: ['id',['userId','employeeId']],
