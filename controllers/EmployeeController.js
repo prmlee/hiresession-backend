@@ -276,7 +276,7 @@ async function settings(req, res){
             await SettingDurations.create({
                 settingId:settings.id,
                 startTime: req.body.times[i].startTime,
-                endTime: req.body.times[i].endTime
+                endTime: req.body.times[i].endTime,
             })
         }
 
