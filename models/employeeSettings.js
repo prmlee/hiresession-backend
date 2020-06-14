@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 240, // EST TIME
     },
+    timezoneName: {
+      type: DataTypes.STRING,
+      defaultValue: 'EST',
+    },
     durationType:  {
       type: DataTypes.ENUM,
       values: ['Min', 'Hours']

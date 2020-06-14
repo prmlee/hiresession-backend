@@ -82,7 +82,8 @@ async function createEvent(req, res){
                 startTime:req.body.startTime,
                 location:req.body.location?req.body.location:'',
                 endTime:req.body.endTime,
-                timezoneOffset:req.body.timezoneOffset || 240,
+                timezoneOffset:req.body.timezoneOffset || 300,
+                timezoneName:req.body.timezoneName || 'EST',
             });
 
             if(req.body.userId){
@@ -751,7 +752,7 @@ async function activities(req, res){
                 ],
             },
             {
-                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset'],
+                attributes :['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
                 model:Events,
                 as:'events',
             }
@@ -770,7 +771,7 @@ async function activities(req, res){
 async  function getEvents(req, res){
 
     const events = await Events.findAll({
-        attributes: ['id', 'bizaboLink', 'pdfFile', 'location', 'eventName','eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset'],
+        attributes: ['id', 'bizaboLink', 'pdfFile', 'location', 'eventName','eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
         raw:true
     });
 

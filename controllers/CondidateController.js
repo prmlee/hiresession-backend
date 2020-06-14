@@ -203,7 +203,7 @@ async function getSingleEmployee(req, res) {
         as: 'SupportingDocuments',
       },
       {
-        attributes: ['eventId', 'timezoneOffset'],
+        attributes: ['eventId', 'timezoneOffset', 'timezoneName'],
         model: employeeSettings,
         as: 'employeeSettings',
       },
@@ -429,7 +429,7 @@ async function getInterviews(req, res) {
         ],
       },
       {
-        attributes: ['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset'],
+        attributes: ['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
         model: Events,
         as: 'events',
       },

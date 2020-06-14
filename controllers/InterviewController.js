@@ -264,7 +264,7 @@ async function changeStatus(req, res){
 
 async function changeCronStatus(req, res){
     try {
-        const ESTOffset = 240;
+        const ESTOffset = 300;
         const currentOffset = new Date().getTimezoneOffset();
         const subtractOffset = Math.abs(currentOffset - ESTOffset);
 
