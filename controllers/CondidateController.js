@@ -3,6 +3,7 @@ const httpStatus = require('http-status');
 const path = require('path');
 const multer = require('multer');
 const moment = require('moment');
+const mailer = require('../services/mail-sender');
 var fs = require('fs');
 const { validationResult } = require('express-validator/check');
 const { createToken, createResetPassToken, verifyToken, Roles } = require('../helpers/JwtHelper');
@@ -179,6 +180,77 @@ async function updateInterview(req, res){
       },
       paranoid: true
     });
+
+    const interview = await Interviews.findOne({
+      where: {
+        id: req.params.id
+      },
+      raw: true,
+    });
+
+    const candidate = await User.findOne({
+      where: {
+        id: interview.candidateId,
+      },
+      raw: true,
+    });
+
+    const candidateInfo = await Candidates.findOne({
+      where: {
+        userId: candidate.id,
+      },
+      raw: true,
+    });
+
+    const employee = await User.findOne({
+      where: {
+        id: interview.employeeId,
+      },
+      raw: true,
+    });
+
+    const company = await Employees.findOne({
+      where: {
+        userId: employee.id,
+      },
+      raw: true,
+    });
+
+    console.log('===============================================');
+    console.log('Update interview:', interview);
+    console.log('candidate:', candidate);
+    console.log('candidateInfo:', candidateInfo);
+    console.log('employee:', employee);
+    console.log('company:', company);
+    console.log('===============================================');
+
+    mailer.send(
+      candidate.email,
+      'changeInterviewEmailCandidates',
+      {
+        startUrl: interview.startUrl,
+        joinUrl: interview.joinUrl,
+        meetingId: interview.meetingId,
+        date: interview.date,
+        time: interview.startTime,
+        timezoneName: interview.timezoneName,
+        companyName: company.companyName
+      },
+      'Interview has been changed'
+    );
+
+    mailer.send(
+      employee.email,
+      'changeInterviewEmailEmployee',
+      {
+        shcool: candidateInfo.shcool,
+        major: candidateInfo.major,
+        date: interview.date,
+        time: interview.startTime,
+        timezoneName: interview.timezoneName,
+      },
+      'Interview has been changed'
+    );
 
     return  res.status(httpStatus.OK).json({
       success: true,

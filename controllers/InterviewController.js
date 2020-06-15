@@ -125,7 +125,6 @@ async function createInterview(req, res){
         const date  =  moment(req.body.date).format('YYYY-MM-DD')
 
         const candidateData = await Candidates.findOne({
-
             where: {
                 userId: req.body.candidateId
             },
