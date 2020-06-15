@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hiresessions</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900"
+          rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+    </style>
+
+</head>
+<body>
+<div style="
+    min-width: 100vh;
+    min-height: 100vh;
+    padding: 50px;
+    font: 16px Montserrat;
+    color: #545454;">
+    <h3 style="line-height: 1.5; margin-top: 50px">The following candidate has changed the interview schedule:</h3>
+    <table style="
+        background-color: #fff;
+        max-width: 800px;
+        width: 100%;
+        margin-top: 40px;
+        padding-left: 30px;
+        line-height: 1.6;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    ">
+        <tr>
+            <td>
+              <span>
+                Date: {{date}}
+                  <br/>
+                  Time: {{time}} {{timezoneName}}
+                  <br/>
+                  School: {{shcool}}
+                  <br/>
+                  Major: {{major}}
+              </span>
+            </td>
+        </tr>
+        <tr>
+            <td >
+                <p style="line-height: 1.5; margin-top: 40px"> Please use this URL to <a href="{{startUrl}}" style="color: #2247ff; text-decoration: none">Start</a>
+                    the meeting</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p style="line-height: 1.5; margin-top: 40px">
+                    To view all your interviews,kindly login to your HireSessions account.<br/>
+                    Your meeting credentials and links can be viewed under the "Interview" tab.<br/>
+                    You will also be able to take notes and rank all the candidates you meet.
+                </p>
+                <p style="line-height: 1.5; margin-top: 40px"></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p style="line-height: 1.5; margin-top: 40px">
+                    Best regards, <br/>
+                    The HireSessions Team<br/>
+                </p>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
