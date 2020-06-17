@@ -175,11 +175,11 @@ async  function updateEvent(req, res){
         const updatedObj  = req.body;
 
         if(req.files){
-            updatedObj.eventLogo = (req.files && req.files.eventLogo)? req.files.eventLogo[0].filename:'';
-            updatedObj.pdfFile = (req.files && req.files.pdfFile)? req.files.pdfFile[0].filename:requestPDFFile;
+            updatedObj.eventLogo = (req.files && req.files.eventLogo)? req.files.eventLogo[0].filename : '';
+            updatedObj.pdfFile = (req.files && req.files.pdfFile)? req.files.pdfFile[0].filename : requestPDFFile;
 
             if(event.eventLogo && updatedObj.eventLogo !== ''){
-                const filePath = `/var/www/html/uploads/events/${event.eventLogo}`
+                const filePath = `/var/www/html/uploads/events/${event.eventLogo}`;
                 await  fs.unlink(filePath, function (err) {
                     console.log(err);
                 });
@@ -195,6 +195,8 @@ async  function updateEvent(req, res){
                     console.log(err);
                 });
             }
+        } else {
+            updatedObj.pdfFile = requestPDFFile;
         }
 
         if(err){
@@ -210,7 +212,7 @@ async  function updateEvent(req, res){
                         EventId:req.body.id
                     },
                     paranoid: true
-                })
+                });
 
             if(req.body.userId){
                 let ids = req.body.userId;
