@@ -122,14 +122,14 @@ async function createInterview(req, res) {
       });
     }
 
-    const date = moment(req.body.date).format('YYYY-MM-DD')
+    const date = moment(req.body.date).format('YYYY-MM-DD');
 
-    const candidateData = await Candidates.findOne({
-      where: {
-        userId: req.body.candidateId,
-      },
-      raw: true,
-    });
+    // const candidateData = await Candidates.findOne({
+    //   where: {
+    //     userId: req.body.candidateId,
+    //   },
+    //   raw: true,
+    // });
 
     mailer.send(
       res.locals.user.email,
@@ -182,6 +182,8 @@ async function createInterview(req, res) {
         note: req.body.note || '',
         employeeNote: req.body.employeeNote || '',
         attachedFile: req.file ? req.file.filename : '',
+        timezoneName: req.body.timezoneName,
+        timezoneOffset: req.body.timezoneOffset,
       });
 
       return res.status(httpStatus.OK).json({
