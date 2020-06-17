@@ -36,9 +36,9 @@ async function profile(req, res) {
     },
   ]);
 
-  const requestResume = req.body.resume || '';
-
   uploads(req, res, async (err) => {
+    const requestResume = req.body.resume || '';
+
     if (req.body.email) {
       const user = await User.findOne({
         where: {
