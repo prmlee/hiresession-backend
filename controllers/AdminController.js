@@ -174,7 +174,7 @@ async  function updateEvent(req, res){
 
         const updatedObj  = req.body;
 
-        if(req.files){
+        if(req.files) {
             updatedObj.eventLogo = (req.files && req.files.eventLogo)? req.files.eventLogo[0].filename : '';
             updatedObj.pdfFile = (req.files && req.files.pdfFile)? req.files.pdfFile[0].filename : requestPDFFile;
 
@@ -230,7 +230,7 @@ async  function updateEvent(req, res){
             }
 
             delete updatedObj.userId;
-            console.log(updatedObj);
+            console.log(updatedObj, req.body, req.files);
 
             await Events.update({
                 ...updatedObj
