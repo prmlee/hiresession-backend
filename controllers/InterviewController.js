@@ -147,25 +147,24 @@ async function createInterview(req, res) {
       'Interview Confirmation Details',
     );
 
-
-    const employeeReplacement = {
-      shcool: candidateData.shcool,
-      major: candidateData.major,
-      date,
-      time: req.body.startTime,
-      timezoneName: req.body.timezoneName,
-    };
-
-    if (req.body.shareResume) {
-      employeeReplacement.resume = `https://hiresessions.com/https:/hiresessions.com/uploads/candidate/${candidateData.resume}`
-    }
-
-    mailer.send(
-      currentEmployee.email,
-      'sheduleEmailEmployee',
-      employeeReplacement,
-      'Interview Confirmation Details',
-    );
+    // const employeeReplacement = {
+    //   shcool: candidateData.shcool,
+    //   major: candidateData.major,
+    //   date,
+    //   time: req.body.startTime,
+    //   timezoneName: req.body.timezoneName,
+    // };
+    //
+    // if (req.body.shareResume) {
+    //   employeeReplacement.resume = `https://hiresessions.com/https:/hiresessions.com/uploads/candidate/${candidateData.resume}`
+    // }
+    //
+    // mailer.send(
+    //   currentEmployee.email,
+    //   'sheduleEmailEmployee',
+    //   employeeReplacement,
+    //   'Interview Confirmation Details',
+    // );
 
     try {
 
