@@ -139,6 +139,8 @@ async  function updateEvent(req, res){
         }
     ]);
 
+    console.log('Update event - request: ', req.body);
+
     const requestPDFFile = req.body.pdfFile || '';
 
     uploads(req, res, async (err) => {
