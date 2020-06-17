@@ -239,18 +239,18 @@ async function updateInterview(req, res){
       'Interview has been changed'
     );
 
-    mailer.send(
-      employee.email,
-      'changeInterviewEmailEmployee',
-      {
-        shcool: candidateInfo.shcool,
-        major: candidateInfo.major,
-        date: interview.date,
-        time: interview.startTime,
-        timezoneName: interview.timezoneName,
-      },
-      'Interview has been changed'
-    );
+    // mailer.send(
+    //   employee.email,
+    //   'changeInterviewEmailEmployee',
+    //   {
+    //     shcool: candidateInfo.shcool,
+    //     major: candidateInfo.major,
+    //     date: interview.date,
+    //     time: interview.startTime,
+    //     timezoneName: interview.timezoneName,
+    //   },
+    //   'Interview has been changed'
+    // );
 
     return  res.status(httpStatus.OK).json({
       success: true,
