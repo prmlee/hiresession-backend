@@ -167,7 +167,7 @@ async function createInterview(req, res) {
     // );
 
     try {
-
+      console.log('Interviews.create: ', req.body)
       await Interviews.create({
         employeeId: req.body.employeeId,
         candidateId: req.body.candidateId,
