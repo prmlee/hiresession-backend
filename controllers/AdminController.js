@@ -114,6 +114,9 @@ async function createEvent(req, res){
 
 async  function updateEvent(req, res){
 
+    console.log('Update event - request: ', req.body);
+    const requestPDFFile = req.body.pdfFile || '';
+
     const storage = multer.diskStorage({
         destination : function (req, file, callback) {
             callback(null, '/var/www/html/uploads/events');
@@ -138,10 +141,6 @@ async  function updateEvent(req, res){
             name: 'pdfFile', maxCount: 1
         }
     ]);
-
-    console.log('Update event - request: ', req.body);
-
-    const requestPDFFile = req.body.pdfFile || '';
 
     uploads(req, res, async (err) => {
 
