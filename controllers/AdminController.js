@@ -230,7 +230,7 @@ async  function updateEvent(req, res){
             }
 
             delete updatedObj.userId;
-            console.log(updatedObj, req.body, req.files);
+            console.log(updatedObj, req.body, req.files, requestPDFFile);
 
             await Events.update({
                 ...updatedObj
