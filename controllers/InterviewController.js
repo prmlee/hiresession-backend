@@ -142,30 +142,30 @@ async function createInterview(req, res){
                 password: meetingData.data.password,
                 meetingId:meetingData.data.id,
                 date,
-                time: req.body.startTime,
+                time: moment(req.body.startTime, 'HH:mm:ss').format('hh:mm a'),
                 companyName:currentEmployee.dataValues.employee.companyName
             },
             'Interview Confirmation Details'
         );
 
 
-        const employeeReplacement =  {
-            shcool:candidateData.shcool,
-            major:candidateData.major,
-            date,
-            time: req.body.startTime
-        };
-
-        if(req.body.shareResume){
-            employeeReplacement.resume =`https://hiresessions.com/https:/hiresessions.com/uploads/candidate/${candidateData.resume}`
-        }
-
-        mailer.send(
-            currentEmployee.email,
-            'sheduleEmailEmployee',
-            employeeReplacement,
-            'Interview Confirmation Details'
-        );
+        // const employeeReplacement =  {
+        //     shcool:candidateData.shcool,
+        //     major:candidateData.major,
+        //     date,
+        //     time: req.body.startTime
+        // };
+        //
+        // if(req.body.shareResume){
+        //     employeeReplacement.resume =`https://hiresessions.com/https:/hiresessions.com/uploads/candidate/${candidateData.resume}`
+        // }
+        //
+        // mailer.send(
+        //     currentEmployee.email,
+        //     'sheduleEmailEmployee',
+        //     employeeReplacement,
+        //     'Interview Confirmation Details'
+        // );
 
         try {
 
