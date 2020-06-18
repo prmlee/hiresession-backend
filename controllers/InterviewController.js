@@ -184,6 +184,7 @@ async function createInterview(req, res) {
         attachedFile: req.file ? req.file.filename : '',
         timezoneName: req.body.timezoneName,
         timezoneOffset: req.body.timezoneOffset,
+        shareResume: req.body.shareResume,
       });
 
       return res.status(httpStatus.OK).json({
