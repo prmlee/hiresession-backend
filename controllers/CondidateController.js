@@ -232,7 +232,7 @@ async function updateInterview(req, res){
         joinUrl: interview.joinUrl,
         meetingId: interview.meetingId,
         date: interview.date,
-        time: interview.startTime,
+        time: moment(interview.startTime, 'HH:mm:ss').format('hh:mm a'),
         timezoneName: interview.timezoneName,
         companyName: company.companyName
       },

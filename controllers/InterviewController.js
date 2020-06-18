@@ -140,7 +140,7 @@ async function createInterview(req, res) {
         password: meetingData.data.password,
         meetingId: meetingData.data.id,
         date,
-        time: req.body.startTime,
+        time: moment(req.body.startTime, 'HH:mm:ss').format('hh:mm a'),
         timezoneName: req.body.timezoneName,
         companyName: currentEmployee.dataValues.employee.companyName,
       },
