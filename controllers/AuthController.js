@@ -116,10 +116,11 @@ async function candidateRegister(req, res) {
         },
       );
 
-      const filename = (req.file) ? req.file.filename : '';
-
       const profileImg = (req.files && req.files.profileImg) ? req.files.profileImg[0].filename : '';
-      const resume = (req.files && req.files.resume) ? req.files.resume[0].filename : '';
+
+      const resumeFile = (req.files && req.files.resume) ? req.files.resume[0] : undefined;
+      const resume = resumeFile ? resumeFile.filename : '';
+      const resumeFileName = resumeFile ? resumeFile.originalname : '';
 
       await Candidates.create({
         userId: createdUser.dataValues.id,
@@ -133,8 +134,9 @@ async function candidateRegister(req, res) {
         zipCode: req.body.zipCode || '',
         specialNeeds: req.body.specialNeeds || '',
         resume,
+        resumeFileName,
         profileImg,
-      })
+      });
 
       return res.status(httpStatus.OK).json({
         success: true,
