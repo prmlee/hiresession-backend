@@ -182,6 +182,7 @@ async function createInterview(req, res) {
         note: req.body.note || '',
         employeeNote: req.body.employeeNote || '',
         attachedFile: req.file ? req.file.filename : '',
+        attachedFileName: req.file ? req.file.originalname : '',
         timezoneName: req.body.timezoneName,
         timezoneOffset: req.body.timezoneOffset,
         shareResume: req.body.shareResume,
