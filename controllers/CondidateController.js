@@ -38,6 +38,7 @@ async function profile(req, res) {
 
   uploads(req, res, async (err) => {
     const requestResume = req.body.resume || '';
+    const requestResumeFileName = req.body.resumeFileName || '';
 
     if (req.body.email) {
       const user = await User.findOne({
@@ -70,7 +71,9 @@ async function profile(req, res) {
       });
 
       updatedObj.profileImg = (req.files && req.files.profileImg) ? req.files.profileImg[0].filename : candidate.profileImg;
-      updatedObj.resume = (req.files && req.files.resume) ? req.files.resume[0].filename : requestResume;
+      const resumeFile = (req.files && req.files.resume) ? req.files.resume[0] : undefined;
+      updatedObj.resume = resumeFile ? resumeFile.filename : requestResume;
+      updatedObj.resumeFileName = resumeFile ? resumeFile.originalname : requestResumeFileName;
 
       console.log('update profile: ', req.files);
 
