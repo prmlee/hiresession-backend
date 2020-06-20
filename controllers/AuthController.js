@@ -153,7 +153,6 @@ async function candidateRegister(req, res) {
 }
 
 async function employeeRegister(req, res) {
-
   const storage = multer.diskStorage({
     destination: function (req, file, callback) {
       callback(null, '/var/www/html/uploads/employeer');
@@ -280,7 +279,7 @@ async function employeeRegister(req, res) {
         profileImg: profileImg || '',
         companyImg: companyLogo || '',
         phone: req.body.phone || '',
-      })
+      });
 
       if (req.files && req.files.supportingDocs) {
 
@@ -289,6 +288,7 @@ async function employeeRegister(req, res) {
           await SupportingDocuments.create({
             userId: createdUser.dataValues.id,
             docName: req.files.supportingDocs[i].filename,
+            docFileName: req.files.supportingDocs[i].originalname,
             fileSize: req.files.supportingDocs[i].size,
           })
         }
