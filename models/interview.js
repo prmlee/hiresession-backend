@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     meetingId: DataTypes.STRING,
     joinUrl: DataTypes.STRING,
     attachedFile: DataTypes.STRING,
+    attachedFileName: DataTypes.STRING,
     status: {
       type: DataTypes.ENUM,
       values: ['interviewed', 'canceled','upcoming']

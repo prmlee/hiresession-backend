@@ -2,555 +2,559 @@ const bcrypt = require('bcrypt');
 const httpStatus = require('http-status');
 const path = require('path');
 const multer = require('multer')
-const {validationResult} = require('express-validator/check');
-const {createToken, createResetPassToken, verifyToken, Roles} = require('../helpers/JwtHelper');
+const { validationResult } = require('express-validator/check');
+const { createToken, createResetPassToken, verifyToken, Roles } = require('../helpers/JwtHelper');
 const mailer = require('../services/mail-sender');
 const configs = require('../config');
-const {LIMIT_UPLOAD_FILE_SIZE} = require('../config/constants');
+const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
-const {User, Candidates, Employees, SupportingDocuments, Admin} = require('../models');
+const { User, Candidates, Employees, SupportingDocuments, Admin } = require('../models');
 
 async function candidateRegister(req, res) {
+  const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, '/var/www/html/uploads/candidate');
+    },
 
-    const storage = multer.diskStorage({
-        destination : function (req, file, callback) {
-            callback(null, '/var/www/html/uploads/candidate');
-        },
+    filename: function (req, file, callback) {
+      callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
 
-        filename: function (req, file, callback) {
+    },
+  });
 
-            callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+  const upload = multer({
+    storage,
+    limits: { fileSize: LIMIT_UPLOAD_FILE_SIZE },
 
-        }
+  }).fields([
+    {
+      name: 'profileImg', maxCount: 1,
+    }, {
+      name: 'resume', maxCount: 1,
+    },
+  ]);
+
+  upload(req, res, async (err) => {
+    if (!req.body.email) {
+      return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+        success: false,
+        message: 'email is required',
+      })
+    }
+
+    if (!req.body.firstName) {
+      return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+        success: false,
+        message: 'First Name is required',
+      })
+    }
+
+    if (!req.body.lastName) {
+      return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+        success: false,
+        message: 'Last Name is required',
+      })
+    }
+
+    if (!req.body.password || !req.body.confirmPassword || (req.body.password !== req.body.confirmPassword)) {
+      return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+        success: false,
+        message: 'password does not match!',
+      })
+    }
+
+    if (!req.body.role) {
+      return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+        success: false,
+        message: 'Role is required',
+      })
+    }
+
+    const user = await User.findOne({
+      where: {
+        email: req.body.email,
+      },
+      raw: true,
     });
 
+    if (user) {
+      return res.status(httpStatus.FORBIDDEN).json({
+        success: false,
+        message: 'this email already used',
+      })
+    }
 
-    const upload = multer({
-        storage,
-        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZE},
+    if (err) {
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: err,
+      })
+    }
 
-    }).fields([
+    const saltRounds = 10;
+    const password = req.body.password;
+
+    const HASHED_PASSWORD = bcrypt.hashSync(password, saltRounds);
+
+    try {
+      const createdUser = await User.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        role: req.body.role,
+        email: req.body.email,
+        password: HASHED_PASSWORD,
+        status: 2,
+      });
+
+      const token = await createResetPassToken(req.body.email);
+
+      await mailer.send(
+        req.body.email,
+        'activationEmailCandidate',
         {
-            name: 'profileImg', maxCount: 1
-        }, {
-            name: 'resume', maxCount: 1
-        }
-    ]);
+          resetPassFormUrl: `${configs.frontAppUrl}/activation/${token}`,
+        },
+      );
 
+      const filename = (req.file) ? req.file.filename : '';
 
-    upload(req, res, async (err) => {
+      const profileImg = (req.files && req.files.profileImg) ? req.files.profileImg[0].filename : '';
+      const resume = (req.files && req.files.resume) ? req.files.resume[0].filename : '';
 
-         if(!req.body.email){
-            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                success: false,
-                message: "email is required"
-            })
-         }
+      await Candidates.create({
+        userId: createdUser.dataValues.id,
+        major: req.body.major || '',
+        shcool: req.body.shcool || '',
+        highDeagree: req.body.highDeagree || '',
+        phone: req.body.phone || '',
+        graduationYear: req.body.graduationYear || 0,
+        desiredJobTitle: req.body.desiredJobTitle || '',
+        industryInterested: req.body.industryInterested || '',
+        zipCode: req.body.zipCode || '',
+        specialNeeds: req.body.specialNeeds || '',
+        resume,
+        profileImg,
+      })
 
-         if(!req.body.firstName){
-             return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                 success: false,
-                 message: "First Name is required"
-             })
-         }
+      return res.status(httpStatus.OK).json({
+        success: true,
+        message: 'you already registered',
+      });
 
-         if(!req.body.lastName){
-             return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                 success: false,
-                 message: "Last Name is required"
-             })
-         }
-
-        if(!req.body.password || !req.body.confirmPassword || (req.body.password !== req.body.confirmPassword)){
-            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                success: false,
-                message: "password does not match!"
-            })
-        }
-
-         if(!req.body.role){
-             return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                 success: false,
-                 message: "Role is required"
-             })
-         }
-
-         const user = await User.findOne({
-             where: {
-                 email: req.body.email
-             },
-             raw: true,
-         });
-
-      if(user){
-          return  res.status(httpStatus.FORBIDDEN).json({
-              success: false,
-              message: 'this email already used'
-          })
-      }
-
-       if(err){
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-                success:false,
-                message:err
-            })
-        }
-
-        const saltRounds = 10;
-        const password = req.body.password;
-
-        const HASHED_PASSWORD = bcrypt.hashSync(password, saltRounds);
-
-        try {
-             const createdUser = await User.create({
-                firstName:req.body.firstName,
-                lastName:req.body.lastName,
-                role:req.body.role,
-                email:req.body.email,
-                password:HASHED_PASSWORD,
-                status:2
-            });
-
-            const token = await createResetPassToken(req.body.email);
-
-            await mailer.send(
-                req.body.email,
-                'activationEmailCandidate',
-                {
-                    resetPassFormUrl: `${configs.frontAppUrl}/activation/${token}`
-                }
-            );
-
-             const filename = (req.file)?req.file.filename:'';
-
-            const profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:'';
-            const resume = (req.files && req.files.resume)?req.files.resume[0].filename:'';
-
-            await Candidates.create({
-                userId:createdUser.dataValues.id,
-                major:req.body.major || '',
-                shcool:req.body.shcool || '',
-                highDeagree:req.body.highDeagree || '',
-                phone:req.body.phone || '',
-                graduationYear:req.body.graduationYear || 0,
-                desiredJobTitle:req.body.desiredJobTitle || '',
-                industryInterested:req.body.industryInterested || '',
-                zipCode:req.body.zipCode || '',
-                specialNeeds:req.body.specialNeeds || '',
-                resume,
-                profileImg,
-            })
-
-            return  res.status(httpStatus.OK).json({
-                success: true,
-                message:"you already registered"
-            });
-
-        }catch (e) {
-            return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: e.message
-            });
-        }
-    })
+    } catch (e) {
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: e.message,
+      });
+    }
+  })
 }
 
 async function employeeRegister(req, res) {
 
-    const storage = multer.diskStorage({
-        destination : function (req, file, callback) {
-            callback(null, '/var/www/html/uploads/employeer');
-        },
+  const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, '/var/www/html/uploads/employeer');
+    },
 
-        filename: function (req, file, callback) {
+    filename: function (req, file, callback) {
 
-            callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+      callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
 
-        }
+    },
+  });
+
+
+  const profileImg = multer({
+    storage,
+    limits: { fileSize: LIMIT_UPLOAD_FILE_SIZE },
+
+  }).fields([
+    {
+      name: 'profileImg', maxCount: 1,
+    }, {
+      name: 'companyLogo', maxCount: 1,
+    },
+    {
+      name: 'supportingDocs', supportingDocs: 20,
+    },
+  ]);
+
+
+  profileImg(req, res, async (err) => {
+
+    if (!req.body.email) {
+      return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+        success: false,
+        message: 'email is required',
+      })
+    }
+
+    if (!req.body.firstName) {
+      return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+        success: false,
+        message: 'First Name is required',
+      })
+    }
+
+    if (!req.body.lastName) {
+      return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+        success: false,
+        message: 'Last Name is required',
+      })
+    }
+
+    if (!req.body.role) {
+      return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+        success: false,
+        message: 'Role is required',
+      })
+    }
+
+    if (!req.body.password || !req.body.confirmPassword || (req.body.password !== req.body.confirmPassword)) {
+      return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+        success: false,
+        message: 'password does not match!',
+      })
+    }
+
+    const user = await User.findOne({
+      where: {
+        email: req.body.email,
+      },
+      raw: true,
     });
 
-
-    const profileImg = multer({
-        storage,
-        limits:{fileSize:LIMIT_UPLOAD_FILE_SIZE},
-
-    }).fields([
-        {
-            name: 'profileImg', maxCount: 1
-        }, {
-            name: 'companyLogo', maxCount: 1
-        },
-        {
-            name: 'supportingDocs', supportingDocs: 20
-        }
-    ]);
-
-
-    profileImg(req, res, async (err) => {
-
-        if(!req.body.email){
-            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                success: false,
-                message: "email is required"
-            })
-        }
-
-        if(!req.body.firstName){
-            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                success: false,
-                message: "First Name is required"
-            })
-        }
-
-        if(!req.body.lastName){
-            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                success: false,
-                message: "Last Name is required"
-            })
-        }
-
-        if(!req.body.role){
-            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                success: false,
-                message: "Role is required"
-            })
-        }
-
-        if(!req.body.password || !req.body.confirmPassword || (req.body.password !== req.body.confirmPassword)){
-            return  res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-                success: false,
-                message: "password does not match!"
-            })
-        }
-
-        const user = await User.findOne({
-            where: {
-                email: req.body.email
-            },
-            raw: true,
-        });
-
-        if(user){
-            return  res.status(httpStatus.FORBIDDEN).json({
-                success: false,
-                message: 'this email already used'
-            })
-        }
-
-        if(err){
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-                success:false,
-                message:err
-            })
-        }
-
-        const saltRounds = 10;
-        const password = req.body.password;
-
-        const HASHED_PASSWORD = bcrypt.hashSync(password, saltRounds);
-
-        try {
-            const createdUser = await User.create({
-                firstName:req.body.firstName,
-                lastName:req.body.lastName,
-                role:req.body.role,
-                email:req.body.email,
-                password:HASHED_PASSWORD,
-                status:2
-            });
-
-            const token = await createResetPassToken(req.body.email);
-
-            await mailer.sendWithBcc(
-                req.body.email,
-                'activationEmailEmployee',
-                {
-                    resetPassFormUrl: `${configs.frontAppUrl}/activation/${token}`
-                },
-                configs.bcc,
-            );
-
-            const profileImg = (req.files && req.files.profileImg)?req.files.profileImg[0].filename:'';
-            const companyLogo = (req.files && req.files.companyLogo)?req.files.companyLogo[0].filename:'';
-
-            await Employees.create({
-                userId:createdUser.dataValues.id,
-                JobTitle:req.body.JobTitle || '',
-                companyName:req.body.companyName || '',
-                videoUrl:req.body.videoUrl || '',
-                city:req.body.city || '',
-                state:req.body.state || '',
-                profileImg: profileImg || '',
-                companyImg:companyLogo || '',
-                phone:req.body.phone || '',
-            })
-
-            if( req.files && req.files.supportingDocs){
-
-                for(let i in req.files.supportingDocs){
-
-                    await SupportingDocuments.create({
-                        userId:createdUser.dataValues.id,
-                        docName: req.files.supportingDocs[i].filename,
-                        fileSize: req.files.supportingDocs[i].size
-                    })
-                }
-            }
-
-            return  res.status(httpStatus.OK).json({
-                success: true,
-                message:"you already registered"
-            });
-
-        }catch (e) {
-            return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: e.message
-            });
-        }
-    })
-}
-
-async function activation(req, res){
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res
-            .status(httpStatus.UNPROCESSABLE_ENTITY)
-            .json(errors.array());
+    if (user) {
+      return res.status(httpStatus.FORBIDDEN).json({
+        success: false,
+        message: 'this email already used',
+      })
     }
+
+    if (err) {
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: err,
+      })
+    }
+
+    const saltRounds = 10;
+    const password = req.body.password;
+
+    const HASHED_PASSWORD = bcrypt.hashSync(password, saltRounds);
 
     try {
+      const createdUser = await User.create({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        role: req.body.role,
+        email: req.body.email,
+        password: HASHED_PASSWORD,
+        status: 2,
+      });
 
-        const decodedToken = await verifyToken(req.body.token);
+      const token = await createResetPassToken(req.body.email);
 
-        await  User.update({
-            status: 1
-        }, {
-            where: {
-                email: decodedToken.email
-            },
-            paranoid: true
-        });
-
-        return res.status(httpStatus.OK).json({
-            success : true,
-            message : "Your account successfully activated!"
-        });
-
-    }catch (e) {
-        console.log(e);
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success : false,
-            message : e
-        });
-    }
-}
-
-async function login(req, res){
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-       return res
-            .status(httpStatus.UNPROCESSABLE_ENTITY)
-            .json({validation: errors.array()});
-    }
-
-    const user = await User.findOne({
-        where: {
-            email: req.body.email,
-            status:1
+      await mailer.sendWithBcc(
+        req.body.email,
+        'activationEmailEmployee',
+        {
+          resetPassFormUrl: `${configs.frontAppUrl}/activation/${token}`,
         },
-        raw:true
-    });
+        configs.bcc,
+      );
 
-    if(!user){
-        return  res.status(httpStatus.UNAUTHORIZED).json({
-            success:"false",
-            message: "Invalid Login or password"
-        })
-    }
+      const profileImg = (req.files && req.files.profileImg) ? req.files.profileImg[0].filename : '';
+      const companyLogo = (req.files && req.files.companyLogo) ? req.files.companyLogo[0].filename : '';
 
-    const result = await bcrypt
-        .compare(req.body.password, user.password);
+      await Employees.create({
+        userId: createdUser.dataValues.id,
+        JobTitle: req.body.JobTitle || '',
+        companyName: req.body.companyName || '',
+        videoUrl: req.body.videoUrl || '',
+        city: req.body.city || '',
+        state: req.body.state || '',
+        profileImg: profileImg || '',
+        companyImg: companyLogo || '',
+        phone: req.body.phone || '',
+      })
 
-    if(!result){
-        return  res.status(httpStatus.UNAUTHORIZED).json({
-            success:"false",
-            message: "Invalid Login or password"
-        })
-    }
+      if (req.files && req.files.supportingDocs) {
 
-    const token  = await createToken(user.email, user.firstName, user.lastName, Roles[user.role]);
-    return  res.status(httpStatus.OK).json({
+        for (let i in req.files.supportingDocs) {
+
+          await SupportingDocuments.create({
+            userId: createdUser.dataValues.id,
+            docName: req.files.supportingDocs[i].filename,
+            fileSize: req.files.supportingDocs[i].size,
+          })
+        }
+      }
+
+      return res.status(httpStatus.OK).json({
         success: true,
-        token,
-        role:Roles[user.role]+1
-    })
+        message: 'you already registered',
+      });
+
+    } catch (e) {
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: e.message,
+      });
+    }
+  })
 }
 
-async function adminLogin(req, res){
-    const errors = validationResult(req);
+async function activation(req, res) {
 
-    if (!errors.isEmpty()) {
-       return  res
-            .status(httpStatus.UNPROCESSABLE_ENTITY)
-            .json(errors.array());
-    }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
 
-    const admin = await Admin.findOne({
-        where: {
-            email: req.body.email
-        },
-        raw:true
+  try {
+
+    const decodedToken = await verifyToken(req.body.token);
+
+    await User.update({
+      status: 1,
+    }, {
+      where: {
+        email: decodedToken.email,
+      },
+      paranoid: true,
     });
 
-    if(!admin){
-        return  res.status(httpStatus.UNAUTHORIZED).json({
-            success:"false",
-            message: "Invalid Login or password"
-        })
-    }
+    return res.status(httpStatus.OK).json({
+      success: true,
+      message: 'Your account successfully activated!',
+    });
 
-    const result = await bcrypt
-        .compare(req.body.password, admin.password);
-
-    if(!result){
-        return  res.status(httpStatus.UNAUTHORIZED).json({
-            success:"false",
-            message: "Invalid Login or password"
-        })
-    }
-
-    const token  = await createToken(admin.email, admin.name, null, Roles.admin);
-    console.log(Roles.admin)
-    return  res.status(httpStatus.OK).json({
-        success: true,
-        token,
-        roles:Roles.admin
-    })
+  } catch (e) {
+    console.log(e);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: e,
+    });
+  }
 }
 
-async function resetPassEmail(req, res){
+async function login(req, res) {
 
-    const errors = validationResult(req);
+  const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-        return  res.status(httpStatus.UNPROCESSABLE_ENTITY)
-            .json(errors.array());
-    }
+  if (!errors.isEmpty()) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json({ validation: errors.array() });
+  }
 
-    const user = await User.findOne({
-        where: {
-            email: req.body.email
-        },
-        raw:true
+  const user = await User.findOne({
+    where: {
+      email: req.body.email,
+      status: 1,
+    },
+    raw: true,
+  });
+
+  if (!user) {
+    return res.status(httpStatus.UNAUTHORIZED).json({
+      success: 'false',
+      message: 'Invalid Login or password',
+    })
+  }
+
+  const result = await bcrypt
+    .compare(req.body.password, user.password);
+
+  if (!result) {
+    return res.status(httpStatus.UNAUTHORIZED).json({
+      success: 'false',
+      message: 'Invalid Login or password',
+    })
+  }
+
+  const token = await createToken(user.email, user.firstName, user.lastName, Roles[user.role]);
+  return res.status(httpStatus.OK).json({
+    success: true,
+    token,
+    role: Roles[user.role] + 1,
+  })
+}
+
+async function adminLogin(req, res) {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
+
+  const admin = await Admin.findOne({
+    where: {
+      email: req.body.email,
+    },
+    raw: true,
+  });
+
+  if (!admin) {
+    return res.status(httpStatus.UNAUTHORIZED).json({
+      success: 'false',
+      message: 'Invalid Login or password',
+    })
+  }
+
+  const result = await bcrypt
+    .compare(req.body.password, admin.password);
+
+  if (!result) {
+    return res.status(httpStatus.UNAUTHORIZED).json({
+      success: 'false',
+      message: 'Invalid Login or password',
+    })
+  }
+
+  const token = await createToken(admin.email, admin.name, null, Roles.admin);
+  console.log(Roles.admin)
+  return res.status(httpStatus.OK).json({
+    success: true,
+    token,
+    roles: Roles.admin,
+  })
+}
+
+async function resetPassEmail(req, res) {
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
+
+  const user = await User.findOne({
+    where: {
+      email: req.body.email,
+    },
+    raw: true,
+  });
+
+  if (!user) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      message: 'User Not Found!',
     });
+  }
 
-    if(!user){
-        return res.status(httpStatus.NOT_FOUND).json({
-            message: 'User Not Found!'
-        });
-    }
+  const token = await createResetPassToken(req.body.email);
 
-    const token = await createResetPassToken(req.body.email);
-
-    try{
-        const success =  await mailer.send(req.body.email, 'resetPassEmail', {resetPassFormUrl: `${configs.frontAppUrl}/reset-password/${token}`});
-console.log(success)
-        return res.status(httpStatus.OK).json({
-            success : true,
-            message : "Please check your email"
-        });
-    }catch (e) {
-        console.log(e);
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success : false,
-            message : "We have some problem please try again"
-        });
-    }
+  try {
+    const success = await mailer.send(req.body.email, 'resetPassEmail', { resetPassFormUrl: `${configs.frontAppUrl}/reset-password/${token}` });
+    console.log(success);
+    return res.status(httpStatus.OK).json({
+      success: true,
+      message: 'Please check your email',
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: 'We have some problem please try again',
+    });
+  }
 
 
 }
 
 async function resetPassword(req, res) {
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res
-            .status(httpStatus.UNPROCESSABLE_ENTITY)
-            .json(errors.array());
-    }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
 
-    try {
+  try {
 
-        const decodedToken = await verifyToken(req.body.token);
+    const decodedToken = await verifyToken(req.body.token);
 
-        await  User.update({
-            password: req.body.password
-        }, {
-            where: {
-                email: decodedToken.email
-            },
-            paranoid: true
-        })
+    await User.update({
+      password: req.body.password,
+    }, {
+      where: {
+        email: decodedToken.email,
+      },
+      paranoid: true,
+    })
 
-        return res.status(httpStatus.OK).json({
-            success : true,
-            message : "Your password successfully updated!"
-        });
+    return res.status(httpStatus.OK).json({
+      success: true,
+      message: 'Your password successfully updated!',
+    });
 
-    }catch (e) {
-        console.log(e);
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success : false,
-            message : e
-        });
-    }
+  } catch (e) {
+    console.log(e);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: e,
+    });
+  }
 }
 
 async function changePassword(req, res) {
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res
-            .status(httpStatus.UNPROCESSABLE_ENTITY)
-            .json(errors.array());
-    }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
 
-    const result = await bcrypt
-        .compare(req.body.oldPassword, res.locals.user.password);
+  const result = await bcrypt
+    .compare(req.body.oldPassword, res.locals.user.password);
 
-    if(!result){
-        return  res.status(httpStatus.UNAUTHORIZED).json({
-            success:"false",
-            message: "Invalid Login or password"
-        })
-    }
+  if (!result) {
+    return res.status(httpStatus.UNAUTHORIZED).json({
+      success: 'false',
+      message: 'Invalid Login or password',
+    })
+  }
 
-    try {
-        await  User.update({
-            password: req.body.password
-        }, {
-            where: {
-                email: res.locals.user.email
-            },
-            paranoid: true
-        })
+  try {
+    await User.update({
+      password: req.body.password,
+    }, {
+      where: {
+        email: res.locals.user.email,
+      },
+      paranoid: true,
+    })
 
-        return res.status(httpStatus.OK).json({
-            success : true,
-            message : "Your password successfully updated!"
-        });
+    return res.status(httpStatus.OK).json({
+      success: true,
+      message: 'Your password successfully updated!',
+    });
 
-    }catch (e) {
-        console.log(e);
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success : false,
-            message : e
-        });
-    }
+  } catch (e) {
+    console.log(e);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: e,
+    });
+  }
 }
 
-module.exports = {candidateRegister, employeeRegister, login, adminLogin, resetPassword, resetPassEmail, changePassword, activation};
+module.exports = {
+  candidateRegister,
+  employeeRegister,
+  login,
+  adminLogin,
+  resetPassword,
+  resetPassEmail,
+  changePassword,
+  activation,
+};
