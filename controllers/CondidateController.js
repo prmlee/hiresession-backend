@@ -71,6 +71,9 @@ async function profile(req, res) {
 
       updatedObj.profileImg = (req.files && req.files.profileImg) ? req.files.profileImg[0].filename : candidate.profileImg;
       updatedObj.resume = (req.files && req.files.resume) ? req.files.resume[0].filename : requestResume;
+
+      console.log('update profile: ', req.files);
+
       console.log(updatedObj);
       Candidates.update({
         ...updatedObj,
@@ -157,33 +160,33 @@ async function sheduleInterview(req, res) {
   }
 }
 
-async function updateInterview(req, res){
+async function updateInterview(req, res) {
 
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     return res
       .status(httpStatus.UNPROCESSABLE_ENTITY)
-      .json({validation: errors.array()});
+      .json({ validation: errors.array() });
   }
 
-  const updatedObj  = req.body;
+  const updatedObj = req.body;
 
   console.log('Update interview:', req.params, updatedObj);
 
   try {
-    await  Interviews.update({
-      ...updatedObj
+    await Interviews.update({
+      ...updatedObj,
     }, {
       where: {
-        id: req.params.id
+        id: req.params.id,
       },
-      paranoid: true
+      paranoid: true,
     });
 
     const interview = await Interviews.findOne({
       where: {
-        id: req.params.id
+        id: req.params.id,
       },
       raw: true,
     });
@@ -234,9 +237,9 @@ async function updateInterview(req, res){
         date: interview.date,
         time: moment(interview.startTime, 'HH:mm:ss').format('hh:mm a'),
         timezoneName: interview.timezoneName,
-        companyName: company.companyName
+        companyName: company.companyName,
       },
-      'Interview has been changed'
+      'Interview has been changed',
     );
 
     // mailer.send(
@@ -252,15 +255,15 @@ async function updateInterview(req, res){
     //   'Interview has been changed'
     // );
 
-    return  res.status(httpStatus.OK).json({
+    return res.status(httpStatus.OK).json({
       success: true,
-      message:"Updated successfully"
+      message: 'Updated successfully',
     });
 
-  }catch (e) {
-    return  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+  } catch (e) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: e.message
+      message: e.message,
     });
   }
 }
