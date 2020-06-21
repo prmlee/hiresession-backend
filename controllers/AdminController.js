@@ -780,7 +780,7 @@ async function activities(req, res) {
 async function getEvents(req, res) {
 
   const events = await Events.findAll({
-    attributes: ['id', 'bizaboLink', 'pdfFile', 'location', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
+    attributes: ['id', 'bizaboLink', 'pdfFile', 'pdfFileName', 'location', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
     raw: true,
   });
 
@@ -793,7 +793,7 @@ async function getEvents(req, res) {
 async function getSingleEvent(req, res) {
 
   const events = await Events.findOne({
-    attributes: ['id', 'bizaboLink', 'pdfFile', 'location', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
+    attributes: ['id', 'bizaboLink', 'pdfFile', 'pdfFileName', 'location', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
     include: [
       {
         attributes: ['id'],
