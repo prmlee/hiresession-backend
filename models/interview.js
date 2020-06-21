@@ -15,12 +15,21 @@ module.exports = (sequelize, DataTypes) => {
     meetingId: DataTypes.STRING,
     joinUrl: DataTypes.STRING,
     attachedFile: DataTypes.STRING,
+    attachedFileName: DataTypes.STRING,
     status: {
       type: DataTypes.ENUM,
       values: ['interviewed', 'canceled','upcoming']
     },
-    rating:DataTypes.INTEGER
-
+    rating:DataTypes.INTEGER,
+    timezoneOffset: {
+      type: DataTypes.INTEGER,
+      defaultValue: 300, // EST TIME
+    },
+    timezoneName: {
+      type: DataTypes.STRING,
+      defaultValue: 'EST',
+    },
+    shareResume: DataTypes.STRING,
   }, {});
 
   Interviews.associate = function(models) {

@@ -8,12 +8,19 @@ module.exports = (sequelize, DataTypes) => {
     bizaboLink: DataTypes.STRING,
     eventLogo: DataTypes.STRING,
     pdfFile: DataTypes.STRING,
+    pdfFileName: DataTypes.STRING,
     date: DataTypes.DATE,
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
     location: DataTypes.STRING,
-
-
+    timezoneOffset: {
+      type: DataTypes.INTEGER,
+      defaultValue: 300, // EST TIME
+    },
+    timezoneName: {
+      type: DataTypes.STRING,
+      defaultValue: 'EST',
+    },
   }, {});
 
   Events.associate = function(models) {
