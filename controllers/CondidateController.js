@@ -238,7 +238,7 @@ async function updateInterview(req, res) {
         joinUrl: interview.joinUrl,
         meetingId: interview.meetingId,
         date: interview.date,
-        time: moment(interview.startTime, 'HH:mm:ss').format('hh:mm a'),
+        time: moment(interview.startTime, 'HH:mm:ss').format('h:mm a'),
         timezoneName: interview.timezoneName,
         companyName: company.companyName,
       },
@@ -499,7 +499,7 @@ function createTimes(duration, durationType, startTime, endTime, arr, startTime2
 
   }
 
-  const format = 'hh:mm:ss';
+  const format = 'HH:mm:ss';
 
   if (!checkArr.includes(newTime)) {
 
@@ -513,7 +513,7 @@ function createTimes(duration, durationType, startTime, endTime, arr, startTime2
 
   if (moment(newTime, format).isBefore(moment(endTime, format))) {
 
-    const argNewTime = newTime.split(':')
+    const argNewTime = newTime.split(':');
 
     createTimes(duration, durationType, argNewTime, endTime, returnArray, newTime, checkArr)
   }
