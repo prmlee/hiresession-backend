@@ -313,7 +313,7 @@ async function getSingleEmployee(req, res) {
         as: 'employee',
       },
       {
-        attributes: ['docName', 'fileSize'],
+        attributes: ['docName', 'docFileName', 'fileSize'],
         model: SupportingDocuments,
         as: 'SupportingDocuments',
       },
