@@ -131,6 +131,8 @@ async function candidateRegister(req, res) {
         graduationYear: req.body.graduationYear || 0,
         desiredJobTitle: req.body.desiredJobTitle || '',
         industryInterested: req.body.industryInterested || '',
+        city: req.body.city || '',
+        state: req.body.state || '',
         zipCode: req.body.zipCode || '',
         specialNeeds: req.body.specialNeeds || '',
         resume,

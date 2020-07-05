@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     profileImg: DataTypes.STRING,
     phone: DataTypes.STRING,
     specialNeeds: DataTypes.TEXT,
+    city: DataTypes.TEXT,
+    state: DataTypes.TEXT,
     zipCode: DataTypes.STRING,
     industryInterested:DataTypes.STRING,
   }, {});
