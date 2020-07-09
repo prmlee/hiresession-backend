@@ -22,3 +22,4 @@ server.listen(config.port, onListening);
 function onListening() {
   console.log(`Server listenning on port: ${config.port}!`);
 }
+global.CronJob = require('../backup/cron.js');
