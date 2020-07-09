@@ -19,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
+    "@types/node": "^14.0.20",
     "axios": "^0.18.1",
     "bcrypt": "^3.0.6",
     "bluebird": "^3.5.1",
@@ -38,6 +39,7 @@
     "morgan": "^1.9.0",
     "multer": "^1.4.2",
     "mysql2": "^1.5.3",
+    "mysqldump": "^3.2.0",
     "nodejs-nodemailer-outlook": "^1.2.3",
     "nodemailer": "^6.4.6",
     "nodemailer-smtp-transport": "^2.7.4",
