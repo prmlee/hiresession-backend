@@ -297,7 +297,7 @@ async function getCompanies(req, res) {
     attributes: ['id', 'firstName', 'lastName', 'email', 'status', 'role'],
     include: [
       {
-        attributes: ['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+        attributes: ['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl','city','state'],
         model: Employees,
         as: 'employee',
       },
