@@ -16,6 +16,7 @@ async function getEvent(req, res){
                         attributes :['id', 'firstName', 'lastName', 'status', 'role'],
                         model:User,
                         as:'Company',
+                        
                         include : [
                             {
                                 attributes :['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl','state'],
@@ -23,7 +24,7 @@ async function getEvent(req, res){
                                 as:'employee'
                             },
 
-                        ],
+                        ]
                     },
                     {
                         model:employeeSettings,
@@ -41,9 +42,12 @@ async function getEvent(req, res){
 
                         ],
                     },
-                ]
+                ],
             },
-
+        ],
+        order:[
+            ['id','ASC'],
+            [Events.associations.attachedEmployees,AttachedEmployees.associations.Company,User.associations.employee, 'companyName', 'ASC']
         ]
     });
 
