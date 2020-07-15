@@ -492,6 +492,58 @@ async function getSettingInterviews(req, res) {
   })
 }
 
+async function checkEmployeeSettingsFull(eventId,employeeId){
+  //console.log("-------------------------------------------------------------");
+  var totalTimeMinutes = 0;
+  var isFull = 0, duration;
+  const settings = await employeeSettings.findOne({
+    include:[
+      {
+        model: SettingDurations,
+        as: 'SettingDurations',
+      },
+    ],
+    where:{
+      employeeId:employeeId,
+      eventId: eventId
+    }
+  });
+  const count = await Interviews.count({
+    where:{
+      employeeId:employeeId,
+      eventId: eventId
+    }
+  })
+
+  //console.log(JSON.stringify(settings));
+  //console.log(JSON.stringify(count));
+  
+  for(var i=0; i<settings.SettingDurations.length;i++)
+  {
+    var item = settings.SettingDurations[i];
+    console.log((new Date("2019-1-1 "+item.endTime)).getTime());
+    totalTimeMinutes += ((new Date("2019-1-1 "+item.endTime)).getTime() - (new Date("2019-1-1 "+item.startTime)).getTime())/60000;
+  }
+
+  duration = settings.durationType == "Min" ? settings.duration : settings.duration * 60;
+
+ // console.log("totalTimeMinutes:",totalTimeMinutes,Math.ceil(totalTimeMinutes/duration));
+  if(count >= Math.ceil(totalTimeMinutes/duration))
+    isFull = 1;
+  //console.log("isFull",isFull);
+  await employeeSettings.update({
+    isFull: isFull
+  },{
+    where:{
+      employeeId:employeeId,
+      eventId: eventId
+    },
+    paranoid: true,
+  });
+  //console.log("-----------------------------------------------");
+  return isFull;
+}
+
 module.exports = {
   getLoggedInUser,
   getSettingInterviews,
@@ -503,4 +555,5 @@ module.exports = {
   updateSettings,
   getAttachedFiles,
   getInterviews,
+  checkEmployeeSettingsFull,
 };

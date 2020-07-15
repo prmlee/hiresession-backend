@@ -8,6 +8,7 @@ const multer = require('multer');
 const { Op } = require('sequelize');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
+const {checkEmployeeSettingsFull} = require('./EmployeeController')
 const { User, Candidates, Employees, Interviews, SupportingDocuments } = require('../models');
 
 async function createInterview(req, res) {
@@ -187,6 +188,8 @@ async function createInterview(req, res) {
         timezoneOffset: req.body.timezoneOffset,
         shareResume: req.body.shareResume,
       });
+
+      await checkEmployeeSettingsFull(req.body.eventId,req.body.employeeId);
 
       return res.status(httpStatus.OK).json({
         success: true,

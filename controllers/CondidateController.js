@@ -627,13 +627,14 @@ async function deleteFavorit(req, res) {
 
 async function getFavorit(req, res) {
 
+  console.log("----------------");
   const favorit = await Favorits.findAll({
     where: {
       candidateId: res.locals.user.id,
     },
     raw: true,
   });
-
+  console.log("----------------");
   res.status(httpStatus.OK).json({
     success: true,
     data: favorit,
