@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       values: ['Min', 'Hours']
     },
+    isFull: {
+        type: DataTypes.INTEGER,
+        defaultValue:0
+    },
   }, {});
 
   EmployeeSettings.associate = function(models) {
