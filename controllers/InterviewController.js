@@ -78,23 +78,23 @@ async function createInterview(req, res) {
     const interview = await Interviews.findAll({
       where: {
         employeeId: req.body.employeeId,
-        candidateId: req.body.candidateId,
         eventId: req.body.eventId,
         date: req.body.date,
       },
       raw: true,
     });
-
+    
     if (interview) {
+      console.log("req.body.startTime :",req.body.startTime);
+      console.log(interview[0].startTime);
       for (let i in interview) {
         if (interview[i].startTime === req.body.startTime) {
           return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
             success: false,
-            message: 'You already registered this time',
+            message: 'Somebody already registered this time',
           })
         }
       }
-
     }
 
     const currentEmployee = await User.findOne({
@@ -152,7 +152,7 @@ async function createInterview(req, res) {
     }catch(err)
     {
       //console.log("Error:" ,JSON.stringify(err))
-      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      return res.status(httpStatus.OK).json({
         success: false,
         message: err.message,
       });
@@ -208,7 +208,7 @@ async function createInterview(req, res) {
         message: 'Your request to interview successfully sended',
       });
     } catch (e) {
-      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      return res.status(httpStatus.OK).json({
         success: false,
         message: e.message,
       });
