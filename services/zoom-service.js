@@ -8,6 +8,15 @@ async function createMeeting(body, email) {
 
     const userEmail = await createUser(email);
 
+    if(userEmail.status == 200)
+    {
+        console.log(userEmail.message);
+        return {
+            status:200,
+            message:userEmail.message,
+        }
+    }
+
     const url =  `https://api.zoom.us/v2/users/${userEmail}/meetings`;
 
     const data = await normaliseData(body);
