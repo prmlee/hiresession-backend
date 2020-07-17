@@ -12,7 +12,7 @@ async function createMeeting(body, email) {
 
     const data = await normaliseData(body);
     const token = generateJWT();
-
+    console.log("create meetting url:",url);
     const headers =  {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ async function createMeeting(body, email) {
             data,
         });
 
-        //console.log(response);
+        console.log("createMeeting response:",response);
 
         return {
             data: response.data,
