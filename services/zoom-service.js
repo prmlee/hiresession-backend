@@ -158,6 +158,8 @@ async function createUser(email) {
             data,
         });
 
+        console.log("create user response",JSON.stringify(response));
+
         await ZoomUsers.create({
             email
         });
