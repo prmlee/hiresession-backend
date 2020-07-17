@@ -112,42 +112,54 @@ async function createInterview(req, res) {
         id: req.body.employeeId,
       },
     });
+    
+    var date,meetingData;
+    try{
+      meetingData = await createMeeting(req.body, currentEmployee.dataValues.email);
 
-    const meetingData = await createMeeting(req.body, currentEmployee.dataValues.email);
 
+      if ((await meetingData).status !== 200) {
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          message: meetingData.message,
+        });
+      }
+      console.log("meettingData: ",JSON.stringify(meetingData));
+      date = moment(req.body.date).format('YYYY-MM-DD');
 
-    if ((await meetingData).status !== 200) {
+      // const candidateData = await Candidates.findOne({
+      //   where: {
+      //     userId: req.body.candidateId,
+      //   },
+      //   raw: true,
+      // });
+      console.log("date: ",date);
+      mailer.send(
+        res.locals.user.email,
+        'sheduleEmailCandidates',
+        {
+          startUrl: meetingData.data.start_url,
+          joinUrl: meetingData.data.join_url,
+          password: meetingData.data.password,
+          meetingId: meetingData.data.id,
+          date,
+          time: moment(req.body.startTime, 'HH:mm:ss').format('h:mm a'),
+          timezoneName: req.body.timezoneName,
+          companyName: currentEmployee.dataValues.employee.companyName,
+        },
+        'Interview Confirmation Details',
+      );
+    }catch(err)
+    {
+      //console.log("Error:" ,JSON.stringify(err))
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
         success: false,
-        message: meetingData.message,
+        message: err.message,
       });
     }
-
-    const date = moment(req.body.date).format('YYYY-MM-DD');
-
-    // const candidateData = await Candidates.findOne({
-    //   where: {
-    //     userId: req.body.candidateId,
-    //   },
-    //   raw: true,
-    // });
-
-    mailer.send(
-      res.locals.user.email,
-      'sheduleEmailCandidates',
-      {
-        startUrl: meetingData.data.start_url,
-        joinUrl: meetingData.data.join_url,
-        password: meetingData.data.password,
-        meetingId: meetingData.data.id,
-        date,
-        time: moment(req.body.startTime, 'HH:mm:ss').format('h:mm a'),
-        timezoneName: req.body.timezoneName,
-        companyName: currentEmployee.dataValues.employee.companyName,
-      },
-      'Interview Confirmation Details',
-    );
-
+    
+    console.log("post Mail");
+    console.log("date: ",date);
     // const employeeReplacement = {
     //   shcool: candidateData.shcool,
     //   major: candidateData.major,
@@ -188,9 +200,9 @@ async function createInterview(req, res) {
         timezoneOffset: req.body.timezoneOffset,
         shareResume: req.body.shareResume,
       });
-
+      console.log("Post Interviews.create ");
       await checkEmployeeSettingsFull(req.body.eventId,req.body.employeeId);
-
+      console.log("Post checkEmployeeSettingsFull ");
       return res.status(httpStatus.OK).json({
         success: true,
         message: 'Your request to interview successfully sended',

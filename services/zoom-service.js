@@ -26,6 +26,8 @@ async function createMeeting(body, email) {
             data,
         });
 
+        //console.log(response);
+
         return {
             data: response.data,
             status:200
