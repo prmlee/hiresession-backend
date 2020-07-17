@@ -149,17 +149,21 @@ async function createUser(email) {
             "type": 1
         }
     };
-
+    var response;
     try{
-        const response = await axios({
+        response = await axios({
             method: 'post',
             url,
             headers,
             data,
         });
-
+    }catch(e)
+    {
         console.log("create user response",JSON.stringify(response));
+    }
 
+        
+    try{
         await ZoomUsers.create({
             email
         });
