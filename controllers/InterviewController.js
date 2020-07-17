@@ -85,9 +85,6 @@ async function createInterview(req, res) {
     });
     
     if (interview) {
-      console.log("req.body.startTime :",req.body.startTime);
-      console.log(JSON.stringify(interview));
-      console.log(interview[0].startTime);
       for (let i in interview) {
         if (interview[i].startTime === req.body.startTime) {
           return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
@@ -155,7 +152,7 @@ async function createInterview(req, res) {
       //console.log("Error:" ,JSON.stringify(err))
       return res.status(httpStatus.OK).json({
         success: false,
-        message: err.message,
+        message: "Failed to create a meeting channel.",
       });
     }
     
@@ -211,7 +208,7 @@ async function createInterview(req, res) {
     } catch (e) {
       return res.status(httpStatus.OK).json({
         success: false,
-        message: e.message,
+        message: "Your request to interview failed to send."
       });
     }
   });
