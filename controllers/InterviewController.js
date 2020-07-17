@@ -86,6 +86,7 @@ async function createInterview(req, res) {
     
     if (interview) {
       console.log("req.body.startTime :",req.body.startTime);
+      console.log(JSON.stringify(interview));
       console.log(interview[0].startTime);
       for (let i in interview) {
         if (interview[i].startTime === req.body.startTime) {
