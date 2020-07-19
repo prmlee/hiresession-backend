@@ -122,7 +122,7 @@ async function createInterview(req, res) {
           message: meetingData.message,
         });
       }
-      console.log("meettingData: ",JSON.stringify(meetingData));
+      //console.log("meettingData: ",JSON.stringify(meetingData));
       date = moment(req.body.date).format('YYYY-MM-DD');
 
       // const candidateData = await Candidates.findOne({
@@ -156,8 +156,8 @@ async function createInterview(req, res) {
       });
     }
     
-    console.log("post Mail");
-    console.log("date: ",date);
+    //console.log("post Mail");
+   // console.log("date: ",date);
     // const employeeReplacement = {
     //   shcool: candidateData.shcool,
     //   major: candidateData.major,
@@ -178,7 +178,7 @@ async function createInterview(req, res) {
     // );
 
     try {
-      console.log('Interviews.create: ', req.body)
+      //console.log('Interviews.create: ', req.body)
       await Interviews.create({
         employeeId: req.body.employeeId,
         candidateId: req.body.candidateId,
@@ -198,9 +198,9 @@ async function createInterview(req, res) {
         timezoneOffset: req.body.timezoneOffset,
         shareResume: req.body.shareResume,
       });
-      console.log("Post Interviews.create ");
+      //console.log("Post Interviews.create ");
       await checkEmployeeSettingsFull(req.body.eventId,req.body.employeeId);
-      console.log("Post checkEmployeeSettingsFull ");
+      //console.log("Post checkEmployeeSettingsFull ");
       return res.status(httpStatus.OK).json({
         success: true,
         message: 'Your request to interview successfully sended',
