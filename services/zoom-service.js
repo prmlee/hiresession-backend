@@ -159,7 +159,7 @@ async function createUser(email) {
         });
     }catch(e)
     {
-        console.log("create user response",JSON.stringify(response));
+        //console.log("create user response",JSON.stringify(response));
     }
 
         
@@ -168,7 +168,7 @@ async function createUser(email) {
             email
         });
 
-        console.log('createUser zoom done: ', response, email);
+        //console.log('createUser zoom done: ', response, email);
 
         return email;
     }catch (e) {
