@@ -314,8 +314,13 @@ async function changeCronStatus(req, res) {
     if (interviewList && interviewList.length > 0) {
       const needUpdateIds = [];
       for (const interview of interviewList) {
-        const { id, startTime, date, timezoneOffset } = interview.dataValues;
+        const { id, startTime, date,timezoneName } = interview.dataValues;
         const dateTime = `${date}T${startTime}.000Z`;
+        var timezoneOffset = 240;
+        if(timezoneName == "EST")
+          timezoneOffset ==240;
+        else
+          timezoneOffset ==420;
         const timeMoment = moment(dateTime).add(timezoneOffset, 'minute');
 
         console.log('=========================');
