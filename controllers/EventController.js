@@ -47,7 +47,8 @@ async function getEvent(req, res){
         ],
         order:[
             ['id','ASC'],
-            [Events.associations.attachedEmployees,AttachedEmployees.associations.Company,User.associations.employee, 'companyName', 'ASC']
+            [Events.associations.attachedEmployees,AttachedEmployees.associations.Company,User.associations.employee, 'companyName', 'ASC'],
+            [Events.associations.attachedEmployees,AttachedEmployees.associations.employeeSettings,employeeSettings.associations.SettingDurations,'startTime','ASC']
         ]
     });
 
