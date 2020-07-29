@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     specialNeeds: DataTypes.TEXT,
     city: DataTypes.TEXT,
     state: DataTypes.TEXT,
+    career: DataTypes.TEXT,
     zipCode: DataTypes.STRING,
     industryInterested:DataTypes.STRING,
   }, {});
