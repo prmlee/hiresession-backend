@@ -133,6 +133,7 @@ async function candidateRegister(req, res) {
         industryInterested: req.body.industryInterested || '',
         city: req.body.city || '',
         state: req.body.state || '',
+        career: req.body.career || '',
         zipCode: req.body.zipCode || '',
         specialNeeds: req.body.specialNeeds || '',
         resume,
