@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     career: DataTypes.TEXT,
     zipCode: DataTypes.STRING,
     industryInterested:DataTypes.STRING,
+    aboutMe: DataTypes.TEXT,
   }, {});
 
   Candidate.associate = function(models) {

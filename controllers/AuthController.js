@@ -136,6 +136,7 @@ async function candidateRegister(req, res) {
         career: req.body.career || '',
         zipCode: req.body.zipCode || '',
         specialNeeds: req.body.specialNeeds || '',
+        aboutMe: req.body.aboutMe || '',
         resume,
         resumeFileName,
         profileImg,
