@@ -85,4 +85,10 @@ router
         EmployeeController.getSettingInterviews
     );
 
+router
+    .route('/searchCandidates')
+    .post(
+        EmployeeController.searchCandidates
+    );
+
 module.exports = router;
