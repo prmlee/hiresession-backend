@@ -8,7 +8,7 @@ const { createToken, createResetPassToken, verifyToken, Roles } = require('../he
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
 const { Candidates, User, employeeSettings, Employees, Events, Interviews, AttachedEmployees, SettingDurations, SupportingDocuments } = require('../models');
-
+const { Op } = require('sequelize');
 async function profile(req, res) {
 
   const storage = multer.diskStorage({
@@ -544,6 +544,58 @@ async function checkEmployeeSettingsFull(eventId,employeeId){
   return isFull;
 }
 
+async function searchCandidates(req, res) {
+  const limit = 100;
+  console.log(req.body);
+  var searchCondition = {};
+
+  if(req.body.state != '')
+    searchCondition.state = req.body.state;
+  if(req.body.shcool != '')
+    searchCondition.shcool = req.body.shcool;
+  if(req.body.industryInterested != '')
+    searchCondition.industryInterested = req.body.industryInterested;
+  if(req.body.highDeagree != '')
+    searchCondition.highDeagree = req.body.highDeagree;
+  if(req.body.career != '')
+    searchCondition.career = req.body.career;
+  if(req.body.city != '')
+    searchCondition.city = req.body.city;
+  if(req.body.major != '')
+  {
+    searchCondition.major = {[Op.like] : '%'+req.body.major+'%'};
+  }
+    
+  if(req.body.desiredJobTitle != '')
+  {
+    searchCondition.desiredJobTitle = {[Op.like] : '%'+req.body.desiredJobTitle+'%'};
+  }
+    
+  
+    const CompanyList = await User.findAndCountAll({
+    attributes: ['id', 'firstName', 'lastName', 'email', 'status', 'role'],
+    include: [
+      {
+        model: Candidates,
+        as: 'candidate',
+        where: searchCondition
+      },
+    ],
+    limit,
+    where: {
+      role: 1,
+      status: 1
+    },
+  });
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    data: CompanyList.rows,
+    count: CompanyList.rows.length,
+  })
+}
+
+
 module.exports = {
   getLoggedInUser,
   getSettingInterviews,
@@ -556,4 +608,5 @@ module.exports = {
   getAttachedFiles,
   getInterviews,
   checkEmployeeSettingsFull,
+  searchCandidates,
 };
