@@ -7,7 +7,7 @@ module.exports = {
       'Candidates',
       'aboutMe',
       {
-        type: Sequelize.STRING(1024),
+        type: Sequelize.TEXT,
         allowNull:true
       },
     );
