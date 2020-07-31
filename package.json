@@ -12,6 +12,7 @@
     "seeder": "sequelize db:seed:all",
     "seeder:staging": "sequelize db:seed:all --env staging",
     "migrate:staging": "sequelize db:migrate --env staging",
+    "migrate:staging:undo": "sequelize db:migrate:undo --env staging",
     "seeder:prod": "sequelize db:seed:all --env production",
     "migrate:prod": "sequelize db:migrate --env production"
   },
