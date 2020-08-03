@@ -196,7 +196,6 @@ async function createInterview(req, res) {
         attachedFileName: req.file ? req.file.originalname : '',
         timezoneName: req.body.timezoneName,
         timezoneOffset: req.body.timezoneOffset,
-        shareResume: req.body.shareResume,
       });
       //console.log("Post Interviews.create ");
       await checkEmployeeSettingsFull(req.body.eventId,req.body.employeeId);
