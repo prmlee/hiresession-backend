@@ -29,7 +29,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: 'EST',
     },
-    shareResume: DataTypes.STRING,
   }, {});
 
   Interviews.associate = function(models) {
