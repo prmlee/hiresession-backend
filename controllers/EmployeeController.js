@@ -549,6 +549,7 @@ async function searchCandidates(req, res) {
   console.log(req.body);
   var searchCondition = {};
 
+  searchCondition.share = 1;
   if(req.body.state != '')
     searchCondition.state = req.body.state;
   if(req.body.shcool != '')
@@ -583,7 +584,7 @@ async function searchCandidates(req, res) {
     ],
     where: {
       role: 1,
-      status: 1
+      status: 1,
     },
   });
 
