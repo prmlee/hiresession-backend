@@ -121,7 +121,7 @@ async function candidateRegister(req, res) {
       const resumeFile = (req.files && req.files.resume) ? req.files.resume[0] : undefined;
       const resume = resumeFile ? resumeFile.filename : '';
       const resumeFileName = resumeFile ? resumeFile.originalname : '';
-
+        console.log(req.body);
       await Candidates.create({
         userId: createdUser.dataValues.id,
         major: req.body.major || '',
