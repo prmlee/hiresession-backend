@@ -137,6 +137,7 @@ async function candidateRegister(req, res) {
         zipCode: req.body.zipCode || '',
         specialNeeds: req.body.specialNeeds || '',
         aboutMe: req.body.aboutMe || '',
+        share: req.body.share || 0,
         resume,
         resumeFileName,
         profileImg,
