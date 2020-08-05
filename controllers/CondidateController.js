@@ -61,6 +61,8 @@ async function profile(req, res) {
     }
 
     const updatedObj = req.body;
+    if(updatedObj.share == null)
+      updatedObj.share = '1';
 
     if (req.files) {
       const candidate = await Candidates.findOne({
