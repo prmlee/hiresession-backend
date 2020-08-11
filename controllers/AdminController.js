@@ -74,7 +74,7 @@ async function createEvent(req, res) {
     const pdfFile = (req.files && req.files.pdfFile) ? req.files.pdfFile[0] : undefined;
     const pdfFileField = pdfFile ? pdfFile.filename : '';
     const pdfFileName = pdfFile ? pdfFile.originalname : '';
-
+    console.log(req.body);
     try {
       const event = await Events.create({
         eventName: req.body.eventName,
@@ -88,6 +88,7 @@ async function createEvent(req, res) {
         endTime: req.body.endTime,
         timezoneOffset: req.body.timezoneOffset || 300,
         timezoneName: req.body.timezoneName || 'EST',
+        type: req.body.type || 'private',
       });
 
       if (req.body.userId) {
@@ -780,7 +781,7 @@ async function activities(req, res) {
 async function getEvents(req, res) {
 
   const events = await Events.findAll({
-    attributes: ['id', 'bizaboLink', 'pdfFile', 'pdfFileName', 'location', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
+    attributes: ['id', 'bizaboLink', 'pdfFile', 'pdfFileName', 'location', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type'],
     raw: true,
   });
 
