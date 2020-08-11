@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: 'EST',
     },
+    type:{
+      type: DataTypes.ENUM,
+      values: ['private', 'group'],
+      defaultValue: 'private'
+    },
   }, {});
 
   Events.associate = function(models) {
