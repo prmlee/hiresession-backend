@@ -389,6 +389,15 @@ async function getTimes(employeeId, date, eventId) {
 
   });
 
+  const events = await Events.findOne({
+      attributes: ['id', 'eventName', 'type'],
+      where:{
+        id:eventId
+      },
+      raw: true,
+  });
+
+
   const interviews = await Interviews.findAll({
     where: {
       employeeId,
@@ -434,7 +443,10 @@ async function getTimes(employeeId, date, eventId) {
     }
   }
 
-  return returnObj;
+  return {
+    eventType : event.type,
+    times: returnObj
+  };
 }
 
 async function getTimesForDay(req, res) {
