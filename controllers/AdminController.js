@@ -724,9 +724,8 @@ async function getArchivedCandidates(req, res) {
     count: CompanyList.count,
   })
 }
-
-async function activities(req, res) {
-
+async function getInterviews(req,res,type)
+{
   const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
@@ -766,7 +765,7 @@ async function activities(req, res) {
         model: Events,
         as: 'events',
         where: {
-          type : 'private',
+          type : type,
         }
       },
     ],
@@ -779,6 +778,13 @@ async function activities(req, res) {
     data: interviewList.rows,
     count: interviewList.count,
   })
+}
+
+async function activities(req, res) {
+  return await getInterviews(req,res,'private');
+}
+async function groups(req, res) {
+  return await getInterviews(req,res,'group');  
 }
 
 async function getEvents(req, res) {
@@ -851,4 +857,5 @@ module.exports = {
   getArchivedCandidates,
   activities,
   getOnlyCompanies,
+  groups
 };
