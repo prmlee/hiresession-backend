@@ -117,6 +117,13 @@ router
     );
 
 router
+    .route('/groups/:page?')
+    .get(
+        isLoggedAdmin,
+        adminController.groups
+    );
+
+router
     .route('/getEvents')
     .get(
         isLoggedAdmin,
