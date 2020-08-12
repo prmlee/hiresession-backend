@@ -496,6 +496,18 @@ async function checkEmployeeSettingsFull(eventId,employeeId){
   //console.log("-------------------------------------------------------------");
   var totalTimeMinutes = 0;
   var isFull = 0, duration;
+
+  const event = await Events.findOne({
+    attributes: ['id', 'eventName', 'type'],
+    where:{
+      id:eventId
+    },
+    raw: true,
+  });
+
+  if(event.type == 'group')
+    return isFull;
+
   const settings = await employeeSettings.findOne({
     include:[
       {
