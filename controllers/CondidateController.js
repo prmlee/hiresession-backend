@@ -396,7 +396,7 @@ async function getTimes(employeeId, date, eventId) {
       },
       raw: true,
   });
-
+  console.log(event);
 
   const interviews = await Interviews.findAll({
     where: {
