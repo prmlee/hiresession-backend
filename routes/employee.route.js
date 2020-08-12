@@ -77,6 +77,12 @@ router
         isLoggedEmployer,
         EmployeeController.getInterviews
     );
+router
+    .route('/getGroups/:page?')
+    .get(
+        isLoggedEmployer,
+        EmployeeController.getGroups
+    );
 
 router
     .route('/getSettingInterviews/:id')

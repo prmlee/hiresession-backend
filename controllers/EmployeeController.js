@@ -422,7 +422,8 @@ async function getAttachedFiles(req, res) {
   })
 }
 
-async function getInterviews(req, res) {
+async function getInterviewsByType(req,res,type)
+{
   const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
@@ -443,9 +444,12 @@ async function getInterviews(req, res) {
         ],
       },
       {
-        attributes: ['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
+        attributes: ['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type'],
         model: Events,
         as: 'events',
+        where: {
+          type : type,
+        }
       },
     ],
     where: {
@@ -463,6 +467,13 @@ async function getInterviews(req, res) {
     data: interviewList.rows,
     count: interviewList.count,
   })
+}
+
+async function getInterviews(req, res) {
+  return await getInterviewsByType(req,res,'private');
+}
+async function getGroups(req, res) {
+  return await getInterviewsByType(req,res,'group');
 }
 
 async function getSettingInterviews(req, res) {
@@ -619,6 +630,7 @@ module.exports = {
   updateSettings,
   getAttachedFiles,
   getInterviews,
+  getGroups,
   checkEmployeeSettingsFull,
   searchCandidates,
 };
