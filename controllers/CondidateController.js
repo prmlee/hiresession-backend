@@ -535,8 +535,7 @@ function createTimes(duration, durationType, startTime, endTime, arr, startTime2
   return returnArray
 }
 
-async function getInterviews(req, res) {
-
+async function getInterviewsByType(req, res,type) {
   const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
@@ -561,6 +560,9 @@ async function getInterviews(req, res) {
         attributes: ['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
         model: Events,
         as: 'events',
+        where: {
+          type : type,
+        }
       },
     ],
     limit,
@@ -578,6 +580,14 @@ async function getInterviews(req, res) {
     data: interviewList.rows,
     count: interviewList.count,
   })
+}
+
+async function getInterviews(req, res) {
+  return await getInterviewsByType(req,res,'private');
+}
+
+async function getGroups(req, res) {
+  return await getInterviewsByType(req,res,'group');
 }
 
 async function deleteInterview(req, res) {
@@ -662,6 +672,7 @@ module.exports = {
   getLoggedInUser,
   getSingleEmployee,
   getInterviews,
+  getGroups,
   getCompanies,
   getTimesForDay,
   addFavorit,

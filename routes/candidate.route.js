@@ -80,6 +80,13 @@ router
   );
 
 router
+  .route('/getGroups/:page?')
+  .get(
+    isLoggedCandidate,
+    CandidateController.getGroups
+  );
+
+router
     .route('/interviews/:id')
     .patch(
         isLoggedCandidate,
