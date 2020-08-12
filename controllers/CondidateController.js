@@ -389,7 +389,7 @@ async function getTimes(employeeId, date, eventId) {
 
   });
 
-  const events = await Events.findOne({
+  const event = await Events.findOne({
       attributes: ['id', 'eventName', 'type'],
       where:{
         id:eventId
