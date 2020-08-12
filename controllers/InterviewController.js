@@ -197,7 +197,7 @@ async function createInterview(req, res) {
         timezoneName: req.body.timezoneName,
         timezoneOffset: req.body.timezoneOffset,
       });
-      //console.log("Post Interviews.create ");
+      
       await checkEmployeeSettingsFull(req.body.eventId,req.body.employeeId);
       //console.log("Post checkEmployeeSettingsFull ");
       return res.status(httpStatus.OK).json({
