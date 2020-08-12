@@ -762,9 +762,12 @@ async function activities(req, res) {
         ],
       },
       {
-        attributes: ['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
+        attributes: ['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type'],
         model: Events,
         as: 'events',
+        where: {
+          type : 'private',
+        }
       },
     ],
     limit,
