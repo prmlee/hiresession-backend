@@ -104,6 +104,7 @@ async function createEvent(req, res) {
 
       return res.status(httpStatus.OK).json({
         success: true,
+        event: event.dataValues,
         message: 'Event successfully created',
       });
 
