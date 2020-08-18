@@ -9,7 +9,7 @@ const { Op } = require('sequelize');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
 const {checkEmployeeSettingsFull} = require('./EmployeeController')
-const { User, Candidates, Employees, Interviews, SupportingDocuments } = require('../models');
+const { User, Candidates, Employees, Interviews, SupportingDocuments,Events } = require('../models');
 
 async function createInterview(req, res) {
   const storage = multer.diskStorage({
