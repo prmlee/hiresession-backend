@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const path = require('path');
 const { validationResult } = require('express-validator/check');
-const { createMeeting } = require('../services/zoom-service');
+const { createMeeting,createWebinar } = require('../services/zoom-service');
 const mailer = require('../services/mail-sender');
 const moment = require('moment');
 const multer = require('multer');
@@ -147,54 +147,92 @@ async function createInterview(req, res) {
     });
     
     var date,meetingData;
-    try{
-      meetingData = await createMeeting(req.body, currentEmployee.dataValues.email);
+    var templateName;
+    if(event.type == 'private')
+    {
+      try{
+        meetingData = await createMeeting(req.body, currentEmployee.dataValues.email);
+  
+        if ((await meetingData).status !== 200) {
+          return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: meetingData.message,
+          });
+        }
+  
+        date = moment(req.body.date).format('YYYY-MM-DD');
+  
+        console.log("date: ",date);
+        templateName = "sheduleEmailCandidates";
 
-
-      if ((await meetingData).status !== 200) {
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        mailer.send(
+          res.locals.user.email,
+          templateName,
+          {
+            startUrl: meetingData.data.start_url,
+            joinUrl: meetingData.data.join_url,
+            password: meetingData.data.password,
+            meetingId: meetingData.data.id,
+            date,
+            time: moment(req.body.startTime, 'HH:mm:ss').format('h:mm a'),
+            timezoneName: req.body.timezoneName,
+            companyName: currentEmployee.dataValues.employee.companyName,
+          },
+          'Interview Confirmation Details',
+        );
+      }catch(err)
+      {
+        //console.log("Error:" ,JSON.stringify(err))
+        return res.status(httpStatus.OK).json({
           success: false,
-          message: meetingData.message,
+          message: "Failed to create a meeting channel.",
         });
       }
-      //console.log("meettingData: ",JSON.stringify(meetingData));
-      date = moment(req.body.date).format('YYYY-MM-DD');
-
-      // const candidateData = await Candidates.findOne({
-      //   where: {
-      //     userId: req.body.candidateId,
-      //   },
-      //   raw: true,
-      // });
-      console.log("date: ",date);
-      var templateName = "sheduleEmailCandidates";
-      if(event.type == 'private')
-        templateName = "sheduleEmailCandidates";
-      else
-        templateName = "sheduleEmailGroupSession";
-      mailer.send(
-        res.locals.user.email,
-        templateName,
-        {
-          startUrl: meetingData.data.start_url,
-          joinUrl: meetingData.data.join_url,
-          password: meetingData.data.password,
-          meetingId: meetingData.data.id,
-          date,
-          time: moment(req.body.startTime, 'HH:mm:ss').format('h:mm a'),
-          timezoneName: req.body.timezoneName,
-          companyName: currentEmployee.dataValues.employee.companyName,
-        },
-        'Interview Confirmation Details',
-      );
-    }catch(err)
-    {
-      //console.log("Error:" ,JSON.stringify(err))
-      return res.status(httpStatus.OK).json({
-        success: false,
-        message: "Failed to create a meeting channel.",
-      });
     }
+    else
+    {
+      try{
+        meetingData = await createWebinar(req.body, currentEmployee.dataValues.email);
+  
+        if ((await meetingData).status !== 200) {
+          return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: meetingData.message,
+          });
+        }
+  
+        date = moment(req.body.date).format('YYYY-MM-DD');
+  
+        console.log("date: ",date);
+        templateName = "sheduleEmailGroupSession";
+
+        mailer.send(
+          res.locals.user.email,
+          templateName,
+          {
+            startUrl: meetingData.data.start_url,
+            joinUrl: meetingData.data.join_url,
+            password: meetingData.data.password,
+            meetingId: meetingData.data.id,
+            date,
+            time: moment(req.body.startTime, 'HH:mm:ss').format('h:mm a'),
+            timezoneName: req.body.timezoneName,
+            companyName: currentEmployee.dataValues.employee.companyName,
+          },
+          'Interview Confirmation Details',
+        );
+      }catch(err)
+      {
+        //console.log("Error:" ,JSON.stringify(err))
+        return res.status(httpStatus.OK).json({
+          success: false,
+          message: "Failed to create a meeting channel.",
+        });
+      }
+    }
+
+    
+    
     
     //console.log("post Mail");
    // console.log("date: ",date);
