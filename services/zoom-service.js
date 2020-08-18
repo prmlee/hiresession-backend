@@ -19,7 +19,53 @@ async function createMeeting(body, email) {
     console.log("userEmail",userEmail);
     const url =  `https://api.zoom.us/v2/users/${userEmail}/meetings`;
 
-    const data = await normaliseData(body);
+    const data = await normaliseMettingData(body);
+    const token = generateJWT();
+    console.log("create meetting url:",url);
+    const headers =  {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'User-Agent': 'Zoom-api-Jwt-Request',
+    };
+    try{
+        const response = await axios({
+            method: 'post',
+            url,
+            headers,
+            data,
+        });
+
+        console.log("createMeeting response:",response);
+
+        return {
+            data: response.data,
+            status:200
+        };
+    }catch (e) {
+        console.log('Create meeting error: ', e);
+        return {
+            status:200,
+            message:e.message,
+        }
+    }
+}
+
+async function createWebinar(body, email) {
+
+    const userEmail = await createUser(email);
+
+    if(userEmail.status == 200)
+    {
+        console.log("userEmail.message :",userEmail.message);
+        return {
+            status:200,
+            message:userEmail.message,
+        }
+    }
+    console.log("userEmail",userEmail);
+    const url =  `https://api.zoom.us/v2/users/${userEmail}/webinars`;
+
+    const data = await normaliseWebinarData(body);
     const token = generateJWT();
     console.log("create meetting url:",url);
     const headers =  {
@@ -54,7 +100,7 @@ async function updateMeeting(body, meetingId){
 
     const url =  `https://api.zoom.us/v2/meetings/${meetingId}`;
 
-    const data = await normaliseData(body);
+    const data = await normaliseMettingData(body);
     const token = generateJWT();
     const headers =  {
         'Authorization': `Bearer ${token}`,
@@ -89,7 +135,7 @@ function generateJWT(){
     return jwt.sign(payload, configs.zoomApiSecret);
 }
 
-async  function normaliseData(data){
+async  function normaliseMettingData(data){
 
     const dateTime = data.date+'T'+data.startTime;
 
@@ -101,6 +147,37 @@ async  function normaliseData(data){
     return  {
         topic: data.eventName,
         type: 2,
+        start_time: dateTime,
+        timezone: configs.zoomTimezone,
+         duration,
+        settings: {
+            host_video: true,
+            participant_video: true,
+            cn_meeting: true,
+            in_meeting: true,
+            join_before_host: true,
+            mute_upon_entry: true,
+            watermark: true,
+            use_pmi: true,
+            approval_type: 1,
+            registration_type: 1,
+            registrants_email_notification: true
+        }
+    }
+}
+
+async  function normaliseWebinarData(data){
+
+    const dateTime = data.date+'T'+data.startTime;
+
+   // const date = moment(dateTime).format('YYYY-MM-DDTHH:mm:ss')
+    const durationMin =  moment.utc(moment(data.endTime,"HH:mm:ss").diff(moment(data.startTime,"HH:mm:ss"))).format("mm");
+    const durationhours =  moment.utc(moment(data.endTime,"HH:mm:ss").diff(moment(data.startTime,"HH:mm:ss"))).format("HH");
+    const duration = parseInt(durationMin)+parseInt((durationhours*60));
+
+    return  {
+        topic: data.eventName,
+        type: 5,
         start_time: dateTime,
         timezone: configs.zoomTimezone,
          duration,
@@ -180,4 +257,4 @@ async function createUser(email) {
     }
 }
 
-module.exports = {createMeeting, updateMeeting};
+module.exports = {createMeeting, updateMeeting,createWebinar};
