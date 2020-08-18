@@ -104,6 +104,29 @@ async function createInterview(req, res) {
         }
       }
     }
+    else
+    {
+      const interview = await Interviews.findAll({
+        where: {
+          employeeId: req.body.employeeId,
+          eventId: req.body.eventId,
+          date: req.body.date,
+          candidateId : req.body.candidateId,
+        },
+        raw: true,
+      });
+      
+      if (interview) {
+        for (let i in interview) {
+          if (interview[i].startTime === req.body.startTime) {
+            return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+              success: false,
+              message: 'You already registered this time',
+            })
+          }
+        }
+      }
+    }
 
     
 
