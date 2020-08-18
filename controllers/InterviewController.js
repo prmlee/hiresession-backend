@@ -74,26 +74,38 @@ async function createInterview(req, res) {
         message: 'End time is required',
       })
     }
-
-    const interview = await Interviews.findAll({
-      where: {
-        employeeId: req.body.employeeId,
-        eventId: req.body.eventId,
-        date: req.body.date,
+    const event = await Events.findOne({
+      attributes: ['id', 'eventName', 'type'],
+      where:{
+        id:req.body.eventId
       },
       raw: true,
     });
-    
-    if (interview) {
-      for (let i in interview) {
-        if (interview[i].startTime === req.body.startTime) {
-          return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-            success: false,
-            message: 'Somebody already registered this time',
-          })
+
+    if(event.type == 'private')
+    {
+      const interview = await Interviews.findAll({
+        where: {
+          employeeId: req.body.employeeId,
+          eventId: req.body.eventId,
+          date: req.body.date,
+        },
+        raw: true,
+      });
+      
+      if (interview) {
+        for (let i in interview) {
+          if (interview[i].startTime === req.body.startTime) {
+            return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+              success: false,
+              message: 'Somebody already registered this time',
+            })
+          }
         }
       }
     }
+
+    
 
     const currentEmployee = await User.findOne({
       include: [
