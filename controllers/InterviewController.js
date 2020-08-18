@@ -144,9 +144,14 @@ async function createInterview(req, res) {
       //   raw: true,
       // });
       console.log("date: ",date);
+      var templateName = "sheduleEmailCandidates";
+      if(event.type == 'private')
+        templateName = "sheduleEmailCandidates";
+      else
+        templateName = "sheduleEmailGroupSession";
       mailer.send(
         res.locals.user.email,
-        'sheduleEmailCandidates',
+        templateName,
         {
           startUrl: meetingData.data.start_url,
           joinUrl: meetingData.data.join_url,
