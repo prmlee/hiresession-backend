@@ -54,7 +54,7 @@ async function createWebinar(body, email) {
 
     const userEmail = await createUser(email);
 
-    updateSetting(email);
+    await updateSetting(email);
 
     if(userEmail.status == 200)
     {
