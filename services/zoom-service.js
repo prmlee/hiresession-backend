@@ -69,7 +69,7 @@ async function createWebinar(body, email) {
 
     const data = await normaliseWebinarData(body);
     const token = generateJWT();
-    console.log("create meetting url:",url);
+    console.log("create webinar url:",url);
     const headers =  {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ async function createWebinar(body, email) {
             data,
         });
 
-        console.log("createMeeting response:",response);
+        //console.log("createMeeting response:",response);
 
         return {
             data: response.data,
