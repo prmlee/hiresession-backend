@@ -230,7 +230,7 @@ async function settings(req, res) {
   })
 
   const event = await Events.findOne({
-    attributes: ['id', 'eventName', 'type'],
+    attributes: ['id', 'eventName', 'type','date'],
     where:{
       id:req.body.eventId
     },
