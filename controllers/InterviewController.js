@@ -288,6 +288,7 @@ async function createInterview(req, res) {
         message: 'Your request to interview successfully sended',
       });
     } catch (e) {
+      console.log("createInterview",e);
       return res.status(httpStatus.OK).json({
         success: false,
         message: "Your request to interview failed to send."
