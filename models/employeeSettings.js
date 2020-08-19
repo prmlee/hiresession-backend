@@ -24,6 +24,22 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue:0
     },
+    startUrl: {
+      type: DataTypes.STRING,
+      defaultValue: '',
+    },
+    joinUrl: {
+      type: DataTypes.STRING,
+      defaultValue: '',
+    },
+    password: {
+      type: DataTypes.STRING,
+      defaultValue: '',
+    },
+    zoomId: {
+      type: DataTypes.STRING,
+      defaultValue: 'EST',
+    }
   }, {});
 
   EmployeeSettings.associate = function(models) {
