@@ -351,7 +351,7 @@ async function settings(req, res) {
 
 
   } catch (e) {
-
+    console.log("settings",e);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       success: false,
       message: e.message,
