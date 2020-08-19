@@ -272,15 +272,16 @@ async function settings(req, res) {
             joinUrl = webinarData.data.join_url;
             password = webinarData.data.password;
             zoomId = webinarData.data.id;
-          }
-          else{
+            console.log("step1");
+          }else{
+            console.log("step2");
             return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
               success: false,
               message: webinarData.message,
             });
           }
       }
-
+      console.log("step3");
       const employeeSetting = await employeeSettings.create({
         employeeId,
         eventId: req.body.eventId,
