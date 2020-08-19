@@ -228,7 +228,7 @@ async function createInterview(req, res) {
         );
       }catch(err)
       {
-        //console.log("Error:" ,JSON.stringify(err))
+        console.log("createInterview",err)
         return res.status(httpStatus.OK).json({
           success: false,
           message: "Failed to create a meeting channel.",
