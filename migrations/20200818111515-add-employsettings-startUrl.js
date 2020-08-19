@@ -7,7 +7,7 @@ module.exports = {
       'employeeSettings',
       'startUrl',
       {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         defaultValue:''
       },
     );
