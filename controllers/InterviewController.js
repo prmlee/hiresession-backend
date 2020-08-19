@@ -82,6 +82,7 @@ async function createInterview(req, res) {
       raw: true,
     });
 
+    
     if(event.type == 'private')
     {
       const interview = await Interviews.findAll({
@@ -148,6 +149,10 @@ async function createInterview(req, res) {
     
     var date,meetingData;
     var templateName;
+    var startUrl =""; 
+    var joinUrl = ""; 
+    var password = "";
+    var zoomId = "";
     if(event.type == 'private')
     {
       try{
@@ -180,6 +185,10 @@ async function createInterview(req, res) {
           },
           'Interview Confirmation Details',
         );
+        startUrl = meetingData.data.start_url;
+        joinUrl = meetingData.data.join_url;
+        password = meetingData.data.password;
+        zoomId = meetingData.data.id;
       }catch(err)
       {
         //console.log("Error:" ,JSON.stringify(err))
@@ -226,6 +235,10 @@ async function createInterview(req, res) {
           },
           'Interview Confirmation Details',
         );
+        startUrl = settings.startUrl;
+        joinUrl = settings.joinUrl;
+        password = settings.password;
+        zoomId = settings.zoomId;
       }catch(err)
       {
         console.log("createInterview",err)
@@ -269,9 +282,9 @@ async function createInterview(req, res) {
         date: date,
         startTime: req.body.startTime,
         endTime: req.body.endTime,
-        startUrl: meetingData.data.start_url,
-        joinUrl: meetingData.data.join_url,
-        meetingId: meetingData.data.id,
+        startUrl: startUrl,
+        joinUrl: joinUrl,
+        meetingId: zoomId,
         status: 3,
         note: req.body.note || '',
         employeeNote: req.body.employeeNote || '',
