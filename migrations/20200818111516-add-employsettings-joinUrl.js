@@ -7,7 +7,7 @@ module.exports = {
       'employeeSettings',
       'joinUrl',
       {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         defaultValue:''
       },
     );

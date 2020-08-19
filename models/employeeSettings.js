@@ -25,19 +25,19 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue:0
     },
     startUrl: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       defaultValue: '',
     },
     joinUrl: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       defaultValue: '',
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       defaultValue: '',
     },
     zoomId: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       defaultValue: 'EST',
     }
   }, {});
