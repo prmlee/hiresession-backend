@@ -6,6 +6,7 @@ const path = require('path');
 const { validationResult } = require('express-validator/check');
 const { createToken, createResetPassToken, verifyToken, Roles } = require('../helpers/JwtHelper');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
+const { createWebinar } = require('../services/zoom-service');
 
 const { Candidates, User, employeeSettings, Employees, Events, Interviews, AttachedEmployees, SettingDurations, SupportingDocuments } = require('../models');
 const { Op } = require('sequelize');
@@ -228,9 +229,56 @@ async function settings(req, res) {
     raw: true,
   })
 
+  const event = await Events.findOne({
+    attributes: ['id', 'eventName', 'type'],
+    where:{
+      id:req.body.eventId
+    },
+    raw: true,
+  });
+  var startUrl =""; 
+  var joinUrl = ""; 
+  var password = "";
+  var zoomId = "";
   try {
 
     if (!settings) {
+
+      if(event.type == 'group')
+      {
+          var bodyData = {
+            eventName: event.eventName,
+            date: event.date,
+            startTime: req.body.times[0].startTime,
+            endTime: req.body.times[0].endTime,
+          }
+          const currentEmployee = await User.findOne({
+            include: [
+              {
+                model: Employees,
+                as: 'employee',
+              }
+            ],
+            where: {
+              id: employeeId,
+            },
+          });
+          var webinarData = await createWebinar(bodyData,currentEmployee.dataValues.email);
+
+          if(webinarData?.success == true)
+          {
+            startUrl = webinarData.data.start_url;
+            joinUrl = webinarData.data.join_url;
+            password = webinarData.data.password;
+            zoomId = webinarData.data.id;
+          }
+          else{
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+              success: false,
+              message: webinarData.message,
+            });
+          }
+      }
 
       const employeeSetting = await employeeSettings.create({
         employeeId,
@@ -240,6 +288,10 @@ async function settings(req, res) {
         durationType: req.body.durationType,
         timezoneOffset: req.body.timezoneOffset || 300,
         timezoneName: req.body.timezoneName || 'EST',
+        startUrl: startUrl,
+        joinUrl: joinUrl,
+        password: password,
+        zoomId: zoomId
       });
 
       for (let i in req.body.times) {

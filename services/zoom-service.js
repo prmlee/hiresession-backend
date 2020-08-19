@@ -54,6 +54,8 @@ async function createWebinar(body, email) {
 
     const userEmail = await createUser(email);
 
+    updateSetting(email);
+
     if(userEmail.status == 200)
     {
         console.log("userEmail.message :",userEmail.message);
@@ -85,13 +87,15 @@ async function createWebinar(body, email) {
 
         return {
             data: response.data,
-            status:200
+            status:200,
+            success: true
         };
     }catch (e) {
         console.log('Create meeting error: ', e);
         return {
             status:200,
             message:e.message,
+            success: false
         }
     }
 }
@@ -197,6 +201,37 @@ async  function normaliseWebinarData(data){
     }
 }
 
+async function updateSetting(email)
+{
+    const url =  `https://api.zoom.us/v2/users/${email}/settings`;
+    const token = generateJWT();
+
+    const headers =  {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+
+    const data = {
+        "feature": {
+            "webinar":true,
+            "webinar_capacity" : 100
+          }
+    };
+
+    var response;
+    try{
+        response = await axios({
+            method: 'patch',
+            url,
+            headers,
+            data,
+        });
+    }catch(e)
+    {
+        console.log("update setting",e);
+    }
+}
+
 async function createUser(email) {
     console.log('createUser zoom: ', email);
 
@@ -223,7 +258,7 @@ async function createUser(email) {
         "action": "custCreate",
         "user_info": {
             email,
-            "type": 1
+            "type": 2
         }
     };
     var response;

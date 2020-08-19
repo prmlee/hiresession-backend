@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const path = require('path');
 const { validationResult } = require('express-validator/check');
-const { createMeeting,createWebinar } = require('../services/zoom-service');
+const { createMeeting } = require('../services/zoom-service');
 const mailer = require('../services/mail-sender');
 const moment = require('moment');
 const multer = require('multer');
@@ -9,7 +9,7 @@ const { Op } = require('sequelize');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
 const {checkEmployeeSettingsFull} = require('./EmployeeController')
-const { User, Candidates, Employees, Interviews, SupportingDocuments,Events } = require('../models');
+const { User, Candidates, Employees, Interviews, SupportingDocuments,Events,employeeSettings } = require('../models');
 
 async function createInterview(req, res) {
   const storage = multer.diskStorage({
@@ -192,14 +192,19 @@ async function createInterview(req, res) {
     else
     {
       try{
-        meetingData = await createWebinar(req.body, currentEmployee.dataValues.email);
-  
-        if ((await meetingData).status !== 200) {
-          return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            message: meetingData.message,
-          });
-        }
+        
+        const settings = await employeeSettings.findOne({
+          include:[
+            {
+              model: SettingDurations,
+              as: 'SettingDurations',
+            },
+          ],
+          where:{
+            employeeId:req.body.employeeId,
+            eventId: req.body.eventId
+          }
+        });
   
         date = moment(req.body.date).format('YYYY-MM-DD');
   
@@ -210,10 +215,10 @@ async function createInterview(req, res) {
           res.locals.user.email,
           templateName,
           {
-            startUrl: meetingData.data.start_url,
-            joinUrl: meetingData.data.join_url,
-            password: meetingData.data.password,
-            meetingId: meetingData.data.id,
+            startUrl: settings.startUrl,
+            joinUrl: settings.joinUrl,
+            password: settings.password,
+            meetingId: settings.zoomId,
             date,
             time: moment(req.body.startTime, 'HH:mm:ss').format('h:mm a'),
             timezoneName: req.body.timezoneName,
