@@ -264,6 +264,7 @@ async function settings(req, res) {
             },
           });
           var webinarData = await createWebinar(bodyData,currentEmployee.dataValues.email);
+          console.log("webinar Data",webinarData);
 
           if(webinarData.success == true)
           {
