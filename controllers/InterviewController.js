@@ -233,7 +233,7 @@ async function createInterview(req, res) {
             timezoneName: req.body.timezoneName,
             companyName: currentEmployee.dataValues.employee.companyName,
           },
-          'Interview Confirmation Details',
+          'Group Session Confirmation Details',
         );
         startUrl = settings.startUrl;
         joinUrl = settings.joinUrl;
