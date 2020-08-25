@@ -58,7 +58,7 @@ async function processWebinar()
         console.log("startTime",startTime);
 
         console.log("diffTime",diffTime);
-        if(diffTime > 0 && diffTime <(5*60*60*1000))
+        if(diffTime > 0 && diffTime <(30*60*1000))
         {
           console.log("Upcoming Event");
           console.log(settings[i].Company.email);
