@@ -24,3 +24,4 @@ function onListening() {
 }
 
 global.CronJob = require('../backup/cron.js');
+global.CronController = require('../controllers/CronController');

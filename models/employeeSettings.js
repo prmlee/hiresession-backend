@@ -44,6 +44,7 @@ module.exports = (sequelize, DataTypes) => {
 
   EmployeeSettings.associate = function(models) {
     EmployeeSettings.hasMany(models.SettingDurations, {as:'SettingDurations', foreignKey:'settingId'});
+    EmployeeSettings.hasOne(models.User, {as:'Company', foreignKey:'id', sourceKey:'employeeId'})
     EmployeeSettings.hasOne(models.Events, {as:'events', foreignKey:'id', sourceKey:'eventId'});
   };
 
