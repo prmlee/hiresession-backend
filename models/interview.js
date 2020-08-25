@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     endTime: DataTypes.TIME,
     note: DataTypes.TEXT,
     employeeNote: DataTypes.TEXT,
-    startUrl: DataTypes.STRING,
+    startUrl: DataTypes.TEXT,
     meetingId: DataTypes.STRING,
-    joinUrl: DataTypes.STRING,
+    joinUrl: DataTypes.TEXT,
     attachedFile: DataTypes.STRING,
     attachedFileName: DataTypes.STRING,
     status: {
