@@ -243,44 +243,7 @@ async function settings(req, res) {
   try {
 
     if (!settings) {
-
-      if(event.type == 'group')
-      {
-          var bodyData = {
-            eventName: event.eventName,
-            date: event.date,
-            startTime: req.body.times[0].startTime,
-            endTime: req.body.times[0].endTime,
-          }
-          const currentEmployee = await User.findOne({
-            include: [
-              {
-                model: Employees,
-                as: 'employee',
-              }
-            ],
-            where: {
-              id: employeeId,
-            },
-          });
-          var webinarData = await createWebinar(bodyData,currentEmployee.dataValues.email);
-          console.log("webinar Data",webinarData);
-
-          if(webinarData.success == true)
-          {
-            startUrl = webinarData.data.start_url;
-            joinUrl = webinarData.data.join_url;
-            password = webinarData.data.password;
-            zoomId = webinarData.data.id;
-            console.log("step1");
-          }else{
-            console.log("step2");
-            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-              success: false,
-              message: webinarData.message,
-            });
-          }
-      }
+      
       console.log("step3");
       const employeeSetting = await employeeSettings.create({
         employeeId,

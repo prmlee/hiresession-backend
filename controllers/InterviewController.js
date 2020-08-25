@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const path = require('path');
 const { validationResult } = require('express-validator/check');
-const { createMeeting } = require('../services/zoom-service');
+const { createMeeting,addWebinarResitrant} = require('../services/zoom-service');
 const mailer = require('../services/mail-sender');
 const moment = require('moment');
 const multer = require('multer');
@@ -146,6 +146,8 @@ async function createInterview(req, res) {
         id: req.body.employeeId,
       },
     });
+
+    
     
     var date,meetingData;
     var templateName;
@@ -219,26 +221,46 @@ async function createInterview(req, res) {
   
         console.log("date: ",date);
         templateName = "sheduleEmailGroupSession";
-
-        mailer.send(
-          res.locals.user.email,
-          templateName,
-          {
-            startUrl: settings.startUrl,
-            joinUrl: settings.joinUrl,
-            password: settings.password,
-            meetingId: settings.zoomId,
-            date,
-            time: moment(req.body.startTime, 'HH:mm:ss').format('h:mm a'),
-            timezoneName: req.body.timezoneName,
-            companyName: currentEmployee.dataValues.employee.companyName,
-          },
-          'Group Session Confirmation Details',
-        );
         startUrl = settings.startUrl;
         joinUrl = settings.joinUrl;
         password = settings.password;
         zoomId = settings.zoomId;
+        if(zoomId != "")
+        {
+          var webinarResult = await addWebinarResitrant(zoomId,req.body.candidateId);
+          console.log("webinarResult",webinarResult);
+
+          if(webinarResult.success)
+          {
+            joinUrl = webinarResult.data.join_url;
+            mailer.send(
+              res.locals.user.email,
+              templateName,
+              {
+                startUrl: startUrl,
+                joinUrl: joinUrl,
+                password: password,
+                meetingId: zoomId,
+                date,
+                time: moment(req.body.startTime, 'HH:mm:ss').format('h:mm a'),
+                timezoneName: req.body.timezoneName,
+                companyName: currentEmployee.dataValues.employee.companyName,
+              },
+              'Group Session Confirmation Details',
+            );
+          }
+          else
+          {
+            
+            return res.status(httpStatus.OK).json({
+              success: false,
+              message: webinarResult.message,
+            });
+          }
+
+          
+        }
+
       }catch(err)
       {
         console.log("createInterview",err)
