@@ -10,7 +10,7 @@ async function processWebinar()
     //console.log(dateNow);
 
     const settings = await employeeSettings.findAll({
-        attributes:['id','eventId','date','timezoneOffset', 'timezoneName'],
+        attributes:['id','employeeId','eventId','date','timezoneOffset', 'timezoneName'],
         include: [
           {
             attributes: ['id', 'eventName', 'type' ],
@@ -63,6 +63,15 @@ async function processWebinar()
           console.log("Upcoming Event");
           console.log(settings[i].Company.email);
 
+          const interviews = await Interviews.findAll({
+            where: {
+              employeeId:settings[i].employeeId,
+              eventId:settings[i].eventId,
+              date: moment(dateNow).format('YYYY-MM-DD'),
+            },
+            raw: true,
+          });
+
           var bodyData = {
             eventName: settings[i].events.eventName,
             date: settings[i].date,
@@ -96,10 +105,10 @@ async function processWebinar()
                 id: settings[i].id
               }
             });
-            console.log("interview",settings[i].events.interview);
-            for(let j in settings[i].events.interview)
+            console.log("interview",interviews);
+            for(let j in interviews)
             {
-              var itemInterview = settings[i].events.interview[j];
+              var itemInterview = interviews[j];
               console.log("user id",itemInterview.candidateId);
               console.log("interview id",itemInterview.id);
               var webinarResult = await addWebinarResitrant(zoomId,itemInterview.candidateId);
