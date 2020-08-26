@@ -316,10 +316,25 @@ async function changeCronStatus(req, res) {
         const { id, startTime, date,timezoneName } = interview.dataValues;
         const dateTime = `${date}T${startTime}.000Z`;
         var timezoneOffset = 240;
-        if(timezoneName == "EST")
-          timezoneOffset ==240;
-        else
-          timezoneOffset ==420;
+        switch(timezoneName)
+        {
+          case "EST":
+            {
+              timezoneOffset = 240;
+              break;
+            }
+          case "MST":
+            {
+              timezoneOffset = 360;
+              break;
+            }
+          case "US/Pacific":
+            {
+              timezoneOffset = 420;
+              break;
+            }
+        }
+        
         const timeMoment = moment(dateTime).add(timezoneOffset, 'minute');
 
         console.log('=========================');
