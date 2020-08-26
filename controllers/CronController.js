@@ -3,6 +3,7 @@ const {removeAllLicesedUser,createWebinar,addWebinarResitrant} = require('../ser
 const {keGetCurrentDate,keConvertLocalToUTC} = require('../helpers/keHelper');
 const { Candidates, User, employeeSettings, Employees, Events, Interviews, SettingDurations,} = require('../models');
 const moment = require('moment');
+const mailer = require('../services/mail-sender');
 
 async function processWebinar()
 {
@@ -58,10 +59,22 @@ async function processWebinar()
         console.log("startTime",startTime);
 
         console.log("diffTime",diffTime);
-        if(diffTime > 0 && diffTime <(30*60*1000))
+        if(diffTime > 0 && diffTime <(1*30*60*1000))
         {
           console.log("Upcoming Event");
           console.log(settings[i].Company.email);
+
+          const currentEmployee = await User.findOne({
+            include: [
+              {
+                model: Employees,
+                as: 'employee',
+              }
+            ],
+            where: {
+              id: settings[i].employeeId,
+            },
+          });
 
           const interviews = await Interviews.findAll({
             where: {
@@ -97,6 +110,21 @@ async function processWebinar()
               password,
               zoomId
             };
+
+            mailer.send(
+              settings[i].Company.email,
+              "sheduleEmailGroupSessionEmployee",
+              {
+                startUrl: startUrl,
+                joinUrl: joinUrl,
+                password: password,
+                meetingId: zoomId,
+                date:settings[i].date,
+                time: moment(settings[i].SettingDurations[0].startTime, 'HH:mm:ss').format('h:mm a'),
+                timezoneName: settings[i].timezoneName,
+              },
+              'Your link for your schedule Group Info Session',
+            );
   
             await employeeSettings.update({
               ...updatedObj,
@@ -111,8 +139,33 @@ async function processWebinar()
               var itemInterview = interviews[j];
               console.log("user id",itemInterview.candidateId);
               console.log("interview id",itemInterview.id);
+              const currentUser = await User.findOne({
+                attributes:['id','email','firstName','lastName'],
+                where: {
+                  id: itemInterview.candidateId,
+                },
+              });
+
+              
+
               var webinarResult = await addWebinarResitrant(zoomId,itemInterview.candidateId);
               console.log(webinarResult);
+              var templateName = "sheduleEmailGroupSessionCandidates";
+              mailer.send(
+                currentUser.email,
+                templateName,
+                {
+                  startUrl: startUrl,
+                  joinUrl: webinarResult.data.join_url,
+                  password: password,
+                  meetingId: zoomId,
+                  date:itemInterview.date,
+                  time: moment(itemInterview.startTime, 'HH:mm:ss').format('h:mm a'),
+                  timezoneName: itemInterview.timezoneName,
+                  companyName: currentEmployee.dataValues.employee.companyName,
+                },
+                'Your link for your schedule Group Info Session',
+              );
               var updateInterview = {
                 startUrl,
                 joinUrl:webinarResult.data.join_url
@@ -153,7 +206,7 @@ async function cronRemoveAllLicensedUser()
 function cronControllInit()
 {
     new CronJob(
-        '38-40 * *  * *',
+        '35-38 * *  * *',
         async function() {
             await cronRemoveAllLicensedUser();
         },

@@ -7,7 +7,8 @@ const { validationResult } = require('express-validator/check');
 const { createToken, createResetPassToken, verifyToken, Roles } = require('../helpers/JwtHelper');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 const { createWebinar } = require('../services/zoom-service');
-
+const moment = require('moment');
+const mailer = require('../services/mail-sender');
 const { Candidates, User, employeeSettings, Employees, Events, Interviews, AttachedEmployees, SettingDurations, SupportingDocuments } = require('../models');
 const { Op } = require('sequelize');
 async function profile(req, res) {
@@ -270,6 +271,33 @@ async function settings(req, res) {
           startTime: req.body.times[i].startTime,
           endTime: req.body.times[i].endTime,
         })
+      }
+      console.log("step4");
+      if(event.type == "group")
+      {
+        console.log("send mail");
+        const currentEmployee = await User.findOne({
+          include: [
+            {
+              model: Employees,
+              as: 'employee',
+            }
+          ],
+          where: {
+            id: employeeId,
+          },
+        });
+        var templateName = "alertEmailGroupSessionEmployee";
+        mailer.send(
+          currentEmployee.email,
+          templateName,
+          {
+            date:req.body.date,
+            time: moment(req.body.times[0].startTime, 'HH:mm:ss').format('h:mm a'),
+            timezoneName: req.body.timezoneName || 'EST',
+          },
+          'Confirmation for Hosting your HireSession Group Info Session',
+        );
       }
 
       return res.status(httpStatus.OK).json({
