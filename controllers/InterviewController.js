@@ -220,13 +220,13 @@ async function createInterview(req, res) {
         date = moment(req.body.date).format('YYYY-MM-DD');
   
         console.log("date: ",date);
-        templateName = "sheduleEmailGroupSession";
         startUrl = settings.startUrl;
         joinUrl = settings.joinUrl;
         password = settings.password;
         zoomId = settings.zoomId;
         if(zoomId != "")
         {
+          templateName = "sheduleEmailGroupSessionCandidates";
           var webinarResult = await addWebinarResitrant(zoomId,req.body.candidateId);
           console.log("webinarResult",webinarResult);
 
@@ -246,7 +246,7 @@ async function createInterview(req, res) {
                 timezoneName: req.body.timezoneName,
                 companyName: currentEmployee.dataValues.employee.companyName,
               },
-              'Group Session Confirmation Details',
+              'Your link for your schedule Group Info Session',
             );
           }
           else
@@ -259,6 +259,21 @@ async function createInterview(req, res) {
           }
 
           
+        }
+        else
+        {
+          templateName = "alertEmailGroupSessionCandidates";
+          mailer.send(
+            res.locals.user.email,
+            templateName,
+            {
+              date,
+              time: moment(req.body.startTime, 'HH:mm:ss').format('h:mm a'),
+              timezoneName: req.body.timezoneName,
+              companyName: currentEmployee.dataValues.employee.companyName,
+            },
+            'Group Session Confirmation Details',
+          );
         }
 
       }catch(err)
