@@ -11,4 +11,10 @@ router
         eventController.getEvent
     );
 
+router
+    .route('/simpleGet')
+    .get(
+        eventController.simpleGetEvents
+    );
+
 module.exports = router;

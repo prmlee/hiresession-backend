@@ -22,6 +22,11 @@ function keConvertLocalToUTC(timeString,timeZoneName)
         date_ob = new Date(date_ob.getTime()+240*60*1000);
         break;
       }
+    case 'MST':
+        {
+          date_ob = new Date(date_ob.getTime()+320*60*1000);
+          break;
+        }
     case 'US/Pacific':
       {
         date_ob = new Date(date_ob.getTime()+420*60*1000);

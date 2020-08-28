@@ -5,12 +5,16 @@ var fs = require('fs');
 const path = require('path');
 const { validationResult } = require('express-validator/check');
 const { createToken, createResetPassToken, verifyToken, Roles } = require('../helpers/JwtHelper');
-const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
+const { LIMIT_UPLOAD_FILE_SIZE,WEBINAR_LIMIT } = require('../config/constants');
 const { createWebinar } = require('../services/zoom-service');
 const moment = require('moment');
 const mailer = require('../services/mail-sender');
 const { Candidates, User, employeeSettings, Employees, Events, Interviews, AttachedEmployees, SettingDurations, SupportingDocuments } = require('../models');
 const { Op } = require('sequelize');
+const {keGetCurrentDate,keConvertLocalToUTC} = require('../helpers/keHelper');
+const configs = require('../config');
+
+
 async function profile(req, res) {
 
   const storage = multer.diskStorage({
@@ -132,7 +136,7 @@ async function profile(req, res) {
 }
 
 async function getattachedEmployeers(req, res) {
-
+  var dateNow = keGetCurrentDate();
   const events = await Events.findAll({
     attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink', 'eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type'],
     include: [
@@ -150,14 +154,28 @@ async function getattachedEmployeers(req, res) {
                 attributes: ['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl', 'state'],
                 model: Employees,
                 as: 'employee',
-              },
-
+              }
             ],
           },
         ],
       },
+      {
+          model:employeeSettings,
+          as:'employeeSettings',
+          include : [
+              {
+                  model:SettingDurations,
+                  as:'SettingDurations'
+              },
 
+          ],
+      },
     ],
+    where:{
+      date:{
+        [Op.gte] : moment(dateNow).format('YYYY-MM-DD'),
+      }
+    }
   });
 
   for (let i in events) {
@@ -179,6 +197,7 @@ async function getattachedEmployeers(req, res) {
   return res.status(httpStatus.OK).json({
     success: true,
     data: events,
+    webinarLimit: WEBINAR_LIMIT
   })
 }
 

@@ -729,7 +729,7 @@ async function getInterviews(req,res,type)
 {
   const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
-
+  console.log("get interviews step1");
   const interviewList = await Interviews.findAndCountAll({
     include: [
       {
@@ -785,6 +785,7 @@ async function activities(req, res) {
   return await getInterviews(req,res,'private');
 }
 async function groups(req, res) {
+  console.log("groups");
   return await getInterviews(req,res,'group');  
 }
 
