@@ -29,7 +29,7 @@ router
 
 router
     .route('/getCompanies')
-    .get(
+    .post(
         isLoggedAdmin,
         adminController.getCompanies
     );
@@ -73,7 +73,7 @@ router
 
 router
     .route('/getCandidates')
-    .get(
+    .post(
         isLoggedAdmin,
         adminController.getCandidates
     );
@@ -111,14 +111,14 @@ router
 
 router
     .route('/activities/:page?')
-    .get(
+    .post(
         isLoggedAdmin,
         adminController.activities
     );
 
 router
     .route('/groups/:page?')
-    .get(
+    .post(
         isLoggedAdmin,
         adminController.groups
     );
