@@ -6,6 +6,7 @@ var fs = require('fs');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
 const { User, Candidates, Employees, SupportingDocuments, Admin, Events, Interviews, AttachedEmployees } = require('../models');
+const { Op } = require('sequelize');
 
 async function createEvent(req, res) {
   const storage = multer.diskStorage({
@@ -295,13 +296,55 @@ async function getCompanies(req, res) {
   const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
+  var employeeCondition = {};
+  var userCondition = {
+    role: 2,
+    status: 1,
+  };
+  var eventCondition = {};
+  
+  console.log("body",req.body);
+  if(req.body.state != '')
+    employeeCondition.state = req.body.state;
+  if(req.body.city != '')
+    employeeCondition.city = {[Op.like] : '%'+req.body.city+'%'} ;
+  if(req.body.companyName != '')
+    employeeCondition.companyName = {[Op.like] : '%'+req.body.companyName+'%'} ;
+  if(req.body.phone != '')
+    employeeCondition.phone = {[Op.like] : '%'+req.body.phone+'%'} ;
+
+  if(req.body.email != '')
+    userCondition.email = {[Op.like] : '%'+req.body.email+'%'};
+  if(req.body.firstName != '')
+    userCondition.firstName = {[Op.like] : '%'+req.body.firstName+'%'};
+  if(req.body.lastName != '')
+    userCondition.lastName = {[Op.like] : '%'+req.body.lastName+'%'};
+
+  if(req.body.regRangeStart != '' || req.body.regRangeEnd != '')
+  {
+    var tempObj = {};
+    userCondition.createdAt = {};
+    if(req.body.regRangeStart != '')
+      tempObj = {[Op.gte]:req.body.regRangeStart}
+    if(req.body.regRangeEnd != '')
+      tempObj = Object.assign(tempObj,{[Op.lte] : req.body.regRangeEnd});
+    userCondition.createdAt = tempObj;
+  }
+  
+  if(req.body.eventList.length !=0)
+  {
+    eventCondition.id = {[Op.in]:req.body.eventList};
+  }
+  console.log("userCondition",userCondition);
+
   const CompanyList = await User.findAndCountAll({
-    attributes: ['id', 'firstName', 'lastName', 'email', 'status', 'role'],
+    attributes: ['id', 'firstName', 'lastName', 'email', 'status', 'role','createdAt'],
     include: [
       {
-        attributes: ['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl','city','state'],
+        attributes: ['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl','city','state','phone'],
         model: Employees,
         as: 'employee',
+        where:employeeCondition
       },
       {
         model: Interviews,
@@ -322,27 +365,36 @@ async function getCompanies(req, res) {
             attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink', 'eventLogo', 'location', 'date', 'startTime', 'endTime'],
             model: Events,
             as: 'events',
+            where: eventCondition,
           },
         ],
-      },
-      {
-        attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink', 'location', 'eventLogo', 'date', 'startTime', 'endTime'],
-        model: Events,
-        as: 'events',
-      },
+      }
     ],
-    where: {
-      role: 2,
-      status: 1,
-    },
+    where: userCondition,
     offset,
     limit,
   });
-
+  var resultRows;
+  console.log("req.body.eventList.length",req.body.eventList.length);
+  if(req.body.eventList.length !=0)
+  {
+    //console.log("result",CompanyList.rows);
+    resultRows = [];
+    for(let i in CompanyList.rows)
+    {
+      var tempRows = CompanyList.rows[i];
+      if(tempRows.interview.length !=0)
+        resultRows.push(tempRows);
+    }
+  }
+  else
+  {
+    resultRows = CompanyList.rows;
+  }
   res.status(httpStatus.OK).json({
     success: true,
-    data: CompanyList.rows,
-    count: CompanyList.rows.length,
+    data: resultRows,
+    count: resultRows.length,
   })
 }
 
@@ -531,12 +583,52 @@ async function getCandidates(req, res) {
   const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
+  var candidateCondition = {};
+  var userCondition = {
+    role: 1,
+    status: 1,
+  };
+  var eventCondition = {};
+  
+  console.log("body",req.body);
+  if(req.body.state != '')
+    candidateCondition.state = req.body.state;
+  if(req.body.city != '')
+    candidateCondition.city = {[Op.like] : '%'+req.body.city+'%'} ;
+  if(req.body.school != '')
+    candidateCondition.shcool = {[Op.like] : '%'+req.body.school+'%'} ;
+
+  if(req.body.email != '')
+    userCondition.email = {[Op.like] : '%'+req.body.email+'%'};
+  if(req.body.firstName != '')
+    userCondition.firstName = {[Op.like] : '%'+req.body.firstName+'%'};
+  if(req.body.lastName != '')
+    userCondition.lastName = {[Op.like] : '%'+req.body.lastName+'%'};
+
+  if(req.body.regRangeStart != '' || req.body.regRangeEnd != '')
+  {
+    var tempObj = {};
+    userCondition.createdAt = {};
+    if(req.body.regRangeStart != '')
+      tempObj = {[Op.gte]:req.body.regRangeStart}
+    if(req.body.regRangeEnd != '')
+      tempObj = Object.assign(tempObj,{[Op.lte] : req.body.regRangeEnd});
+    userCondition.createdAt = tempObj;
+  }
+  
+  if(req.body.eventList.length !=0)
+  {
+    eventCondition.id = {[Op.in]:req.body.eventList};
+  }
+  console.log("userCondition",userCondition);
+
   const CompanyList = await User.findAndCountAll({
-    attributes: ['id', 'firstName', 'lastName', 'email', 'status', 'role'],
+    attributes: ['id', 'firstName', 'lastName', 'email', 'status', 'role','createdAt'],
     include: [
       {
         model: Candidates,
         as: 'candidate',
+        where:candidateCondition
       },
       {
         attributes: ['id', 'date', 'startTime', 'endTime', 'note', 'status', 'rating', 'timezoneOffset', 'timezoneName'],
@@ -559,22 +651,37 @@ async function getCandidates(req, res) {
             attributes: ['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName'],
             model: Events,
             as: 'events',
+            where:eventCondition
           },
         ],
       },
     ],
     limit,
     offset,
-    where: {
-      role: 1,
-      status: 1,
-    },
+    where: userCondition,
   });
+
+  var resultRows;
+  console.log("req.body.eventList.length",req.body.eventList.length);
+  if(req.body.eventList.length !=0)
+  {
+    resultRows = [];
+    for(let i in CompanyList.rows)
+    {
+      var tempRows = CompanyList.rows[i];
+      if(tempRows.interviews.length !=0)
+        resultRows.push(tempRows);
+    }
+  }
+  else
+  {
+    resultRows = CompanyList.rows;
+  }
 
   res.status(httpStatus.OK).json({
     success: true,
-    data: CompanyList.rows,
-    count: CompanyList.rows.length,
+    data: resultRows,
+    count: resultRows.length,
   })
 }
 
@@ -730,19 +837,46 @@ async function getInterviews(req,res,type)
   const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
   console.log("get interviews step1");
+
+  var candidateCondition = {};
+  var employeeCondition = {}
+  var userCondition = {
+    role: 1
+  };
+  var eventCondition = {type:type};
+  
+  console.log("body",req.body);
+
+  if(req.body.companyName != '')
+    employeeCondition.companyName = {[Op.like] : '%'+req.body.companyName+'%'} ;
+  if(req.body.school != '')
+    candidateCondition.shcool = {[Op.like] : '%'+req.body.school+'%'} ;
+
+  if(req.body.email != '')
+    userCondition.email = {[Op.like] : '%'+req.body.email+'%'};
+  if(req.body.firstName != '')
+    userCondition.firstName = {[Op.like] : '%'+req.body.firstName+'%'};
+  if(req.body.lastName != '')
+    userCondition.lastName = {[Op.like] : '%'+req.body.lastName+'%'};
+  
+  if(req.body.eventList.length !=0)
+  {
+    eventCondition.id = {[Op.in]:req.body.eventList};
+  }
+  console.log("userCondition",userCondition);
+
   const interviewList = await Interviews.findAndCountAll({
     include: [
       {
-        attributes: ['firstName', 'lastName', 'status', 'role'],
+        attributes: ['firstName', 'lastName', 'status', 'role','email'],
         model: User,
         as: 'Candidate',
-        where: {
-          role: 1,
-        },
+        where: userCondition,
         include: [
           {
             model: Candidates,
             as: 'candidate',
+            where:candidateCondition
           },
         ],
       },
@@ -758,6 +892,7 @@ async function getInterviews(req,res,type)
             attributes: ['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
             model: Employees,
             as: 'employee',
+            where:employeeCondition
           },
         ],
       },
@@ -765,9 +900,7 @@ async function getInterviews(req,res,type)
         attributes: ['id', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type'],
         model: Events,
         as: 'events',
-        where: {
-          type : type,
-        }
+        where: eventCondition
       },
     ],
     limit,
