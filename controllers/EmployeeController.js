@@ -634,32 +634,35 @@ async function checkEmployeeSettingsFull(eventId,employeeId){
 async function searchCandidates(req, res) {
   //const limit = 100;
   console.log(req.body);
-  var searchCondition = {};
+  var tempCondition = [];
 
-  searchCondition.share = 1;
+  tempCondition.push({share:1});
   if(req.body.state != '')
-    searchCondition.state = req.body.state;
-  if(req.body.shcool != '')
-    searchCondition.shcool = req.body.shcool;
-  if(req.body.industryInterested != '')
-    searchCondition.industryInterested = req.body.industryInterested;
-  if(req.body.highDeagree != '')
-    searchCondition.highDeagree = req.body.highDeagree;
-  if(req.body.career != '')
-    searchCondition.career = req.body.career;
+    tempCondition.push({state:req.body.state});
   if(req.body.city != '')
-    searchCondition.city = req.body.city;
+    tempCondition.push({city:{[Op.like] : '%'+req.body.city+'%'}});
+  if(req.body.shcool != '')
+    tempCondition.push({shcool:req.body.shcool});
+  if(req.body.industryInterested != '')
+    tempCondition.push({industryInterested:req.body.industryInterested});
+  if(req.body.highDeagree != '')
+    tempCondition.push({highDeagree:req.body.highDeagree});
+  if(req.body.career != '')
+    tempCondition.push({career:req.body.career});
   if(req.body.major != '')
-  {
-    searchCondition.major = {[Op.like] : '%'+req.body.major+'%'};
-  }
-    
+    tempCondition.push({major:{[Op.like] : '%'+req.body.major+'%'}});
   if(req.body.desiredJobTitle != '')
-  {
-    searchCondition.desiredJobTitle = {[Op.like] : '%'+req.body.desiredJobTitle+'%'};
-  }
-    
-  
+    tempCondition.push({desiredJobTitle:{[Op.like] : '%'+req.body.desiredJobTitle+'%'}});
+  if(req.body.isMilitary == 1)
+    tempCondition.push({[Op.or]:[
+                          {isYouMilitary:1},
+                          {isFamilyMilitary:1}
+                        ]});
+
+  var searchCondition = {[Op.and]:tempCondition};
+
+  console.log(searchCondition);
+
     const CompanyList = await User.findAndCountAll({
     attributes: ['id', 'firstName', 'lastName', 'email', 'status', 'role'],
     include: [

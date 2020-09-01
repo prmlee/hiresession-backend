@@ -591,12 +591,68 @@ async function getCandidates(req, res) {
   var eventCondition = {};
   
   console.log("body",req.body);
+  var tempCondition = [];
   if(req.body.state != '')
+    tempCondition.push({state:req.body.state});
+  if(req.body.city != '')
+    tempCondition.push({city:{[Op.like] : '%'+req.body.city+'%'}});
+  if(req.body.school != '')
+    tempCondition.push({shcool:req.body.school});
+  if(req.body.industryInterested != '')
+    tempCondition.push({industryInterested:req.body.industryInterested});
+  if(req.body.highDeagree != '')
+    tempCondition.push({highDeagree:req.body.highDeagree});
+  if(req.body.career != '')
+    tempCondition.push({career:req.body.career});
+  if(req.body.isMilitary == 1)
+    tempCondition.push({[Op.or]:[
+                          {isYouMilitary:1},
+                          {isFamilyMilitary:1}
+                        ]});
+  
+  if(tempCondition.length != 0)
+    candidateCondition = {[Op.and]:tempCondition};
+  console.log("candidateCondition step1 ",candidateCondition);
+
+  if(req.body.keyword != '')
+  {
+    tempCondition = [];
+    tempCondition.push({city:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({state:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({shcool:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({major:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({highDeagree:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({graduationYear:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({desiredJobTitle:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({industryInterested:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({zipCode:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({phone:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({aboutMe:{[Op.like] : '%'+req.body.keyword+'%'}});
+    candidateCondition = {...candidateCondition,...{[Op.or]:tempCondition}};
+  }
+  console.log("candidateCondition step2 ",candidateCondition);
+  /*if(req.body.isMilitary == 1)
+  {
+    tempCondition = {[Op.or]:[
+      {isYouMilitary:1},
+      {isFamilyMilitary:1}
+    ]};
+    candidateCondition = {...candidateCondition,...tempCondition};
+  }
+  console.log("candidateCondition step3 ",candidateCondition);*/
+
+  /*if(req.body.state != '')
     candidateCondition.state = req.body.state;
   if(req.body.city != '')
     candidateCondition.city = {[Op.like] : '%'+req.body.city+'%'} ;
   if(req.body.school != '')
     candidateCondition.shcool = {[Op.like] : '%'+req.body.school+'%'} ;
+  if(req.body.school != '')
+    candidateCondition.industryInterested = req.body.industryInterested ;
+  if(req.body.school != '')
+    candidateCondition.highDeagree = req.body.highDeagree ;
+  if(req.body.school != '')
+    candidateCondition.career = req.body.career ;*/
 
   if(req.body.email != '')
     userCondition.email = {[Op.like] : '%'+req.body.email+'%'};
