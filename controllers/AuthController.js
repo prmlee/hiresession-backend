@@ -138,6 +138,8 @@ async function candidateRegister(req, res) {
         specialNeeds: req.body.specialNeeds || '',
         aboutMe: req.body.aboutMe || '',
         share: req.body.share,
+        isYouMilitary: req.body.isYouMilitary,
+        isFamilyMilitary: req.body.isFamilyMilitary,
         resume,
         resumeFileName,
         profileImg,
