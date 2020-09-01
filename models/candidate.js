@@ -20,6 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     industryInterested:DataTypes.STRING,
     aboutMe: DataTypes.TEXT,
     share: DataTypes.INTEGER,
+    isYouMilitary: DataTypes.INTEGER,
+    isFamilyMilitary: DataTypes.INTEGER,
   }, {});
 
   Candidate.associate = function(models) {
