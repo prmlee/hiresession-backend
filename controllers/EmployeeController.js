@@ -138,7 +138,7 @@ async function profile(req, res) {
 async function getattachedEmployeers(req, res) {
   var dateNow = keGetCurrentDate();
   const events = await Events.findAll({
-    attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink', 'eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type'],
+    attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink', 'eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
     include: [
       {
         attributes: ['id', ['userId', 'employeeId']],
