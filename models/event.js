@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
       values: ['private', 'group'],
       defaultValue: 'private'
     },
+    hostLimit:{
+      type:DataTypes.INTEGER,
+      defaultValue: 1,
+    }
   }, {});
 
   Events.associate = function(models) {
