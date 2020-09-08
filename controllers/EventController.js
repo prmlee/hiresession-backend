@@ -5,7 +5,7 @@ const {Op} = require('sequelize');
 
 async function getEvent(req, res){
     const events = await Events.findAll({
-        attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type'],
+        attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
         include:[
             {
                 attributes: ['id',['userId','employeeId']],
@@ -74,7 +74,7 @@ async function getEvent(req, res){
 
 async function simpleGetEvents(req, res){
     const events = await Events.findAll({
-        attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type'],
+        attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
         order:[
             ['id','ASC'],
         ]
