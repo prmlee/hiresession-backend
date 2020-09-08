@@ -995,7 +995,7 @@ async function getEvents(req, res) {
 async function getSingleEvent(req, res) {
 
   const events = await Events.findOne({
-    attributes: ['id', 'bizaboLink', 'pdfFile', 'pdfFileName', 'location', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type'],
+    attributes: ['id', 'bizaboLink', 'pdfFile', 'pdfFileName', 'location', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
     include: [
       {
         attributes: ['id'],
