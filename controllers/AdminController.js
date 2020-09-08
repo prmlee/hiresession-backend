@@ -90,6 +90,7 @@ async function createEvent(req, res) {
         timezoneOffset: req.body.timezoneOffset || 300,
         timezoneName: req.body.timezoneName || 'EST',
         type: req.body.type || 'private',
+        hostLimit: req.body.hostLimit || 1,
       });
 
       if (req.body.userId) {
