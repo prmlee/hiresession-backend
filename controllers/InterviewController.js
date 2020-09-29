@@ -8,6 +8,8 @@ const multer = require('multer');
 const { Op } = require('sequelize');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
+const {keCalcTimeOffset} = require('../helpers/keTime')
+
 const {checkEmployeeSettingsFull} = require('./EmployeeController')
 const { User, Candidates, Employees, Interviews, SupportingDocuments,Events,employeeSettings,SettingDurations } = require('../models');
 
@@ -450,24 +452,9 @@ async function changeCronStatus(req, res) {
         const { id, startTime, date,timezoneName } = interview.dataValues;
         const dateTime = `${date}T${startTime}.000Z`;
         var timezoneOffset = 240;
-        switch(timezoneName)
-        {
-          case "EST":
-            {
-              timezoneOffset = 240;
-              break;
-            }
-          case "MST":
-            {
-              timezoneOffset = 360;
-              break;
-            }
-          case "US/Pacific":
-            {
-              timezoneOffset = 420;
-              break;
-            }
-        }
+
+        timezoneOffset = -keCalcTimeOffset(timezoneName);
+        
         
         const timeMoment = moment(dateTime).add(timezoneOffset, 'minute');
 
