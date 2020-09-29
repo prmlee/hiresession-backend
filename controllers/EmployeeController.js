@@ -11,7 +11,7 @@ const moment = require('moment');
 const mailer = require('../services/mail-sender');
 const { Candidates, User, employeeSettings, Employees, Events, Interviews, AttachedEmployees, SettingDurations, SupportingDocuments } = require('../models');
 const { Op } = require('sequelize');
-const {keGetCurrentDate,keConvertLocalToUTC} = require('../helpers/keHelper');
+const {keGetCurrentDate,keConvertLocalToUTC} = require('../helpers/keTime');
 const configs = require('../config');
 
 

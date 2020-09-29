@@ -1,6 +1,6 @@
 const CronJob = require('cron').CronJob;
 const {removeAllLicesedUser,createWebinar,addWebinarResitrant} = require('../services/zoom-service');
-const {keGetCurrentDate,keConvertLocalToUTC} = require('../helpers/keHelper');
+const {keGetCurrentDate,keConvertLocalToUTC} = require('../helpers/keTime');
 const { Candidates, User, employeeSettings, Employees, Events, Interviews, SettingDurations,} = require('../models');
 const moment = require('moment');
 const mailer = require('../services/mail-sender');
