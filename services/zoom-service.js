@@ -3,7 +3,7 @@ const moment = require('moment');
 const configs = require('../config');
 const jwt = require('jsonwebtoken');
 const {ZoomUsers,User} = require('../models');
-
+const {keConvertTimezoneName} = require('../helpers/keTime')
 async function createMeeting(body, email) {
 
     const userEmail = await createUser(email);
@@ -181,10 +181,9 @@ async  function normaliseWebinarData(data){
     const durationhours =  moment.utc(moment(data.endTime,"HH:mm:ss").diff(moment(data.startTime,"HH:mm:ss"))).format("HH");
     const duration = parseInt(durationMin)+parseInt((durationhours*60));
     var zoomTimezone;
-    if(data.timezoneName == 'US/Pacific')
-        zoomTimezone = 'America/Los_Angeles';
-    else
-        zoomTimezone = 'America/New_York';
+
+    zoomTimezone = keConvertTimezoneName(data.timezoneName);
+    
     return  {
         topic: data.eventName,
         type: 5,
