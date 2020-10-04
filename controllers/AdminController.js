@@ -742,6 +742,186 @@ async function getCandidates(req, res) {
   })
 }
 
+async function getOneCandidate(req,res){
+  const id = req.params.id;
+  if (!id) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
+
+  try {
+    const oneCandidate = await User.findOne({
+      where: {
+        id: id,
+      },
+      include: [
+        {
+          model: Candidates,
+          as: 'candidate',
+        },
+      ],
+      raw: true,
+    });
+
+    delete oneCandidate.password;
+
+    return res.status(httpStatus.OK).json({
+      success: true,
+      data: oneCandidate,
+    })
+
+  } catch (e) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: e.message,
+    });
+  }
+}
+
+async function changeCandidateProfile(req, res) {
+  const id = req.params.id;
+  if (!id) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
+
+  const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, '/var/www/html/uploads/candidate');
+    },
+
+    filename: function (req, file, callback) {
+      callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+
+    },
+  });
+
+  const uploads = multer({
+    storage,
+    limits: { fileSize: LIMIT_UPLOAD_FILE_SIZE },
+
+  }).fields([
+    {
+      name: 'profileImg', maxCount: 1,
+    }, {
+      name: 'resume', maxCount: 1,
+    },
+  ]);
+
+  uploads(req, res, async (err) => {
+    const requestResume = req.body.resume || '';
+    const requestResumeFileName = req.body.resumeFileName || '';
+    console.log("res.locals.user.email",res.locals.user.email);
+    if (req.body.email) {
+      const user = await User.findOne({
+        where: {
+          email: {
+            [Op.eq]: req.body.email,
+          },
+          id:{
+            [Op.not]:id,
+          },
+
+        },
+        raw: true,
+      });
+
+      if (user) {
+        return res.status(httpStatus.FORBIDDEN).json({
+          success: false,
+          message: 'this email already used',
+        })
+      }
+    }
+
+    const updatedObj = req.body;
+    if(updatedObj.share == null)
+      updatedObj.share = '0';
+
+    if (req.files) {
+      const candidate = await Candidates.findOne({
+        where: {
+          userId: id,
+        },
+        raw: true,
+      });
+
+      updatedObj.profileImg = (req.files && req.files.profileImg) ? req.files.profileImg[0].filename : candidate.profileImg;
+      const resumeFile = (req.files && req.files.resume) ? req.files.resume[0] : undefined;
+      updatedObj.resume = resumeFile ? resumeFile.filename : requestResume;
+      updatedObj.resumeFileName = resumeFile ? resumeFile.originalname : requestResumeFileName;
+
+      console.log('update profile: ', req.files);
+
+      console.log(updatedObj);
+      Candidates.update({
+        ...updatedObj,
+      }, {
+        where: {
+          userId: res.locals.user.id,
+        },
+        paranoid: true,
+      });
+
+      if (candidate.resume && updatedObj.resume && updatedObj.resume !== '') {
+        const filePath = `uploads/candidate/${candidate.resume}`;
+        await fs.unlink(filePath, function (err) {
+          console.log(err);
+        });
+      }
+
+      if (candidate.profileImg && updatedObj.profileImg && updatedObj.profileImg !== '') {
+        const filePath = `uploads/candidate/${candidate.profileImg}`;
+        await fs.unlink(filePath, function (err) {
+          console.log(err);
+        });
+      }
+    } else {
+      Candidates.update({
+        ...updatedObj,
+        resume: requestResume,
+      }, {
+        where: {
+          userId: id,
+        },
+        paranoid: true,
+      })
+    }
+
+    if (err) {
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: err,
+      })
+    }
+
+    try {
+      await User.update({
+        ...updatedObj,
+      }, {
+        where: {
+          id: id,
+        },
+        paranoid: true,
+      });
+
+      return res.status(httpStatus.OK).json({
+        updatedObj,
+        success: true,
+        message: 'Updated successfully'
+      });
+
+    } catch (e) {
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: e.message,
+      });
+    }
+  });
+}
+
 async function archiveCandidate(req, res) {
 
   const errors = validationResult(req);
@@ -1043,6 +1223,8 @@ module.exports = {
   revertCompany,
   deleteCompany,
   getCandidates,
+  getOneCandidate,
+  changeCandidateProfile,
   archiveCandidate,
   revertCandidate,
   deleteCandidate,

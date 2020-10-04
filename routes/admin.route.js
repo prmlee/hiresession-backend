@@ -77,6 +77,19 @@ router
         isLoggedAdmin,
         adminController.getCandidates
     );
+router
+    .route('/getOneCandidate/:id')
+    .post(
+        isLoggedAdmin,
+        adminController.getOneCandidate
+    );
+
+router
+    .route('/changeCandidateProfile/:id')
+    .patch(
+        isLoggedAdmin,
+        adminController.changeCandidateProfile
+    );
 
 
 router
