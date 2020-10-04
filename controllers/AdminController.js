@@ -860,7 +860,7 @@ async function changeCandidateProfile(req, res) {
         ...updatedObj,
       }, {
         where: {
-          userId: res.locals.user.id,
+          userId: id,
         },
         paranoid: true,
       });
