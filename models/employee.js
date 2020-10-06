@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
     city: DataTypes.STRING,
     state: DataTypes.STRING,
     phone: DataTypes.STRING,
+    isSearchable: {
+      type: DataTypes.INTEGER,
+      defaultValue:0
+    },
   }, {});
 
   Employee.associate = function(models) {
