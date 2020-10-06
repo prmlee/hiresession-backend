@@ -40,7 +40,18 @@ router
         isLoggedAdmin,
         adminController.getOnlyCompanies
     );
-
+router
+    .route('/getOneCompany/:id')
+    .post(
+        isLoggedAdmin,
+        adminController.getOneCompany
+    );
+router
+    .route('/changeCompanyProfile/:id')
+    .patch(
+        isLoggedAdmin,
+        adminController.changeCompanyProfile
+    );
 router
     .route('/getArchivedCompanies')
     .get(
