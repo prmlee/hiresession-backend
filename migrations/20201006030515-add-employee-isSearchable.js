@@ -5,7 +5,7 @@ module.exports = {
     // logic for transforming into the new state
     return queryInterface.addColumn(
       'Employees',
-      'isSearchabel',
+      'isSearchable',
       {
         type: Sequelize.INTEGER,
         defaultValue:0
