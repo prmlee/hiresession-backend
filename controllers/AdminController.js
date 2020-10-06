@@ -476,7 +476,166 @@ async function archiveCompany(req, res) {
     });
   }
 }
+async function getOneCompany(req, res) {
+  const id = req.params.id;
+  if (!id) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
 
+  try {
+    const currentEmployee = await User.findOne({
+      where: {
+        id: id,
+      },
+      include: [
+        {
+          model: Employees,
+          as: 'employee',
+        },
+        {
+          model: SupportingDocuments,
+          as: 'SupportingDocuments',
+        },
+      ],
+    });
+
+    delete currentEmployee.password;
+
+    return res.status(httpStatus.OK).json({
+      success: true,
+      data: currentEmployee,
+    })
+
+  } catch (e) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: e.message,
+    });
+  }
+}
+async function changeCompanyProfile(req, res) {
+
+  const id = req.params.id;
+  if (!id) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
+  const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, '/var/www/html/uploads/employeer');
+    },
+
+    filename: function (req, file, callback) {
+
+      callback(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+
+    },
+  });
+
+  const profileImg = multer({
+    storage,
+    limits: { fileSize: LIMIT_UPLOAD_FILE_SIZE },
+
+  }).fields([
+    {
+      name: 'profileImg', maxCount: 1,
+    }, {
+      name: 'companyLogo', maxCount: 1,
+    },
+    {
+      name: 'supportingDocs', supportingDocs: 20,
+    },
+  ]);
+  //console.log("step1");
+  profileImg(req, res, async (err) => {
+
+    if (req.body.email) {
+      const user = await User.findOne({
+        email: {
+          [Op.eq]: req.body.email,
+        },
+        id:{
+          [Op.not]:id,
+        },
+        raw: true,
+      });
+
+      if (user) {
+        return res.status(httpStatus.FORBIDDEN).json({
+          success: false,
+          message: 'this email already used',
+        })
+      }
+    }
+    const updatedObj = req.body;
+    const employee = await Employees.findOne({
+      where: {
+        userId: id,
+      },
+      raw: true,
+    });
+
+
+    if (req.files) {
+      updatedObj.profileImg = (req.files && req.files.profileImg) ? req.files.profileImg[0].filename : employee.profileImg;
+      updatedObj.companyImg = (req.files && req.files.companyLogo) ? req.files.companyLogo[0].filename : employee.companyImg;
+    }
+
+    Employees.update({
+      ...updatedObj,
+    }, {
+      where: {
+        userId: id,
+      },
+      paranoid: true,
+    });
+    //console.log("step2");
+    if (req.files && req.files.supportingDocs) {
+
+      for (let i in req.files.supportingDocs) {
+
+        await SupportingDocuments.create({
+          userId: id,
+          docName: req.files.supportingDocs[i].filename,
+          docFileName: req.files.supportingDocs[i].originalname,
+          fileSize: req.files.supportingDocs[i].size,
+        })
+      }
+    }
+
+    
+    if (err) {
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: err,
+      })
+    }
+    try {
+      await User.update({
+        ...updatedObj,
+      }, {
+        where: {
+          id: id,
+        },
+        paranoid: true,
+      })
+
+      return res.status(httpStatus.OK).json({
+        success: true,
+        message: 'Updated successfully'
+      });
+
+    } catch (e) {
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: e.message,
+      });
+    }
+  })
+}
 async function revertCompany(req, res) {
 
   const errors = validationResult(req);
@@ -1218,6 +1377,8 @@ module.exports = {
   updateEvent,
   getLoggedInAdmin,
   getCompanies,
+  getOneCompany,
+  changeCompanyProfile,
   getArchivedCompanies,
   archiveCompany,
   revertCompany,
