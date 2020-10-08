@@ -52,6 +52,14 @@ router
         isLoggedAdmin,
         adminController.changeCompanyProfile
     );
+    
+router
+    .route('/getOneCompanyEvents/:id')
+    .post(
+        isLoggedAdmin,
+        adminController.getOneCompanyEvents
+    );
+
 router
     .route('/getArchivedCompanies')
     .get(

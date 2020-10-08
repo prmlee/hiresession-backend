@@ -3,17 +3,17 @@ const bcrypt = require('bcrypt');
 module.exports = (sequelize, DataTypes) => {
   const saltRounds = 10;
 
-  const EmployeeSettings = sequelize.define('SettingDurations', {
+  const SettingDurations = sequelize.define('SettingDurations', {
     settingId: DataTypes.INTEGER,
     startTime: DataTypes.TIME,
     endTime: DataTypes.TIME,
   }, {});
 
-  EmployeeSettings.associate = function(models) {
+  SettingDurations.associate = function(models) {
 
   };
 
 
 
-  return EmployeeSettings;
+  return SettingDurations;
 };

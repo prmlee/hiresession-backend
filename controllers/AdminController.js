@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator/check');
 var fs = require('fs');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
-const { User, Candidates, Employees, SupportingDocuments, Admin, Events, Interviews, AttachedEmployees } = require('../models');
+const { User, Candidates, Employees, SupportingDocuments, Admin, Events, Interviews, AttachedEmployees,employeeSettings,SettingDurations} = require('../models');
 const { Op } = require('sequelize');
 
 async function createEvent(req, res) {
@@ -635,6 +635,58 @@ async function changeCompanyProfile(req, res) {
       });
     }
   })
+}
+async function getOneCompanyEvents(req, res) {
+  const id = req.params.id;
+  if (!id) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
+
+  try {
+    const currentEmployee = await User.findOne({
+      attributes:['id','email','firstName','lastName'],
+      where: {
+        id: id,
+      },
+      include: [
+        {
+          attributes: ['id','companyName'],
+          model: Employees,
+          as: 'employee'
+        },
+        {
+            attributes:['id','employeeId','eventId','date','timezoneOffset', 'timezoneName'],
+            model:employeeSettings,
+            as:'employeeSettings',
+            include: [
+              {
+                attributes: ['id', 'eventName', 'type' ],
+                model: Events,
+                as: 'events'
+              },
+              {
+                attributes: ['id','settingId','startTime','endTime'],
+                model: SettingDurations,
+                as: 'SettingDurations',
+              }
+            ],
+        },
+      ],
+    });
+
+    return res.status(httpStatus.OK).json({
+      success: true,
+      data: currentEmployee,
+    })
+
+  } catch (e) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: e.message,
+    });
+  }
 }
 async function revertCompany(req, res) {
 
@@ -1379,6 +1431,7 @@ module.exports = {
   getCompanies,
   getOneCompany,
   changeCompanyProfile,
+  getOneCompanyEvents,
   getArchivedCompanies,
   archiveCompany,
   revertCompany,
