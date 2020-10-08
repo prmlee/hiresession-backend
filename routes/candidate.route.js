@@ -28,13 +28,6 @@ router
     );
 
 router
-    .route('/getSingleEmployee/:id')
-    .get(
-        isLoggedCandidate,
-        CandidateController.getSingleEmployee
-    );
-
-router
     .route('/getCompanies')
     .get(
         isLoggedCandidate,
