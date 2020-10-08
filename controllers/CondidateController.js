@@ -304,46 +304,6 @@ async function getLoggedInUser(req, res) {
   }
 }
 
-async function getSingleEmployee(req, res) {
-
-  const singleCompany = await User.findOne({
-    attributes: ['id', 'firstName', 'lastName', 'status', 'role'],
-    include: [
-      {
-        attributes: ['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
-        model: Employees,
-        as: 'employee',
-      },
-      {
-        attributes: ['docName', 'docFileName', 'fileSize'],
-        model: SupportingDocuments,
-        as: 'SupportingDocuments',
-      },
-      {
-        attributes: ['eventId', 'timezoneOffset', 'timezoneName'],
-        model: employeeSettings,
-        as: 'employeeSettings',
-      },
-    ],
-    where: {
-      id: req.params.id,
-    },
-  });
-
-  let date = moment(new Date()).format('YYYY-MM-DD');
-  let times = [];
-
-  if (singleCompany.dataValues && singleCompany.dataValues.employeeSettings) {
-    date = await getFirstDate(req.params.id, singleCompany.dataValues.employeeSettings.eventId);
-    times = await getTimes(req.params.id, date, singleCompany.dataValues.employeeSettings.eventId);
-  }
-
-  return res.status(httpStatus.OK).json({
-    success: true,
-    data: { singleCompany, times, date },
-
-  })
-}
 
 async function getFirstDate(employeeId, eventId) {
 
@@ -670,7 +630,6 @@ module.exports = {
   sheduleInterview,
   updateInterview,
   getLoggedInUser,
-  getSingleEmployee,
   getInterviews,
   getGroups,
   getCompanies,
