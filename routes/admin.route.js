@@ -95,6 +95,12 @@ router
         isLoggedAdmin,
         adminController.deleteOneCompanyEvent
     );
+router
+    .route('/updateOneCompanyEvent')
+    .post(
+        isLoggedAdmin,
+        adminController.updateOneCompanyEvent
+    );
 
 router
     .route('/getCandidates')

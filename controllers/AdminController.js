@@ -789,7 +789,7 @@ async function deleteOneCompanyEvent(req, res) {
     {
       return res.status(httpStatus.OK).json({
         success: false,
-        message: "Can't delete private session. This session has some interviews.",
+        message: "Can't delete session. This session has some interviews.",
       });
     }
 
@@ -820,6 +820,65 @@ async function deleteOneCompanyEvent(req, res) {
     });
   }
 }
+
+async function updateOneCompanyEvent(req,res) {
+
+  try {
+    const id = req.body.employeeSettingId;
+    const curEmploySetting = await employeeSettings.findOne(
+      {
+        where:{
+          id:id
+        }
+      }
+    );
+    console.log("curEmploySetting",curEmploySetting);
+
+    const interviewCount = await Interviews.count({
+      where:{
+        employeeId:curEmploySetting.employeeId,
+        eventId:curEmploySetting.eventId
+      }
+    });
+
+    if(interviewCount > 0)
+    {
+      return res.status(httpStatus.OK).json({
+        success: false,
+        message: "Can't change session. This session has some interviews.",
+      });
+    }
+
+    await SettingDurations.destroy({
+      where: {
+        settingId:id
+      },
+      paranoid: true,
+    });
+
+    for (let i in req.body.times) {
+
+      await SettingDurations.create({
+        settingId: id,
+        startTime: req.body.times[i].startTime,
+        endTime: req.body.times[i].endTime,
+      })
+    }
+
+    return res.status(httpStatus.OK).json({
+      success: true,
+      message: 'Company successfully changed',
+    });
+
+  } catch (e) {
+    console.log(e);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: e,
+    });
+  }
+}
+
 async function getArchivedCompanies(req, res) {
   const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
@@ -1199,6 +1258,8 @@ async function changeCandidateProfile(req, res) {
   });
 }
 
+
+
 async function archiveCandidate(req, res) {
 
   const errors = validationResult(req);
@@ -1498,6 +1559,7 @@ module.exports = {
   getOneCompany,
   changeCompanyProfile,
   getOneCompanyEvents,
+  updateOneCompanyEvent,
   getArchivedCompanies,
   archiveCompany,
   revertCompany,
