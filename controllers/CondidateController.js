@@ -573,9 +573,9 @@ async function getSingleEmployee(req, res) {
   let date = moment(new Date()).format('YYYY-MM-DD');
   let times = [];
   console.log("step1",eventId);
-  date = await getFirstDate(req.body.employeeId, eventId);
+  date = await getFirstDate(req.body.employeeId, req.body.eventId);
   console.log("step2",date);
-  times = await getTimes(req.body.employeeId, date, eventId);
+  times = await getTimes(req.body.employeeId, date, req.body.eventId);
   console.log("step3",times);
   return res.status(httpStatus.OK).json({
     success: true,
