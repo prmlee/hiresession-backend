@@ -361,7 +361,6 @@ async function getTimes(employeeId, eventId) {
     where: {
       employeeId,
       eventId,
-      date: moment(date).format('YYYY-MM-DD'),
     },
     raw: true,
   });
