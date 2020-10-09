@@ -572,7 +572,7 @@ async function getSingleEmployee(req, res) {
 
   let date = moment(new Date()).format('YYYY-MM-DD');
   let times = [];
-  console.log("step1",eventId);
+  console.log("step1",req.body.eventId);
   date = await getFirstDate(req.body.employeeId, req.body.eventId);
   console.log("step2",date);
   times = await getTimes(req.body.employeeId, date, req.body.eventId);
