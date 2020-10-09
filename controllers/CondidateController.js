@@ -332,12 +332,11 @@ async function getFirstDate(employeeId, eventId) {
   return moment(new Date()).format('YYYY-MM-DD');
 }
 
-async function getTimes(employeeId, date, eventId) {
+async function getTimes(employeeId, eventId) {
   const setting = await employeeSettings.findOne({
     where: {
       employeeId,
-      eventId,
-      date: moment(date).format('YYYY-MM-DD'),
+      eventId
     },
     include: [
       {
