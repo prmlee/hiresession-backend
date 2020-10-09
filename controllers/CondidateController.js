@@ -553,7 +553,15 @@ async function getSingleEmployee(req, res) {
         attributes: ['docName', 'docFileName', 'fileSize'],
         model: SupportingDocuments,
         as: 'SupportingDocuments',
-      }
+      },
+      {
+        attributes: ['eventId', 'timezoneOffset', 'timezoneName'],
+        model: employeeSettings,
+        as: 'employeeSettings',
+        where:{
+          eventId:req.body.eventId
+        }
+      },
     ],
     where: {
       id: req.body.employeeId,
