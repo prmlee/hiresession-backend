@@ -89,6 +89,12 @@ router
         isLoggedAdmin,
         adminController.deleteCompany
     );
+router
+    .route('/deleteOneCompanyEvent/:id')
+    .delete(
+        isLoggedAdmin,
+        adminController.deleteOneCompanyEvent
+    );
 
 router
     .route('/getCandidates')
