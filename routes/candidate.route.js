@@ -92,5 +92,11 @@ router
     isLoggedCandidate,
     CandidateController.deleteInterview
   );
+router
+  .route('/getSingleEmployee')
+  .post(
+      isLoggedCandidate,
+      CandidateController.getSingleEmployee
+  );
 
 module.exports = router;

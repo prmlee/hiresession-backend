@@ -541,7 +541,39 @@ async function getInterviewsByType(req, res,type) {
     count: interviewList.count,
   })
 }
+async function getSingleEmployee(req, res) {
 
+  const singleCompany = await User.findOne({
+    attributes: ['id', 'firstName', 'lastName', 'status', 'role'],
+    include: [
+      {
+        attributes: ['companyName', 'JobTitle', 'profileImg', 'companyImg', 'videoUrl'],
+        model: Employees,
+        as: 'employee',
+      },
+      {
+        attributes: ['docName', 'docFileName', 'fileSize'],
+        model: SupportingDocuments,
+        as: 'SupportingDocuments',
+      }
+    ],
+    where: {
+      id: req.body.employeeId,
+    },
+  });
+
+  let date = moment(new Date()).format('YYYY-MM-DD');
+  let times = [];
+
+  date = await getFirstDate(req.body.employeeId, req.body.eventId);
+  times = await getTimes(req.body.employeeId, req.body.eventId);
+
+  return res.status(httpStatus.OK).json({
+    success: true,
+    data: { singleCompany, times, date },
+
+  })
+}
 async function getInterviews(req, res) {
   return await getInterviewsByType(req,res,'private');
 }
@@ -637,5 +669,6 @@ module.exports = {
   addFavorit,
   getFavorit,
   deleteFavorit,
+  getSingleEmployee,
   deleteInterview,
 };
