@@ -663,7 +663,7 @@ async function getOneCompanyEvents(req, res) {
             as:'employeeSettings',
             include: [
               {
-                attributes: ['id', 'eventName', 'type' ],
+                attributes: ['id', 'eventName', 'type','startTime','endTime' ],
                 model: Events,
                 as: 'events'
               },
@@ -674,7 +674,7 @@ async function getOneCompanyEvents(req, res) {
               }
             ],
             order: [
-              ['date', 'DESC'],
+              ['date', 'ASC'],
             ],
         },
       ],
@@ -788,7 +788,7 @@ async function deleteOneCompanyEvent(req, res) {
     if(interviewCount > 0)
     {
       return res.status(httpStatus.OK).json({
-        success: true,
+        success: false,
         message: "Can't delete private session. This session has some interviews.",
       });
     }
