@@ -8,6 +8,7 @@ const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 const { User, Candidates, Employees, SupportingDocuments, Admin, Events, Interviews, AttachedEmployees,employeeSettings,SettingDurations} = require('../models');
 const { Op } = require('sequelize');
 
+
 async function createEvent(req, res) {
   const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -672,6 +673,9 @@ async function getOneCompanyEvents(req, res) {
                 as: 'SettingDurations',
               }
             ],
+            order: [
+              ['date', 'DESC'],
+            ],
         },
       ],
     });
@@ -722,6 +726,8 @@ async function revertCompany(req, res) {
   }
 }
 
+
+
 async function deleteCompany(req, res) {
 
   const id = req.params.id;
@@ -753,7 +759,60 @@ async function deleteCompany(req, res) {
     });
   }
 }
+async function deleteOneCompanyEvent(req, res) {
 
+  const id = req.params.id;
+  if (!id) {
+    return res
+      .status(httpStatus.UNPROCESSABLE_ENTITY)
+      .json(errors.array());
+  }
+
+  try {
+    const curEmploySetting = await employeeSettings.findOne(
+      {
+        where:{
+          id:id
+        }
+      }
+    );
+    console.log("curEmploySetting",curEmploySetting);
+
+    const interviewCount = await Interviews.count({
+      where:{
+        employeeId:curEmploySetting.employeeId,
+        eventId:curEmploySetting.eventId
+      }
+    });
+
+    if(interviewCount > 0)
+    {
+      return res.status(httpStatus.OK).json({
+        success: true,
+        message: "Can't delete private session. This session has some interviews.",
+      });
+    }
+
+    await employeeSettings.destroy({
+      where: {
+        id:id
+      },
+      paranoid: true,
+    })
+
+    return res.status(httpStatus.OK).json({
+      success: true,
+      message: 'Company successfully deleted',
+    });
+
+  } catch (e) {
+    console.log(e);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: e,
+    });
+  }
+}
 async function getArchivedCompanies(req, res) {
   const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
@@ -1436,6 +1495,7 @@ module.exports = {
   archiveCompany,
   revertCompany,
   deleteCompany,
+  deleteOneCompanyEvent,
   getCandidates,
   getOneCandidate,
   changeCandidateProfile,
