@@ -798,6 +798,13 @@ async function deleteOneCompanyEvent(req, res) {
         id:id
       },
       paranoid: true,
+    });
+
+    await SettingDurations.destroy({
+      where: {
+        settingId:id
+      },
+      paranoid: true,
     })
 
     return res.status(httpStatus.OK).json({
