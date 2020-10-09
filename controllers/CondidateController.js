@@ -332,11 +332,12 @@ async function getFirstDate(employeeId, eventId) {
   return moment(new Date()).format('YYYY-MM-DD');
 }
 
-async function getTimes(employeeId, eventId) {
+async function getTimes(employeeId, date, eventId) {
   const setting = await employeeSettings.findOne({
     where: {
       employeeId,
-      eventId
+      eventId,
+      date: moment(date).format('YYYY-MM-DD'),
     },
     include: [
       {
@@ -361,6 +362,7 @@ async function getTimes(employeeId, eventId) {
     where: {
       employeeId,
       eventId,
+      date: moment(date).format('YYYY-MM-DD'),
     },
     raw: true,
   });
@@ -571,9 +573,9 @@ async function getSingleEmployee(req, res) {
   let date = moment(new Date()).format('YYYY-MM-DD');
   let times = [];
 
-  date = await getFirstDate(req.body.employeeId, req.body.eventId);
-  times = await getTimes(req.body.employeeId, req.body.eventId);
-
+  date = await getFirstDate(req.body.employeeId, eventId);
+  times = await getTimes(req.body.employeeId, date, eventId);
+  
   return res.status(httpStatus.OK).json({
     success: true,
     data: { singleCompany, times, date },
