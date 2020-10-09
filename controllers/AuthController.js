@@ -78,7 +78,7 @@ async function candidateRegister(req, res) {
     });
 
     if (user) {
-      return res.status(httpStatus.FORBIDDEN).json({
+      return res.status(httpStatus.OK).json({
         success: false,
         message: 'this email already used',
       })
@@ -234,7 +234,7 @@ async function employeeRegister(req, res) {
     });
 
     if (user) {
-      return res.status(httpStatus.FORBIDDEN).json({
+      return res.status(httpStatus.OK).json({
         success: false,
         message: 'this email already used',
       })
