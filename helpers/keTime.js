@@ -5,29 +5,44 @@ function keCalcTimeOffset(timezoneName)
     switch(timezoneName)
     {
         case 'EST':
+            {
+                r_value = -300;
+            }
         case 'EDT':
         case 'US/Eastern':
             {
-                r_value = IS_WINTER? -300:-240;
+                r_value = -240;
                 break;
             }
         case 'CST':
+            {
+                r_value = -360;
+                break;
+            }
         case 'CDT':
             {
-                r_value = IS_WINTER? -360:-300;
+                r_value = -300;
                 break;
             }
         case 'MST':
+            {
+                r_value = -420;
+                break;
+            }
         case 'MDT':
             {
-                r_value = IS_WINTER? -420:-360;
+                r_value = -360;
                 break;
             }
         case 'PST':
+            {
+                r_value = -480;
+                break;
+            }
         case 'PDT':
         case 'US/Pacific':
             {
-                r_value = IS_WINTER? -480:-420;
+                r_value = -420;
                 break;
             }
     }
