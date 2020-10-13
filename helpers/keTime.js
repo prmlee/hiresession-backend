@@ -7,6 +7,7 @@ function keCalcTimeOffset(timezoneName)
         case 'EST':
             {
                 r_value = -300;
+                break;
             }
         case 'EDT':
         case 'US/Eastern':
