@@ -253,7 +253,7 @@ async function isWebinarUser(email)
             headers,
         });
         console.log(response);
-        if(response.feature.webinar)
+        if(response.data.feature.webinar)
             return true;
         return false;
     }catch (e) {
