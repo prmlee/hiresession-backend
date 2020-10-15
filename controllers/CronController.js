@@ -206,7 +206,7 @@ async function cronRemoveAllLicensedUser()
 }
 function cronControllInit()
 {
-    /*new CronJob(
+    new CronJob(
         '35-38 * *  * *',
         async function() {
             await cronRemoveAllLicensedUser();
@@ -214,19 +214,8 @@ function cronControllInit()
         null,
         true,
         'America/New_York'
-    );*/
-
-    new CronJob(
-      '*/3 * *  * *',
-      async function() {
-          await cronRemoveAllLicensedUser();
-      },
-      null,
-      true,
-      'America/New_York'
     );
-
-
+    
     new CronJob(
         '40 * *  * *',
         async function() {
