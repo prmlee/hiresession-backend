@@ -245,13 +245,14 @@ async function isWebinarUser(email)
         'Content-Type': 'application/json',
         'User-Agent': 'Zoom-api-Jwt-Request',
     };
+    console.log(email);
     try{
         const response = await axios({
             method: 'get',
             url,
             headers,
         });
-
+        console.log(response);
         if(response.feature.webinar)
             return true;
         return false;
