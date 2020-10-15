@@ -252,7 +252,7 @@ async function isWebinarUser(email)
             url,
             headers,
         });
-        console.log(response);
+        //console.log(response.data);
         if(response.data.feature.webinar)
             return true;
         return false;
