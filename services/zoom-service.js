@@ -236,6 +236,29 @@ async function updateSetting(email)
         console.log("update setting",e.response.data.message);
     }
 }
+async function isWebinarUser(email)
+{
+    const url =  `https://api.zoom.us/v2/users/${email}/settings`;
+    const token = generateJWT();
+    const headers =  {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'User-Agent': 'Zoom-api-Jwt-Request',
+    };
+    try{
+        const response = await axios({
+            method: 'get',
+            url,
+            headers,
+        });
+
+        if(response.feature.webinar)
+            return true;
+        return false;
+    }catch (e) {
+        return false;
+    }
+}
 async function updateUserType(email,type)
 {
     const url =  `https://api.zoom.us/v2/users/${email}`;
@@ -394,8 +417,12 @@ async function removeAllLicesedUser(){
     }
     for(let i in licensedUsers)
     {
-        await updateUserType(licensedUsers[i].email,1);
-        console.log(licensedUsers[i]);
+        if(await isWebinarUser(licensedUsers[i].email))
+        {
+            await updateUserType(licensedUsers[i].email,1);
+            console.log(licensedUsers[i]);
+        }
+        
     }
     return true;
 }
@@ -448,4 +475,4 @@ async function addWebinarResitrant(webinarId,userId)
         //console.log("create user response",JSON.stringify(response));
     }
 }
-module.exports = {createMeeting, updateMeeting,createWebinar,addWebinarResitrant,removeAllLicesedUser,updateUserType,updateSetting};
+module.exports = {createMeeting, updateMeeting,createWebinar,addWebinarResitrant,removeAllLicesedUser,updateUserType,updateSetting,isWebinarUser};

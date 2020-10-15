@@ -197,6 +197,7 @@ async function processWebinar()
 
 async function cronRemoveAllLicensedUser()
 {
+    
     console.log("cronRemoveAllLicensedUser");
     if(await removeAllLicesedUser())
       console.log("removeAllLicesedUser success");
@@ -205,8 +206,7 @@ async function cronRemoveAllLicensedUser()
 }
 function cronControllInit()
 {
-  return;
-    new CronJob(
+    /*new CronJob(
         '35-38 * *  * *',
         async function() {
             await cronRemoveAllLicensedUser();
@@ -214,6 +214,16 @@ function cronControllInit()
         null,
         true,
         'America/New_York'
+    );*/
+
+    new CronJob(
+      '*/3 * *  * *',
+      async function() {
+          await cronRemoveAllLicensedUser();
+      },
+      null,
+      true,
+      'America/New_York'
     );
 
 
