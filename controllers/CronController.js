@@ -9,37 +9,55 @@ async function processWebinar()
 {
     var dateNow = keGetCurrentDate();
     //console.log(dateNow);
+    const events = await Events.findAll({
+      attributes:['id','date','type'],
+      where:{
+        date: moment(dateNow).format('YYYY-MM-DD'),
+        type:'group'
+      }
+    });
 
-    const settings = await employeeSettings.findAll({
-        attributes:['id','employeeId','eventId','date','timezoneOffset', 'timezoneName'],
-        include: [
-          {
-            attributes: ['id', 'eventName', 'type' ],
-            model: Events,
-            as: 'events',
-            include: [
-              {
-                attributes:['id','employeeId','candidateId'],
-                model: Interviews,
-                as: 'interview',
-              },
-            ],
+    console.log("Cron Events",events);
+    if(events.length == 0)
+      return;
+    //////////////////////////////////////////////////////////
+
+    var settings = [];
+
+    for(let i =0; i< events.length;i++)
+    {
+      const tempSettings = await employeeSettings.findAll({
+          attributes:['id','employeeId','eventId','date','timezoneOffset', 'timezoneName'],
+          include:[
+            {
+              attributes: ['id', 'eventName', 'type' ],
+              model: Events,
+              as: 'events',
+            },
+            {
+              attributes: ['id','settingId','startTime','endTime'],
+              model: SettingDurations,
+              as: 'SettingDurations',
+            },
+            {
+              attributes: ['id', 'email'],
+              model: User,
+              as: 'Company'
+            }
+          ],
+          where: {
+            date: moment(dateNow).format('YYYY-MM-DD'),
+            eventId:events[i].id
           },
-          {
-            attributes: ['id','settingId','startTime','endTime'],
-            model: SettingDurations,
-            as: 'SettingDurations',
-          },
-          {
-            attributes: ['id', 'email'],
-            model: User,
-            as: 'Company'
-          }
-        ],
-        where: {
-          date: moment(dateNow).format('YYYY-MM-DD')
-        },
-      });
+        });
+
+        settings = {...settings,...tempSettings};
+    }
+
+    console.log(settings);
+
+    //////////////////////////////////////////////////////////
+
       var dateString;
       for (let i in settings)
       {
