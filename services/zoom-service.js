@@ -86,7 +86,7 @@ async function createWebinar(body, email) {
             data,
         });
 
-        //console.log("createMeeting response:",response);
+        console.log("createMeeting response:",response);
 
         return {
             data: response.data,
