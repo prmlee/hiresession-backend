@@ -23,13 +23,13 @@ const transport = Promise.promisifyAll(
 );
 
 function sendWithBcc(to, tmp, replacements, bcc) {
-  console.log('SMTP credential: ', configs);
+  //console.log('SMTP credential: ', configs);
   return;
   return send(to, tmp, replacements, `Welcome to ${configs.appName}`, configs.email, bcc);
 }
 
 function send(to, tmp, replacements = {}, subject = `Welcome to ${configs.appName}`, from = configs.email, bcc) {
-  console.log('SMTP credential: ', configs);
+  //console.log('SMTP credential: ', configs);
   const templatePath = `../templates/${tmp}/index.html`;
   return;
   return fs.readFileAsync(`${__dirname}/${templatePath}`, {encoding: 'utf-8'})
