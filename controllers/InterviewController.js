@@ -430,9 +430,9 @@ async function changeCronStatus(req, res) {
     const nextDate = moment().add(1, 'day').format('YYYY-MM-DD');
     const today = moment().format('YYYY-MM-DD');
 
-    console.log('=========================');
-    console.log(prevDate, today, nextDate);
-    console.log('=========================');
+    // console.log('=========================');
+    // console.log(prevDate, today, nextDate);
+    // console.log('=========================');
 
     const interviewList = await Interviews.findAll({
       where: {
@@ -458,9 +458,9 @@ async function changeCronStatus(req, res) {
         
         const timeMoment = moment(dateTime).add(timezoneOffset, 'minute');
 
-        console.log('=========================');
-        console.log(timeMoment.toISOString(), date, startTime, timezoneOffset, todayMoment.isSameOrAfter(timeMoment));
-        console.log('=========================');
+        // console.log('=========================');
+        // console.log(timeMoment.toISOString(), date, startTime, timezoneOffset, todayMoment.isSameOrAfter(timeMoment));
+        // console.log('=========================');
 
         if (todayMoment.isSameOrAfter(timeMoment)) {
           needUpdateIds.push(id);
