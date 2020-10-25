@@ -390,7 +390,7 @@ async function getCompanies(req, res) {
   });
   var resultRows;
   console.log("req.body.eventList.length",req.body.eventList.length);
-  if(req.body.eventList.length !=0)
+  /*if(req.body.eventList.length !=0)
   {
     //console.log("result",CompanyList.rows);
     resultRows = [];
@@ -401,7 +401,7 @@ async function getCompanies(req, res) {
         resultRows.push(tempRows);
     }
   }
-  else
+  else*/
   {
     resultRows = CompanyList.rows;
   }
