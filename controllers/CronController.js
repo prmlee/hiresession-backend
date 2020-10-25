@@ -17,7 +17,7 @@ async function processWebinar()
       }
     });
 
-    console.log("Cron Events",events);
+    //console.log("Cron Events",events);
     if(events.length == 0)
       return;
     //////////////////////////////////////////////////////////
@@ -54,22 +54,22 @@ async function processWebinar()
         settings = {...settings,...tempSettings};
     }
 
-    console.log("Cron Settings",settings);
+    //console.log("Cron Settings",settings);
 
     //////////////////////////////////////////////////////////
 
-    return;
+    //return;
 
       var dateString;
       for (let i in settings)
       {        
         dateString = settings[i].date+' ' + settings[i].SettingDurations[0].startTime;
-        console.log(dateString);
+        console.log('date string',dateString);
         var startTime = keConvertLocalToUTC(dateString,settings[i].timezoneName);
         var diffTime = startTime.getTime() - dateNow.getTime();
 
-        dateString = settings[i].date+' ' + settings[i].SettingDurations[0].endTime;
-        var endTime = keConvertLocalToUTC(dateString,settings[i].timezoneName);
+        //dateString = settings[i].date+' ' + settings[i].SettingDurations[0].endTime;
+        //var endTime = keConvertLocalToUTC(dateString,settings[i].timezoneName);
         console.log("Now",dateNow);
         console.log("startTime",startTime);
 
@@ -232,7 +232,7 @@ function cronControllInit()
     );*/
     
     new CronJob(
-        '*/2 * *  * *',
+        '*/4 * *  * *',
         async function() {
             await processWebinar();
         },

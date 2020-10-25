@@ -51,7 +51,8 @@ async function createMeeting(body, email) {
 }
 
 async function createWebinar(body, email) {
-
+    console.log("CreateWebinar",body);
+    console.log(email);
     const userEmail = await createUser(email);
 
     await updateUserType(email,2);
