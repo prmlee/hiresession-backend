@@ -54,18 +54,15 @@ async function processWebinar()
         settings = {...settings,...tempSettings};
     }
 
-    console.log(settings);
+    console.log("Cron Settings",settings);
 
     //////////////////////////////////////////////////////////
 
+    return;
+
       var dateString;
       for (let i in settings)
-      {
-        console.log(settings[i].events.eventName);
-        console.log(settings[i].timezoneOffset);
-        console.log(settings[i].timezoneName);
-        console.log(settings[i].Company.email);
-        
+      {        
         dateString = settings[i].date+' ' + settings[i].SettingDurations[0].startTime;
         console.log(dateString);
         var startTime = keConvertLocalToUTC(dateString,settings[i].timezoneName);
@@ -81,7 +78,7 @@ async function processWebinar()
         {
           console.log("Upcoming Event");
           console.log(settings[i].Company.email);
-
+          
           const currentEmployee = await User.findOne({
             include: [
               {
@@ -224,7 +221,7 @@ async function cronRemoveAllLicensedUser()
 }
 function cronControllInit()
 {
-    new CronJob(
+    /*new CronJob(
         '35-38 * *  * *',
         async function() {
             await cronRemoveAllLicensedUser();
@@ -232,10 +229,10 @@ function cronControllInit()
         null,
         true,
         'America/New_York'
-    );
+    );*/
     
     new CronJob(
-        '40 * *  * *',
+        '*/2 * *  * *',
         async function() {
             await processWebinar();
         },
