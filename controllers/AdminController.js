@@ -336,6 +336,19 @@ async function getCompanies(req, res) {
   if(req.body.eventList.length !=0)
   {
     eventCondition.id = {[Op.in]:req.body.eventList};
+    const AttachedEmployeeList = await AttachedEmployees.findAll({
+      attributes:['userId'],
+      where:{
+        EventId:{[Op.in]:req.body.eventList}
+      }
+    });
+    var employeeIds = [];
+    for(let i in AttachedEmployeeList)
+    {
+      employeeIds.push(AttachedEmployeeList[i].userId);
+    }
+
+    userCondition.id = {[Op.in]:employeeIds}
   }
   console.log("userCondition",userCondition);
 
@@ -366,8 +379,7 @@ async function getCompanies(req, res) {
           {
             attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink', 'eventLogo', 'location', 'date', 'startTime', 'endTime'],
             model: Events,
-            as: 'events',
-            where: eventCondition,
+            as: 'events'
           },
         ],
       }
