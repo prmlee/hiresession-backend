@@ -221,6 +221,7 @@ async function cronRemoveAllLicensedUser()
 }
 function cronControllInit()
 {
+  return;
     new CronJob(
         '35-38 * *  * *',
         async function() {
