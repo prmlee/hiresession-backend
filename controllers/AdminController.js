@@ -1023,7 +1023,7 @@ async function getCandidates(req, res) {
     userCondition.createdAt = tempObj;
   }
   
-  if(req.body.eventList.length !=0)
+  if(req.body.eventList!=null && req.body.eventList.length !=0)
   {
     eventCondition.id = {[Op.in]:req.body.eventList};
   }
