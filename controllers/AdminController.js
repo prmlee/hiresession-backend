@@ -568,11 +568,13 @@ async function changeCompanyProfile(req, res) {
     console.log('step3');
     if (req.body.email) {
       const user = await User.findOne({
-        email: {
-          [Op.eq]: req.body.email,
-        },
-        id:{
-          [Op.not]:id,
+        where:{
+          email: {
+            [Op.eq]: req.body.email,
+          },
+          id:{
+            [Op.not]:id,
+          }
         },
         raw: true,
       });
