@@ -529,7 +529,7 @@ async function getOneCompany(req, res) {
   }
 }
 async function changeCompanyProfile(req, res) {
-
+  console.log('step1');
   const id = req.params.id;
   if (!id) {
     return res
@@ -562,9 +562,10 @@ async function changeCompanyProfile(req, res) {
       name: 'supportingDocs', supportingDocs: 20,
     },
   ]);
-  //console.log("step1");
+  console.log("step2");
   profileImg(req, res, async (err) => {
 
+    console.log('step3');
     if (req.body.email) {
       const user = await User.findOne({
         email: {
