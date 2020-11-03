@@ -583,6 +583,8 @@ async function changeCompanyProfile(req, res) {
         })
       }
     }
+
+    console.log("step1");
     const updatedObj = req.body;
     const employee = await Employees.findOne({
       where: {
