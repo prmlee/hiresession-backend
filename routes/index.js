@@ -6,6 +6,7 @@ const candidateRoutes = require('./candidate.route');
 const adminRoutes = require('./admin.route');
 const eventRoutes = require('./event.route');
 const interviewRoutes = require('./interview.route');
+const ticketRoutes = require('./ticket.route')
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use('/candidate', candidateRoutes);
 router.use('/admin', adminRoutes);
 router.use('/event', eventRoutes);
 router.use('/interview', interviewRoutes);
+router.use('/ticket', ticketRoutes);
 
 module.exports = router;
