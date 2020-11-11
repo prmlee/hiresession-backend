@@ -8,7 +8,7 @@
     "start": " nodemon ./bin/www",
     "start:staging": " NODE_ENV=development PORT=8000 node ./bin/www",
     "start:prod": " NODE_ENV=production PORT=8000 node ./bin/www",
-    "migrate": "sequelize db:migrate",
+    "migrate": "sequelize db:migrate --env development",
     "migrate:undo": "sequelize db:migrate:undo",
     "seeder": "sequelize db:seed:all",
     "seeder:staging": "sequelize db:seed:all --env staging",
