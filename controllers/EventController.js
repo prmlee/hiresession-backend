@@ -85,5 +85,18 @@ async function simpleGetEvents(req, res){
         data:events
     })
 }
+async function simpleGetOne(req,res){
+    const events = await Events.findOne({
+        attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
+        where:{
+            id:req.body.id
+        }
+    });
 
-module.exports = {getEvent,simpleGetEvents};
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:events
+    })
+}
+
+module.exports = {getEvent,simpleGetEvents,simpleGetOne};
