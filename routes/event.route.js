@@ -17,4 +17,10 @@ router
         eventController.simpleGetEvents
     );
 
+router
+    .route('/simpleGetOne')
+    .post(
+        eventController.simpleGetOne
+    );
+
 module.exports = router;

@@ -1,6 +1,6 @@
 const express = require('express');
 const ticketController = require('../controllers/TicketController');
-const { isLoggedAdmin } = require('../middlewares/auth');
+const { isLoggedAdmin,isLoggedEmployer} = require('../middlewares/auth');
 
 const router = express.Router();
 
@@ -31,5 +31,20 @@ router
         isLoggedAdmin,
         ticketController.updateTicketType
     );
+
+router
+    .route('/getSingleTicketType')
+    .post(
+        isLoggedAdmin,
+        ticketController.getSingleTicketType
+    );
+
+router
+    .route('/getTicketTypesByEvent')
+    .post(
+        isLoggedEmployer,
+        ticketController.getTicketTypesByEvent
+    )
+    
 
 module.exports = router;

@@ -79,6 +79,42 @@ async function getTicketTypes(req, res) {
         });
     }
 }
+async function getTicketTypesByEvent(req, res) {
+
+    try{
+        const TicketList = await TicketTypes.findAndCountAll({
+            attributes:['id','name','role','price','description','ticketPerOrder'],
+            include:[
+                {
+                    attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink', 'eventLogo', 'location', 'date', 'startTime', 'endTime'],
+                    model: Events,
+                    as: 'events',
+                    where:{
+                        id:req.body.eventId
+                    }
+                }
+            ],
+            order: [
+                ['createdAt', 'DESC'],
+            ],
+        });
+
+        var resultRows = TicketList.rows;
+        return res.status(httpStatus.OK).json({
+            success: true,
+            data: resultRows,
+            count: resultRows.length,
+          })
+
+    }catch(e)
+    {
+        console.log('Get Tickets Error', e)
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message,
+        });
+    }
+}
 async function deleteTicketType(req, res) {
 
     const id = req.body.id;
@@ -196,9 +232,12 @@ async function updateTicketType(req, res) {
     }
 }
 
+
 module.exports = {
     addTicketType,
     getTicketTypes,
     deleteTicketType,
     updateTicketType,
+    getSingleTicketType,
+    getTicketTypesByEvent,
 };
