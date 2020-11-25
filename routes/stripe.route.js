@@ -6,10 +6,17 @@ const router = express.Router();
 
 
 router
-    .route('/getTicketTypesByEvent')
+    .route('/createPaymentIntent')
     .post(
         isLoggedEmployer,
         stripeController.createPaymentIntent
+    );
+
+router
+    .route('/completePayment')
+    .post(
+        isLoggedEmployer,
+        stripeController.completePayment
     )
 
 module.exports = router;
