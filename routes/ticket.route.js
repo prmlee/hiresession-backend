@@ -42,7 +42,6 @@ router
 router
     .route('/getTicketTypesByEvent')
     .post(
-        isLoggedEmployer,
         ticketController.getTicketTypesByEvent
     )
     
