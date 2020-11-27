@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 
-const {User, Events, Employees, AttachedEmployees, employeeSettings, SettingDurations} = require('../models');
+const {User, Events, Employees, AttachedEmployees, employeeSettings, SettingDurations,TicketTypes} = require('../models');
 const {Op} = require('sequelize');
 
 async function getEvent(req, res){
@@ -59,11 +59,24 @@ async function getEvent(req, res){
             if(typeof events[i]['attachedEmployees'][j] !== 'undefined'){
 
                 involvedEmployers.push(events[i]['attachedEmployees'][j]['dataValues']['employeeId']);
-                console.log(events[i]['attachedEmployees'][j]['dataValues']['employeeId']);
+                //console.log(events[i]['attachedEmployees'][j]['dataValues']['employeeId']);
             }
         }
 
         events[i]['dataValues']['involvedEmployers'] = involvedEmployers;
+        //console.log("eventId",events[i].id);
+        const ticketTypeCount = await TicketTypes.count({
+            where:{
+                eventId:events[i].id
+            }
+        });
+
+        //console.log(ticketTypeCount);
+
+        if(ticketTypeCount !=0)
+            events[i]['dataValues']['hasTicket'] = true;
+        else
+            events[i]['dataValues']['hasTicket'] = false;
     }
 
     return  res.status(httpStatus.OK).json({
