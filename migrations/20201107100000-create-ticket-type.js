@@ -22,7 +22,7 @@ module.exports = {
       },
       role: {
         type: Sequelize.ENUM,
-        values: ['Sponsor', 'Exhibitor']
+        values: ['Sponsor', 'Exhibitor','Extra Reps','Resume Database'],
       },
       price:{
         type: Sequelize.DECIMAL(10,2),
