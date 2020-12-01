@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User, Candidates, Employees, Events, AttachedEmployees,TicketTypes,Payments,Tickets} = require('../models');
+const { User, Candidates, Employees, Events, AttachedEmployees,TicketTypes,Payments,Tickets,ExtraTickets} = require('../models');
 const stripe = require("stripe")("sk_test_51Hj7cQJZ7kpAYq4CXhMPRwYK5mpLMzsAL6fsEdossHdVMOnB8z9sIutS8juDa8FBbv8KAmehJpmpWNxX7xQIu8AA00JFyOM6Ko");
 
 async function addAttachedEmployees(userId,eventId)
@@ -57,29 +57,39 @@ async function completePayment(req,res){
             billedContact:req.body.billedContact,
             companyName:req.body.companyName,
         });
+        var ticket,ticketType;
+        /////////////////////////////////////////////////////////////////////////
+        var mainTicketType = req.body.mainTicket;
+        ticket = await Tickets.create({
+            ticketTypeId:mainTicket.id,
+            paymentId:payment.id,
+            userId:userId,
+            count:1
+        });
+        console.log("ticket",ticket);
 
-        var ticketTypes = req.body.order;
+        ticketType = await TicketTypes.findOne({
+            attributes:['id','name','role','price','description','ticketPerOrder','eventId'],
+            where:{
+                id:ticket.ticketTypeId
+            }
+        });
 
-        for(var i =0; i < ticketTypes.length;i++)
+        await addAttachedEmployees(userId,ticketType.eventId);
+
+        /////////////////////////////////////////////////////////////////////////////////
+        var extraTicket = req.body.mainTicket;
+        if(extraTicket != null)
         {
-            var ticket = await Tickets.create({
-                ticketTypeId:ticketTypes[i].id,
+            var extraEmailList= req.body.extraEmailList
+            ticket = await Tickets.create({
+                ticketTypeId:extraTicket.id,
                 paymentId:payment.id,
-                userId:userId
+                userId:userId,
+                count:extraEmailList.length,
             });
-            console.log("ticket",ticket);
-
-            var ticketType = await TicketTypes.findOne({
-                attributes:['id','name','role','price','description','ticketPerOrder','eventId'],
-                where:{
-                    id:ticket.ticketTypeId
-                }
-            });
-
-            console.log("ticketType",ticketType);
-
-            await addAttachedEmployees(userId,ticketType.eventId);
         }
+
 
         return res.status(httpStatus.OK).json({
             success: true,
