@@ -5,7 +5,10 @@ module.exports = (sequelize, DataTypes) => {
         ticketTypeId: DataTypes.INTEGER,
         paymentId: DataTypes.INTEGER,
         userId: DataTypes.INTEGER,
-        
+        count:{
+            type: DataTypes.INTEGER,
+            defaultValue: 1
+        },
     }, {});
   
     Tickets.associate = function(models) {

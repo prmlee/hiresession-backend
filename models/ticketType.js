@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         eventId: DataTypes.INTEGER,
         role: {
             type: DataTypes.ENUM,
-            values: ['Sponsor', 'Exhibitor']
+            values: ['Sponsor', 'Exhibitor','Extra Reps','Resume Database']
         },
         price:{
             type: DataTypes.DECIMAL(10,2),
