@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue:0
     },
+    searchExpire: {
+      type: DataTypes.INTEGER,
+      defaultValue:0
+    },
   }, {});
 
   Employee.associate = function(models) {
