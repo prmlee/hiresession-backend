@@ -19,6 +19,18 @@ async function addAttachedEmployees(userId,eventId)
         EventId:eventId,
     });
 }
+async function setSearchable(userId,days)
+{
+    var searchExpire = Date.now() + 1000*60*60*24*days;
+    const employee = await Employees.update({
+        isSearchable: 1,
+        searchExpire: searchExpire
+    },{
+        where:{
+            userId:userId
+        }
+    });
+}
 
 async function createPaymentIntent(req, res) {
     const paymentIntent = await stripe.paymentIntents.create({
@@ -61,7 +73,7 @@ async function completePayment(req,res){
         /////////////////////////////////////////////////////////////////////////
         var mainTicketType = req.body.mainTicket;
         ticket = await Tickets.create({
-            ticketTypeId:mainTicket.id,
+            ticketTypeId:mainTicketType.id,
             paymentId:payment.id,
             userId:userId,
             count:1
@@ -78,7 +90,7 @@ async function completePayment(req,res){
         await addAttachedEmployees(userId,ticketType.eventId);
 
         /////////////////////////////////////////////////////////////////////////////////
-        var extraTicket = req.body.mainTicket;
+        var extraTicket = req.body.extraTicket;
         if(extraTicket != null)
         {
             var extraEmailList= req.body.extraEmailList
@@ -88,8 +100,45 @@ async function completePayment(req,res){
                 userId:userId,
                 count:extraEmailList.length,
             });
-        }
 
+            for(var i = 0; i< extraEmailList.length;i++)
+            {
+                const email = extraEmailList[i];
+                const user = await User.findOne({
+                    attributes:["id"],
+                    where:{
+                        email: email,
+                        role:'employer',
+                    }
+                });
+                var isProcess = 0;
+                if(user)
+                {
+                    await addAttachedEmployees(user.id,ticketType.eventId);
+                    isProcess = 1;
+                }
+
+                await ExtraTickets.create({
+                    ticketId: ticket.id,
+                    eventId: ticketType.eventId,
+                    email:email,
+                    isProcess:isProcess,
+                });
+            }
+        }
+        //////////////////////////////////////////////////////////////////////////////////
+        var resumeTicket = req.body.resumeTicket;
+        if(resumeTicket !=null)
+        {
+            ticket = await Tickets.create({
+                ticketTypeId:resumeTicket.id,
+                paymentId:payment.id,
+                userId:userId,
+                count:1,
+            });
+
+            await setSearchable(userId,30);
+        }
 
         return res.status(httpStatus.OK).json({
             success: true,
