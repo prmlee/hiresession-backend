@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 
-const {User, Events, Employees, AttachedEmployees, employeeSettings, SettingDurations,TicketTypes} = require('../models');
+const {User, Events, Employees, AttachedEmployees, employeeSettings, SettingDurations,EventTicketTypes} = require('../models');
 const {Op} = require('sequelize');
 
 async function getEvent(req, res){
@@ -65,7 +65,7 @@ async function getEvent(req, res){
 
         events[i]['dataValues']['involvedEmployers'] = involvedEmployers;
         //console.log("eventId",events[i].id);
-        const ticketTypeCount = await TicketTypes.count({
+        const ticketTypeCount = await EventTicketTypes.count({
             where:{
                 eventId:events[i].id
             }
@@ -89,7 +89,7 @@ async function simpleGetEvents(req, res){
     const events = await Events.findAll({
         attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
         order:[
-            ['id','ASC'],
+            ['id','DESC'],
         ]
     });
 

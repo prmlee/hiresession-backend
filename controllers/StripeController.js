@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User, Candidates, Employees, Events, AttachedEmployees,TicketTypes,Payments,Tickets,ExtraTickets} = require('../models');
+const { User, Candidates, Employees, Events, AttachedEmployees,Payments,EventTickets,ExtraTickets} = require('../models');
 const stripe = require("stripe")("sk_test_51Hj7cQJZ7kpAYq4CXhMPRwYK5mpLMzsAL6fsEdossHdVMOnB8z9sIutS8juDa8FBbv8KAmehJpmpWNxX7xQIu8AA00JFyOM6Ko");
 
 async function addAttachedEmployees(userId,eventId)
@@ -18,6 +18,31 @@ async function addAttachedEmployees(userId,eventId)
         userId:userId,
         EventId:eventId,
     });
+}
+
+async function processTicketEmail(email,eventTicketId,eventId,roleType)
+{
+	const user = await User.findOne({
+		attributes:["id"],
+		where:{
+			email: email,
+			role:'employer',
+		}
+	});
+	var isProcess = 0;
+	if(user)
+	{
+		await addAttachedEmployees(user.id,eventId);
+		isProcess = 1;
+	}
+
+	await ExtraTickets.create({
+		eventTicketId,
+		eventId,
+		email,
+		roleType,
+		isProcess
+	});
 }
 async function setSearchable(userId,days)
 {
@@ -69,74 +94,66 @@ async function completePayment(req,res){
             billedContact:req.body.billedContact,
             companyName:req.body.companyName,
         });
-        var ticket,ticketType;
+        
         /////////////////////////////////////////////////////////////////////////
-        var mainTicketType = req.body.mainTicket;
-        ticket = await Tickets.create({
-            ticketTypeId:mainTicketType.id,
-            paymentId:payment.id,
-            userId:userId,
-            count:1
-        });
-        console.log("ticket",ticket);
+		var mainTicket = req.body.mainTicket;
+		var extraTicket = req.body.extraTicket;
+		var resumeTicket = req.body.resumeTicket;
+		var extraEmailList= req.body.extraEmailList;
+		var primaryEmail = req.body.primaryEmail;
+		var eventId = req.body.eventId;
 
-        ticketType = await TicketTypes.findOne({
-            attributes:['id','name','role','price','description','ticketPerOrder','eventId'],
-            where:{
-                id:ticket.ticketTypeId
-            }
-        });
+		var eventTicketData = {
+			eventId,
+			userId,
+			mainTicketType: mainTicket.roleType,
+			mainTicketPrice: mainTicket.price,
+			primaryEmail
+		}
 
-        await addAttachedEmployees(userId,ticketType.eventId);
+		if(extraTicket != null)
+		{
+			eventTicketData['isExtraTicket'] = 1;
+			eventTicketData['extraTicketType'] = extraTicket.roleType;
+			eventTicketData['extraTicketPrice'] = extraTicket.price;
+			eventTicketData['extraTicketCount'] = extraEmailList.length;
+			for(var i = 0; i< extraEmailList.length;i++)
+			{
+				eventTicketData['extraEmail'+(i+1)] = extraEmailList[i];
+			}
+		}
+
+		if(resumeTicket !=null)
+		{
+			eventTicketData['isResumeTicket'] = 1;
+			eventTicketData['resumeTicketType'] = resumeTicket.roleType;
+			eventTicketData['resumeTicketPrice'] = resumeTicket.price;
+		}
+
+        var eventTicket = await EventTickets.create(eventTicketData);
+		console.log("ticket",eventTicket);
+		
+		await Payments.update({eventTicketId:eventTicket.id},{
+			where:{
+				id:payment.id
+			}
+		})
+
+        await processTicketEmail(primaryEmail,eventTicket.id,eventId,mainTicket.roleType);
 
         /////////////////////////////////////////////////////////////////////////////////
-        var extraTicket = req.body.extraTicket;
+        
         if(extraTicket != null)
         {
-            var extraEmailList= req.body.extraEmailList
-            ticket = await Tickets.create({
-                ticketTypeId:extraTicket.id,
-                paymentId:payment.id,
-                userId:userId,
-                count:extraEmailList.length,
-            });
-
             for(var i = 0; i< extraEmailList.length;i++)
             {
-                const email = extraEmailList[i];
-                const user = await User.findOne({
-                    attributes:["id"],
-                    where:{
-                        email: email,
-                        role:'employer',
-                    }
-                });
-                var isProcess = 0;
-                if(user)
-                {
-                    await addAttachedEmployees(user.id,ticketType.eventId);
-                    isProcess = 1;
-                }
-
-                await ExtraTickets.create({
-                    ticketId: ticket.id,
-                    eventId: ticketType.eventId,
-                    email:email,
-                    isProcess:isProcess,
-                });
+                await processTicketEmail(extraEmailList[i],eventTicket.id,eventId,extraTicket.roleType);  
             }
         }
         //////////////////////////////////////////////////////////////////////////////////
-        var resumeTicket = req.body.resumeTicket;
+        
         if(resumeTicket !=null)
         {
-            ticket = await Tickets.create({
-                ticketTypeId:resumeTicket.id,
-                paymentId:payment.id,
-                userId:userId,
-                count:1,
-            });
-
             await setSearchable(userId,30);
         }
 

@@ -3,47 +3,33 @@ const ticketController = require('../controllers/TicketController');
 const { isLoggedAdmin,isLoggedEmployer} = require('../middlewares/auth');
 
 const router = express.Router();
-
+	
 router
-    .route('/addTicketType')
+    .route('/getEventTicketTypeByEvent')
+    .post(
+        ticketController.getEventTicketTypeByEvent
+	)
+	
+router
+    .route('/updateEventTicketType')
     .post(
         isLoggedAdmin,
-        ticketController.addTicketType
-    );
+        ticketController.updateEventTicketType
+	);
 
 router
-    .route('/getTicketTypes')
+    .route('/getEventTickets')
     .post(
         isLoggedAdmin,
-        ticketController.getTicketTypes
+        ticketController.getEventTickets
+	);
+	
+router
+    .route('/getEmployerTickets')
+    .get(
+        isLoggedEmployer,
+        ticketController.getEmployerTickets
     );
 
-router
-    .route('/deleteTicketType')
-    .post(
-        isLoggedAdmin,
-        ticketController.deleteTicketType
-    );
-
-router
-    .route('/updateTicketType')
-    .post(
-        isLoggedAdmin,
-        ticketController.updateTicketType
-    );
-
-router
-    .route('/getSingleTicketType')
-    .post(
-        isLoggedAdmin,
-        ticketController.getSingleTicketType
-    );
-
-router
-    .route('/getTicketTypesByEvent')
-    .post(
-        ticketController.getTicketTypesByEvent
-    )
-    
 
 module.exports = router;
