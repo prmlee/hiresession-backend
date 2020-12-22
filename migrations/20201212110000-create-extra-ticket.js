@@ -1,15 +1,21 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('TicketTypes', {
+    return queryInterface.createTable('ExtraTickets', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
+      eventTicketId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'EventTickets',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       eventId: {
         type: Sequelize.INTEGER,
@@ -20,20 +26,16 @@ module.exports = {
         onUpdate: 'cascade',
         onDelete: 'cascade'
       },
-      role: {
-        type: Sequelize.ENUM,
-        values: ['Sponsor', 'Exhibitor','Extra Reps','Resume Database'],
-      },
-      price:{
-        type: Sequelize.DECIMAL(10,2),
+      email: {
+        type: Sequelize.STRING
+	  },
+	  roleType:{
+        type: Sequelize.INTEGER,
         defaultValue: 0
       },
-      description: {
-        type: Sequelize.TEXT
-      },
-      ticketPerOrder:{
+      isProcess:{
         type: Sequelize.INTEGER,
-        defaultValue: 1
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,
@@ -46,6 +48,6 @@ module.exports = {
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable('TicketTypes');
+    return queryInterface.dropTable('ExtraTickets');
   }
 };

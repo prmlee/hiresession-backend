@@ -10,7 +10,16 @@ module.exports = {
       },
       paymentId: {
         type: Sequelize.STRING
-      },
+	  },
+	  eventTicketId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'EventTickets',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
+	  },
       amount:{
         type: Sequelize.DECIMAL(10,2),
         defaultValue: 0

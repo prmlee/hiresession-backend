@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     const Payments = sequelize.define('Payments', {
         paymentId: {
             type: DataTypes.STRING
-        },
+		},
+		eventTicketId: DataTypes.INTEGER,
         amount:{
             type: DataTypes.DECIMAL(10,2),
             defaultValue: 0
@@ -39,7 +40,11 @@ module.exports = (sequelize, DataTypes) => {
         companyName: {
             type: DataTypes.TEXT
           },
-    }, {});
+	}, {});
+	
+	Payments.associate = function(models) {
+		Payments.hasOne(models.EventTickets, {as:'eventTickets', foreignKey:'id', sourceKey:'eventTicketId'});
+    };
 
     return Payments;
 };
