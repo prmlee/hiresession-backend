@@ -5,183 +5,21 @@ const { validationResult } = require('express-validator/check');
 var fs = require('fs');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
-const { User, Candidates, Employees, Events, AttachedEmployees,TicketTypes} = require('../models');
+const { Events,User,Payments, EventTicketTypes,EventTickets} = require('../models');
 const { Op } = require('sequelize');
 
-
-async function addTicketType(req, res) {
-
-    if (!req.body.name) {
-        return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-          success: false,
-          message: 'Ticket name is required',
-        })
-    }
-
-    console.log(req.body);
-
-    try{
-        const ticket = await TicketTypes.create({
-            name: req.body.name,
-            eventId: req.body.eventId,
-            role: req.body.role,
-            price: req.body.price || 0,
-            description: req.body.description,
-            ticketPerOrder: req.body.ticketPerOrder || 1,
-        });
-
-        return res.status(httpStatus.OK).json({
-            success: true,
-            event: ticket.dataValues,
-            message: 'Ticket Type successfully created',
-        });
-
-    }catch(e)
-    {
-        console.log('Add Ticket Type Error', e)
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            message: e.message,
-        });
-    }
+const TICKET_ROLES = {
+	LEAD_SPONSOR: 1,
+	GOLD_SPONSOR: 2,
+	SPONSOR: 3,
+	EXHIBITOR_REGISTRATION: 11,
+	EXHIBITOR: 12,
+	EXHIBITOR_NON_PROFIT: 13,
+	EXTRA_REPS: 21,
+	RESUME: 31
 }
 
-async function getTicketTypes(req, res) {
 
-    try{
-        const TicketList = await TicketTypes.findAndCountAll({
-            attributes:['id','name','role','price','description','ticketPerOrder'],
-            include:[
-                {
-                    attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink', 'eventLogo', 'location', 'date', 'startTime', 'endTime'],
-                    model: Events,
-                    as: 'events'
-                }
-            ],
-            order: [
-                ['createdAt', 'DESC'],
-            ],
-        });
-
-        var resultRows = TicketList.rows;
-        return res.status(httpStatus.OK).json({
-            success: true,
-            data: resultRows,
-            count: resultRows.length,
-          })
-
-    }catch(e)
-    {
-        console.log('Get Tickets Error', e)
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            message: e.message,
-        });
-    }
-}
-async function getTicketTypesByEvent(req, res) {
-
-    try{
-        const TicketList = await TicketTypes.findAndCountAll({
-            attributes:['id','name','role','price','description','ticketPerOrder'],
-            include:[
-                {
-                    attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink', 'eventLogo', 'location', 'date', 'startTime', 'endTime'],
-                    model: Events,
-                    as: 'events',
-                    where:{
-                        id:req.body.eventId
-                    }
-                }
-            ],
-            order: [
-                ['createdAt', 'DESC'],
-            ],
-        });
-
-        var resultRows = TicketList.rows;
-        return res.status(httpStatus.OK).json({
-            success: true,
-            data: resultRows,
-            count: resultRows.length,
-          })
-
-    }catch(e)
-    {
-        console.log('Get Tickets Error', e)
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            message: e.message,
-        });
-    }
-}
-async function deleteTicketType(req, res) {
-
-    const id = req.body.id;
-    if (!id) {
-      return res
-        .status(httpStatus.UNPROCESSABLE_ENTITY)
-        .json(errors.array());
-    }
-  
-    try {
-      await TicketTypes.destroy({
-        where: {
-          id
-        },
-        paranoid: true,
-      })
-  
-      return res.status(httpStatus.OK).json({
-        success: true,
-        message: 'Ticket Type successfully deleted',
-      });
-    } catch (e) {
-      console.log("Delete Ticket Type",e);
-      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        message: e.message,
-      });
-    }
-}
-
-async function getSingleTicketType(req, res) {
-
-    if (!req.body.id) {
-        return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
-          success: false,
-          message: 'Ticket Type id is required',
-        })
-    }
-
-    try{
-        const ticketType = await TicketTypes.findOne({
-            attributes:['id','name','role','price','description','ticketPerOrder'],
-            include:[
-                {
-                    attributes: ['id', 'eventName', 'pdfFile', 'bizaboLink', 'eventLogo', 'location', 'date', 'startTime', 'endTime'],
-                    model: Events,
-                    as: 'events'
-                }
-            ],
-            where: {
-                id: req.body.id,
-            },
-        });
-      
-        return res.status(httpStatus.OK).json({
-          success: true,
-          data: ticketType,
-        });
-    }catch(e)
-    {
-        console.log("Get Single Ticket Type",e);
-        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-            success: false,
-            message: e.message,
-        });
-    }
-}
 async function updateTicketType(req, res) {
 
     if (!req.body.id) {
@@ -232,12 +70,185 @@ async function updateTicketType(req, res) {
     }
 }
 
+async function getEventTicketTypeByEvent(req,res){
+	if (!req.body.eventId) {
+        return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+          success: false,
+          message: 'Event Id is required',
+        })
+	}
+	
+	try{
+        const eventTicketType = await EventTicketTypes.findOne({
+            where: {
+                eventId: req.body.eventId,
+            },
+        });
+      
+        return res.status(httpStatus.OK).json({
+          success: true,
+          data: eventTicketType,
+        });
+    }catch(e)
+    {
+        console.log("Get Event Ticket Type By Event",e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message,
+        });
+    }
+}
+async function updateEventTicketType(req, res) {
+	const eventId = req.body.eventId;
+    if (!eventId) {
+        return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+          success: false,
+          message: 'Event id is required',
+        })
+	}
+	
+    try{
+		const roleTypes = req.body.roleTypes == null ? [] : req.body.roleTypes;
+		const roleData = req.body.roleData;
+		console.log("Role Types",roleTypes);
+		console.log("Role Data",roleData);
+		const eventTicketType = {
+			eventId
+		}
+
+		Object.values(TICKET_ROLES).map((roleType)=>{
+			if(roleType == TICKET_ROLES.RESUME)
+				return;
+			eventTicketType['type'+roleType] = roleTypes.includes(roleType) ? 1: 0;
+			eventTicketType['price_type'+roleType] = roleData[roleType].price;
+			eventTicketType['description_type'+roleType] = roleData[roleType].description;
+		});
+
+		console.log("eventTicketType",eventTicketType);
+
+        const ticketType = await EventTicketTypes.findOne({
+            attributes: ['id'],
+            where: {
+              eventId
+            },
+            raw: true,
+        });
+      
+        if (!ticketType) {
+            await EventTicketTypes.create(eventTicketType);
+		}
+		else
+		{
+			await EventTicketTypes.update({
+				...eventTicketType,
+			  }, {
+				where: {
+				  id: ticketType.id,
+				},
+				paranoid: true,
+			});
+		}      
+    
+        return res.status(httpStatus.OK).json({
+            success: true,
+            message: 'Event successfully updated',
+        });
+
+    }catch(e){
+        console.log("Update Event Ticket Type",e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message,
+        });
+    }
+}
+
+async function getEventTickets(req,res){
+	const eventId = req.body.eventId;
+    if (!eventId) {
+        return res.status(httpStatus.UNPROCESSABLE_ENTITY).json({
+          success: false,
+          message: 'Event id is required',
+        })
+	}
+
+	try{
+        const eventTickets = await EventTickets.findAll({
+			include:[
+				{
+					model:User,
+                    as:'user',
+				},
+				{
+					model:Payments,
+					as:'payment'
+				}
+			],
+            where: {
+                eventId: req.body.eventId,
+			},
+			order:[
+				['createdAt','DESC']
+			]
+        });
+      
+        return res.status(httpStatus.OK).json({
+          success: true,
+          data: eventTickets,
+        });
+    }catch(e)
+    {
+        console.log("Get Event Ticket Type By Event",e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message,
+        });
+    }
+}
+
+async function getEmployerTickets(req,res){
+	const userId = res.locals.user.id;
+
+	try{
+        const eventTickets = await EventTickets.findAll({
+			include:[
+				{
+					attributes:['eventName'],
+					model:Events,
+                    as:'events',
+				},
+				{
+					model:Payments,
+					as:'payment'
+				}
+			],
+            where: {
+                userId: userId
+			},
+			order:[
+				['createdAt','DESC']
+			]
+        });
+      
+        return res.status(httpStatus.OK).json({
+          success: true,
+          data: eventTickets,
+        });
+    }catch(e)
+    {
+        console.log("getEmployerTickets",e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message,
+        });
+    }
+}
+
 
 module.exports = {
-    addTicketType,
-    getTicketTypes,
-    deleteTicketType,
     updateTicketType,
-    getSingleTicketType,
-    getTicketTypesByEvent,
+	getEventTicketTypeByEvent,
+	updateEventTicketType,
+	getEventTickets,
+	getEmployerTickets
 };

@@ -2,9 +2,10 @@
 module.exports = (sequelize, DataTypes) => {
     
     const ExtraTickets = sequelize.define('ExtraTickets', {
-        ticketId: DataTypes.INTEGER,
+        eventTicketId: DataTypes.INTEGER,
         eventId: DataTypes.INTEGER,
-        email: DataTypes.STRING,
+		email: DataTypes.STRING,
+		roleType: DataTypes.INTEGER,
         isProcess:{
             type: DataTypes.INTEGER,
             defaultValue: 0
@@ -13,8 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   
     ExtraTickets.associate = function(models) {
         ExtraTickets.hasOne(models.Events, {as:'events', foreignKey:'id', sourceKey:'eventId'});
-        ExtraTickets.hasOne(models.Tickets, {as:'tickets', foreignKey:'id', sourceKey:'ticketId'});
-
+        ExtraTickets.hasOne(models.EventTickets, {as:'eventTickets', foreignKey:'id', sourceKey:'eventTicketId'});
     };
 
     return ExtraTickets;
