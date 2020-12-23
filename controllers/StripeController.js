@@ -46,7 +46,7 @@ async function processTicketEmail(email,eventTicketId,eventId,roleType)
 }
 async function setSearchable(userId,days)
 {
-    var searchExpire = Date.now() + 1000*60*60*24*days;
+    var searchExpire = Math.ceil(Date.now()/(1000*60*60)) + 24*days;
     const employee = await Employees.update({
         isSearchable: 1,
         searchExpire: searchExpire
@@ -93,8 +93,16 @@ async function completePayment(req,res){
             zipPostalCode:req.body.zipPostalCode,
             billedContact:req.body.billedContact,
             companyName:req.body.companyName,
-        });
-        
+		});
+		var resumeTicket = req.body.resumeTicket;
+		if(req.body.onlyResume)
+		{
+			console.log("onlyResume")
+			await setSearchable(userId,30);
+			return res.status(httpStatus.OK).json({
+				success: true,
+			});
+		}
         /////////////////////////////////////////////////////////////////////////
 		var mainTicket = req.body.mainTicket;
 		var extraTicket = req.body.extraTicket;

@@ -4,9 +4,11 @@ const multer = require('multer')
 const { validationResult } = require('express-validator/check');
 var fs = require('fs');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
+const {getResumeConfiguration,setResumeConfigration} = require('../services/configuration');
 
-const { Events,User,Payments, EventTicketTypes,EventTickets} = require('../models');
+const { Events,User,Payments,Employees, EventTicketTypes,EventTickets} = require('../models');
 const { Op } = require('sequelize');
+
 
 const TICKET_ROLES = {
 	LEAD_SPONSOR: 1,
@@ -83,11 +85,13 @@ async function getEventTicketTypeByEvent(req,res){
             where: {
                 eventId: req.body.eventId,
             },
-        });
+		});
+		const resumeTicket = await getResumeConfiguration();
       
         return res.status(httpStatus.OK).json({
           success: true,
-          data: eventTicketType,
+		  data: eventTicketType,
+		  resume:resumeTicket
         });
     }catch(e)
     {
@@ -244,11 +248,79 @@ async function getEmployerTickets(req,res){
     }
 }
 
+async function getResumeTicketInfo(req,res){
+	try{
+		const resumeTicket = await getResumeConfiguration();
+		return res.status(httpStatus.OK).json({
+			success: true,
+			data: resumeTicket,
+		});
+	}catch{
+		console.log("getResumeTicketInfo",e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message,
+        });
+	}
+}
+
+async function setResumeTicketInfo(req,res){
+	try{
+		const resumeTicket = req.body.resumeTicket;
+		console.log(resumeTicket);
+		await setResumeConfigration(resumeTicket);
+		return res.status(httpStatus.OK).json({
+			success: true,
+		});
+	}catch{
+		console.log("setResumeTicketInfo",e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message,
+        });
+	}
+}
+
+async function getEmployerResumeTicketInfo(req,res){
+	const userId = res.locals.user.id;
+	try{
+		const resumeTicket = await getResumeConfiguration();
+		const employer = await Employees.findOne({
+			where:{
+				userId
+			}
+		});
+		var remainTime = 0;
+		if(employer)
+		{
+			console.log(employer.searchExpire);
+			console.log(Date.now());
+			remainTime = employer.searchExpire - Math.ceil(Date.now()/(1000*60*60));
+			if(remainTime < 0)
+				remainTime = 0;
+		}
+		return res.status(httpStatus.OK).json({
+			success: true,
+			resume: resumeTicket,
+			remainTime: remainTime
+		});
+	}catch{
+		console.log("getEmployerResumeTicketInfo",e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message,
+        });
+	}
+}
+
 
 module.exports = {
     updateTicketType,
 	getEventTicketTypeByEvent,
 	updateEventTicketType,
 	getEventTickets,
-	getEmployerTickets
+	getEmployerTickets,
+	getResumeTicketInfo,
+	setResumeTicketInfo,
+	getEmployerResumeTicketInfo
 };
