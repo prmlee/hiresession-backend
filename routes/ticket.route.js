@@ -29,7 +29,28 @@ router
     .get(
         isLoggedEmployer,
         ticketController.getEmployerTickets
-    );
+	);
+
+router
+    .route('/getResumeTicketInfo')
+    .get(
+        ticketController.getResumeTicketInfo
+	);
+	
+router
+    .route('/setResumeTicketInfo')
+    .post(
+        isLoggedAdmin,
+        ticketController.setResumeTicketInfo
+	);
+
+	
+router
+    .route('/getEmployerResumeTicketInfo')
+    .get(
+		isLoggedEmployer,
+        ticketController.getEmployerResumeTicketInfo
+	);
 
 
 module.exports = router;
