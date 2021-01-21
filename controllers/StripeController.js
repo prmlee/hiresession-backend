@@ -110,13 +110,15 @@ async function completePayment(req,res){
 		var extraEmailList= req.body.extraEmailList;
 		var primaryEmail = req.body.primaryEmail;
 		var eventId = req.body.eventId;
+		var releationEvent = req.body.releationEvent;
 
 		var eventTicketData = {
 			eventId,
 			userId,
 			mainTicketType: mainTicket.roleType,
 			mainTicketPrice: mainTicket.price,
-			primaryEmail
+			primaryEmail,
+			releationEvent
 		}
 
 		if(extraTicket != null)
@@ -147,7 +149,12 @@ async function completePayment(req,res){
 			}
 		})
 
-        await processTicketEmail(primaryEmail,eventTicket.id,eventId,mainTicket.roleType);
+		await processTicketEmail(primaryEmail,eventTicket.id,eventId,mainTicket.roleType);
+		if(releationEvent != null)
+		{
+			await processTicketEmail(primaryEmail,eventTicket.id,releationEvent,mainTicket.roleType);
+		}
+
 
         /////////////////////////////////////////////////////////////////////////////////
         
@@ -155,7 +162,11 @@ async function completePayment(req,res){
         {
             for(var i = 0; i< extraEmailList.length;i++)
             {
-                await processTicketEmail(extraEmailList[i],eventTicket.id,eventId,extraTicket.roleType);  
+				await processTicketEmail(extraEmailList[i],eventTicket.id,eventId,extraTicket.roleType);
+				if(releationEvent != null)
+				{
+					await processTicketEmail(extraEmailList[i],eventTicket.id,releationEvent,extraTicket.roleType);
+				}
             }
         }
         //////////////////////////////////////////////////////////////////////////////////
