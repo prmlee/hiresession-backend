@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     const EventTickets = sequelize.define('EventTickets', {
 		eventId: DataTypes.INTEGER,
 		userId: DataTypes.INTEGER,
+		releationEvent:DataTypes.INTEGER,
 		
 		mainTicketType:{
             type: DataTypes.INTEGER,
