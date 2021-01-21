@@ -29,6 +29,8 @@ async function profile(req, res) {
     },
   });
 
+  console.log("step1");
+
   const profileImg = multer({
     storage,
     limits: { fileSize: LIMIT_UPLOAD_FILE_SIZE },
@@ -61,7 +63,9 @@ async function profile(req, res) {
           message: 'this email already used',
         })
       }
-    }
+	}
+	
+	console.log("step2");
     const updatedObj = req.body;
     const employee = await Employees.findOne({
       where: {
@@ -96,7 +100,9 @@ async function profile(req, res) {
           fileSize: req.files.supportingDocs[i].size,
         })
       }
-    }
+	}
+	
+	console.log("step3");
 
     if (err) {
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
@@ -119,14 +125,16 @@ async function profile(req, res) {
       if (req.body.email) {
         token = await createToken(req.body.email, res.locals.user.firstName, res.locals.user.lastName, Roles[res.locals.user.role]);
       }
-
+	  console.log("step4");
       return res.status(httpStatus.OK).json({
         success: true,
         message: 'Updated successfully',
         token,
-      });
+	  });
+	  
 
     } catch (e) {
+		console.log("step error");
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: e.message,
