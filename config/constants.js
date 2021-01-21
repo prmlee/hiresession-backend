@@ -1,4 +1,4 @@
-const LIMIT_UPLOAD_FILE_SIZE = 100 * 1024 * 1024;
+const LIMIT_UPLOAD_FILE_SIZE = 1000 * 1024 * 1024;
 const WEBINAR_LIMIT = 2;
 
 module.exports = {
