@@ -2,7 +2,8 @@
 module.exports = (sequelize, DataTypes) => {
     
     const TicketTypes = sequelize.define('EventTicketTypes', {
-        eventId: DataTypes.INTEGER,
+		eventId: DataTypes.INTEGER,
+		releationEvent:DataTypes.INTEGER,
 		type1:{
             type: DataTypes.INTEGER,
             defaultValue: 0

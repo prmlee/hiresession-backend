@@ -117,7 +117,8 @@ async function updateEventTicketType(req, res) {
 		console.log("Role Types",roleTypes);
 		console.log("Role Data",roleData);
 		const eventTicketType = {
-			eventId
+			eventId,
+			releationEvent: req.body.releationEvent,
 		}
 
 		Object.values(TICKET_ROLES).map((roleType)=>{
