@@ -14,7 +14,7 @@ function createToken(email, firstName, lastName, role) {
     if(lastName) {
       userObj.lastName = lastName;
     }
-    jwt.sign(userObj, config.jwtSecret, {expiresIn: `${tokenExpiration} days`}, (err, token) => {
+    jwt.sign(userObj, config.jwtSecret, {expiresIn: '1d'}, (err, token) => {
       if (err || !token) {
         reject(err);
       } else {
