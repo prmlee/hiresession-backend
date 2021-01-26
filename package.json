@@ -10,7 +10,7 @@
     "start:prod": " NODE_ENV=production PORT=8000 node ./bin/www",
     "migrate": "sequelize db:migrate --env development",
     "migrate:undo": "sequelize db:migrate:undo",
-    "seeder": "sequelize db:seed:all",
+    "seeder": "sequelize db:seed:all --env development",
     "seeder:staging": "sequelize db:seed:all --env staging",
     "migrate:staging": "sequelize db:migrate --env staging",
     "migrate:staging:undo": "sequelize db:migrate:undo --env staging",

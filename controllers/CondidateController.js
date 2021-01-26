@@ -9,7 +9,7 @@ const { validationResult } = require('express-validator/check');
 const { createToken, createResetPassToken, verifyToken, Roles } = require('../helpers/JwtHelper');
 const { Op } = require('sequelize');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
-
+const dataController = require('../controllers/DataController');
 const { User, Candidates, SupportingDocuments, Employees, Interviews, Events, employeeSettings, SettingDurations, Favorits } = require('../models');
 
 async function profile(req, res) {
@@ -60,7 +60,12 @@ async function profile(req, res) {
       }
     }
 
-    const updatedObj = req.body;
+	const updatedObj = req.body;
+	if(updatedObj.shcool)
+	{
+		dataController.addSchool(req.body.shcool);
+	}
+
     if(updatedObj.share == null)
       updatedObj.share = '0';
 

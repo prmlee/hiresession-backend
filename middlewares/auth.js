@@ -83,21 +83,44 @@ async function isUserLoggedIn(req, res, next) {
       const decodedToken = await verifyToken(token);
       if(decodedToken){
 
-        const user = await User.findOne({
-          where: {
-            email: decodedToken.email
-          },
-          raw:true
-        });
+		var user = null;
 
-        if(!user){
-          return  res
-              .status(httpStatus.UNAUTHORIZED)
-              .json({authorization: [{message: 'Unauthorized'}]});
-        }
-
-        res.locals.user = user;
-        next();
+		if(decodedToken.role == Roles.admin)
+		{
+			const admin = await Admin.findOne({
+				where: {
+				  email: decodedToken.email
+				},
+				raw:true
+			  });
+	
+			  if(!admin){
+				return  res
+					.status(httpStatus.UNAUTHORIZED)
+					.json({authorization: [{message: 'Unauthorized'}]});
+			  }
+	
+			  res.locals.user = admin;
+			  next();
+		}
+		else
+		{
+			const user = await User.findOne({
+				where: {
+				  email: decodedToken.email
+				},
+				raw:true
+			  });
+	
+			  if(!user){
+				return  res
+					.status(httpStatus.UNAUTHORIZED)
+					.json({authorization: [{message: 'Unauthorized'}]});
+			  }
+	
+			  res.locals.user = user;
+			  next();
+		}
       }else{
         res
             .status(httpStatus.UNAUTHORIZED)

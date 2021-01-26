@@ -7,7 +7,7 @@ const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
 const { User, Candidates, Employees, SupportingDocuments, Admin, Events, Interviews, AttachedEmployees,employeeSettings,SettingDurations} = require('../models');
 const { Op } = require('sequelize');
-
+const dataController = require('../controllers/DataController');
 
 async function createEvent(req, res) {
   const storage = multer.diskStorage({
@@ -1189,7 +1189,13 @@ async function changeCandidateProfile(req, res) {
       }
     }
 
-    const updatedObj = req.body;
+	const updatedObj = req.body;
+	
+	if(updatedObj.shcool)
+	{
+		dataController.addSchool(req.body.shcool);
+	}
+	
     if(updatedObj.share == null)
       updatedObj.share = '0';
 
