@@ -9,7 +9,7 @@ const { Op } = require('sequelize');
 const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
 const {keCalcTimeOffset} = require('../helpers/keTime')
-
+const {pushInterviewNotification} = require('./NotificationController');
 const {checkEmployeeSettingsFull} = require('./EmployeeController')
 const { User, Candidates, Employees, Interviews, SupportingDocuments,Events,employeeSettings,SettingDurations } = require('../models');
 
@@ -333,7 +333,9 @@ async function createInterview(req, res) {
         timezoneOffset: req.body.timezoneOffset,
       });
       
-      await checkEmployeeSettingsFull(req.body.eventId,req.body.employeeId);
+	  await checkEmployeeSettingsFull(req.body.eventId,req.body.employeeId);
+	  await pushInterviewNotification(req.body.employeeId,req.body.candidateId,req.body.eventId);
+	  
       //console.log("Post checkEmployeeSettingsFull ");
       return res.status(httpStatus.OK).json({
         success: true,
