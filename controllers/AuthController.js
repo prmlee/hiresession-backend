@@ -10,6 +10,8 @@ const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
 const { User, Candidates, Employees, SupportingDocuments, Admin } = require('../models');
 
+const dataController = require('../controllers/DataController');
+
 async function candidateRegister(req, res) {
   const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -143,7 +145,12 @@ async function candidateRegister(req, res) {
         resume,
         resumeFileName,
         profileImg,
-      });
+	  });
+	  
+	  if(req.body.shcool)
+	  {
+		  dataController.addSchool(req.body.shcool);
+	  }
 
       return res.status(httpStatus.OK).json({
         success: true,
