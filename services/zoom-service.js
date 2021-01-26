@@ -137,7 +137,7 @@ async function updateMeeting(body, meetingId){
 function generateJWT(){
     const payload = {
         iss: configs.zoomApiKey,
-        exp: ((new Date()).getTime() + 5000)
+        exp: ((new Date()).getTime() + 5000*6)
     };
     return jwt.sign(payload, configs.zoomApiSecret);
 }
