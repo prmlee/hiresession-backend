@@ -7,7 +7,7 @@ const router = express.Router();
 	
 router
 	.route('/subscription')
-	.patch(zoomController.subscription
+	.post(zoomController.subscription
 	);
 
 
