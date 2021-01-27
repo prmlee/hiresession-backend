@@ -16,7 +16,7 @@ async function addNotificationProc(notification)
 async function getNotifications(req,res)
 {
     try{
-        console.log("getNotifications");
+        //console.log("getNotifications");
         const member = res.locals.user;
         
         const notifications = await Notifications.findAll({
