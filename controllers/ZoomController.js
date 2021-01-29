@@ -32,7 +32,7 @@ async function subscription(req,res)
 						{ date: today },
 						{ date: nextDate },
 					],
-					'joinUrl': `https://zoom.us/j/${infoObj.id}`
+					joinUrl: `https://zoom.us/j/${infoObj.id}`
 				},
 			});
 
@@ -41,7 +41,7 @@ async function subscription(req,res)
 	}
 	catch(e)
 	{
-
+		console.log("subscription error", e);
 	}
 	return res.status(httpStatus.OK).json({
 		success: true,
