@@ -8,7 +8,7 @@ function searchIntervewIdByTime(userInfo,interviewList)
 {
 	const searchId = -1;
 	const todayMoment = moment();
-	var diffTime = 60*8;
+	var diffTime = 8*60*1000;
 	for (const interview of interviewList) {
 		const { id, startTime, date,timezoneName } = interview.dataValues;
 		const dateTime = `${date}T${startTime}.000Z`;
