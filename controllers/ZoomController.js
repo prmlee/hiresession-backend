@@ -6,7 +6,7 @@ const {keCalcTimeOffset} = require('../helpers/keTime');
 
 function searchIntervewIdByTime(userInfo,interviewList)
 {
-	const searchId = -1;
+	var searchId = -1;
 	const todayMoment = moment();
 	var diffTime = 8*60*1000;
 	for (const interview of interviewList) {
