@@ -17,16 +17,15 @@ async function subscription(req,res)
 		console.log("subscription type",type);
 		console.log("subscription payload",payload);
 
-		if(infoObj.join_time == payload.start_time)
+		if(type === "meeting.participant_joined")
 		{
-			console.log("subscription host create room",payload.id);
-			return res.status(httpStatus.OK).json({
-				success: true,
-			});	
-		}
-
-		if(type == "meeting.participant_joined")
-		{
+			if(infoObj.join_time === payload.start_time)
+			{
+				console.log("subscription host create room",payload.id);
+				return res.status(httpStatus.OK).json({
+					success: true,
+				});	
+			}
 			const interviewList = await Interviews.findAll({
 				where: {
 					[Op.or]: [
