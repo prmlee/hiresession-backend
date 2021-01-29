@@ -17,6 +17,7 @@ function searchIntervewIdByTime(userInfo,interviewList)
 		const timeMoment = moment(dateTime).add(timezoneOffset, 'minute');
 		
 		const diffSeconds = Math.abs(todayMoment.diff(timeMoment));
+		console.log("searchIntervewIdByTime",diffSeconds);
 
 		if(diffSeconds < diffTime)
 		{
@@ -67,6 +68,8 @@ async function subscription(req,res)
 
 			if (interviewList && interviewList.length > 0){
 				const updateId = searchIntervewIdByTime(infoObj.participant,interviewList);
+
+				console.log("subscription updateId",updateId)
 
 				if(updateId != -1)
 				{
