@@ -15,10 +15,11 @@ async function subscription(req,res)
 		const infoObj = req.body.payload.object;
 
 		console.log("subscription type",type);
-		console.log("subscription payload",type);
+		console.log("subscription payload",payload);
 
 		if(infoObj.join_time == payload.start_time)
 		{
+			console.log("subscription host create room",payload.id);
 			return res.status(httpStatus.OK).json({
 				success: true,
 			});	
