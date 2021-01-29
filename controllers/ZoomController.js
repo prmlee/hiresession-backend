@@ -1,13 +1,13 @@
 const httpStatus = require('http-status');
 const moment = require('moment');
 const { User, Interviews } = require('../models');
-const prevDate = moment().subtract(1, 'day').format('YYYY-MM-DD');
-const nextDate = moment().add(1, 'day').format('YYYY-MM-DD');
-const today = moment().format('YYYY-MM-DD');
+const { Op } = require('sequelize');
 
 async function subscription(req,res)
 {
-	
+	const prevDate = moment().subtract(1, 'day').format('YYYY-MM-DD');
+	const nextDate = moment().add(1, 'day').format('YYYY-MM-DD');
+	const today = moment().format('YYYY-MM-DD');
 
 	try{
 		const type = req.body.event;
