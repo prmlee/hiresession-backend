@@ -11,17 +11,16 @@ async function subscription(req,res)
 
 	try{
 		const type = req.body.event;
-		const payload = req.body.payload;
 		const infoObj = req.body.payload.object;
 
 		console.log("subscription type",type);
-		console.log("subscription payload",payload);
+		console.log("subscription infoObj",infoObj);
 
 		if(type === "meeting.participant_joined")
 		{
-			if(infoObj.join_time === payload.start_time)
+			if(infoObj.participant.join_time === infoObj.start_time)
 			{
-				console.log("subscription host create room",payload.id);
+				console.log("subscription host create room",infoObj.id);
 				return res.status(httpStatus.OK).json({
 					success: true,
 				});	
@@ -33,7 +32,7 @@ async function subscription(req,res)
 						{ date: today },
 						{ date: nextDate },
 					],
-					'joinUrl': `https://zoom.us/j/${payload.id}`
+					'joinUrl': `https://zoom.us/j/${infoObj.id}`
 				},
 			});
 
