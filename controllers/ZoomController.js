@@ -17,7 +17,7 @@ function searchIntervewIdByTime(userInfo,interviewList)
 		const timeMoment = moment(dateTime).add(timezoneOffset, 'minute');
 		
 		const diffSeconds = Math.abs(todayMoment.diff(timeMoment));
-		console.log("searchIntervewIdByTime",diffSeconds);
+		//console.log("searchIntervewIdByTime",diffSeconds);
 
 		if(diffSeconds < diffTime)
 		{
@@ -40,14 +40,14 @@ async function subscription(req,res)
 		const type = req.body.event;
 		const infoObj = req.body.payload.object;
 
-		console.log("subscription type",type);
-		console.log("subscription infoObj",infoObj);
+		//console.log("subscription type",type);
+		//console.log("subscription infoObj",infoObj);
 
 		if(type === "meeting.participant_joined")
 		{
 			if(infoObj.participant.join_time === infoObj.start_time)
 			{
-				console.log("subscription host create room",infoObj.id);
+				//console.log("subscription host create room",infoObj.id);
 				return res.status(httpStatus.OK).json({
 					success: true,
 				});	
@@ -64,7 +64,7 @@ async function subscription(req,res)
 				},
 			});
 
-			console.log("interviewList",interviewList);
+			//console.log("interviewList",interviewList);
 
 			if (interviewList && interviewList.length > 0){
 				const updateId = searchIntervewIdByTime(infoObj.participant,interviewList);
