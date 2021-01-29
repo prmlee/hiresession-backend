@@ -2,6 +2,32 @@ const httpStatus = require('http-status');
 const moment = require('moment');
 const { User, Interviews } = require('../models');
 const { Op } = require('sequelize');
+const {keCalcTimeOffset} = require('../helpers/keTime');
+
+function searchIntervewIdByTime(userInfo,interviewList)
+{
+	const searchId = -1;
+	const todayMoment = moment();
+	var diffTime = 60*8;
+	for (const interview of interviewList) {
+		const { id, startTime, date,timezoneName } = interview.dataValues;
+		const dateTime = `${date}T${startTime}.000Z`;
+    	var timezoneOffset = 240;
+	    timezoneOffset = -keCalcTimeOffset(timezoneName);
+		const timeMoment = moment(dateTime).add(timezoneOffset, 'minute');
+		
+		const diffSeconds = Math.abs(todayMoment.diff(timeMoment));
+
+		if(diffSeconds < diffTime)
+		{
+			diffTime = diffSeconds;
+			searchId = id;
+		}
+	}
+
+	return id;
+	
+}
 
 async function subscription(req,res)
 {
@@ -32,11 +58,27 @@ async function subscription(req,res)
 						{ date: today },
 						{ date: nextDate },
 					],
-					joinUrl: `https://zoom.us/j/${infoObj.id}`
+					joinUrl: `https://zoom.us/j/${infoObj.id}`,
+					status:3
 				},
 			});
 
 			console.log("interviewList",interviewList);
+
+			if (interviewList && interviewList.length > 0){
+				const updateId = searchIntervewIdByTime(infoObj.participant,interviewList);
+
+				if(updateId != -1)
+				{
+					await Interviews.update({
+						status: 1,
+					  }, {
+						where: {
+							id:updateId
+						},
+					  });
+				}
+			}
 		}
 	}
 	catch(e)
