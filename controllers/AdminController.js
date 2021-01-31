@@ -295,7 +295,10 @@ async function getLoggedInAdmin(req, res) {
 }
 
 async function getCompanies(req, res) {
-  const limit = req.params.page ? 10 : undefined;
+  
+  try{
+
+	const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
   var employeeCondition = {};
@@ -304,8 +307,8 @@ async function getCompanies(req, res) {
     status: 1,
   };
   var eventCondition = {};
-  
-  console.log("body",req.body);
+
+	console.log("body",req.body);
   if(req.body.state != '')
     employeeCondition.state = req.body.state;
   if(req.body.city != '')
@@ -410,6 +413,17 @@ async function getCompanies(req, res) {
     data: resultRows,
     count: resultRows.length,
   })
+
+  }
+  catch(e)
+  {
+	  console.log("getCompanies error",e);
+	return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+		success: false,
+		message: e.message,
+	  });
+  }
+  
 }
 
 async function getOnlyCompanies(req, res) {
