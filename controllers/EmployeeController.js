@@ -669,6 +669,23 @@ async function searchCandidates(req, res) {
 
   var searchCondition = {[Op.and]:tempCondition};
 
+  if(req.body.keyword != '')
+  {
+    tempCondition = [];
+    tempCondition.push({city:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({state:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({shcool:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({major:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({highDeagree:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({graduationYear:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({desiredJobTitle:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({industryInterested:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({zipCode:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({phone:{[Op.like] : '%'+req.body.keyword+'%'}});
+    tempCondition.push({aboutMe:{[Op.like] : '%'+req.body.keyword+'%'}});
+    searchCondition = {...searchCondition,...{[Op.or]:tempCondition}};
+  }
+
   console.log(searchCondition);
 
     const CompanyList = await User.findAndCountAll({
