@@ -111,6 +111,7 @@ async function completePayment(req,res){
 		var primaryEmail = req.body.primaryEmail;
 		var eventId = req.body.eventId;
 		var releationEvent = req.body.releationEvent;
+		var promoCode = req.body.promoCode;
 
 		var eventTicketData = {
 			eventId,
@@ -139,6 +140,14 @@ async function completePayment(req,res){
 			eventTicketData['resumeTicketType'] = resumeTicket.roleType;
 			eventTicketData['resumeTicketPrice'] = resumeTicket.price;
 		}
+
+		if(promoCode != null)
+		{
+			eventTicketData['promoId'] = promoCode.id;
+			eventTicketData['promoCode'] = promoCode.code;
+			eventTicketData['promoPercent'] = promoCode.percent;
+		}
+		
 
         var eventTicket = await EventTickets.create(eventTicketData);
 		console.log("ticket",eventTicket);
