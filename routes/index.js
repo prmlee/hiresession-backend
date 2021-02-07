@@ -7,10 +7,11 @@ const adminRoutes = require('./admin.route');
 const eventRoutes = require('./event.route');
 const interviewRoutes = require('./interview.route');
 const ticketRoutes = require('./ticket.route');
-const stripeRoutes = require('./stripe.route')
+const stripeRoutes = require('./stripe.route');
 const dataRoutes = require('./data.route');
 const notificationRoutes = require('./notification.route');
 const zoomRoutes = require('./zoom.route');
+const promoRoutes = require('./promo.route');
 
 const router = express.Router();
 
@@ -25,6 +26,6 @@ router.use('/stripe', stripeRoutes);
 router.use('/data', dataRoutes);
 router.use('/notification', notificationRoutes);
 router.use('/zoom',zoomRoutes);
-
+router.use('/promo',promoRoutes);
 
 module.exports = router;

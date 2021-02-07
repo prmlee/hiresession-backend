@@ -10,6 +10,7 @@ const { Events,User,Payments,Employees, EventTicketTypes,EventTickets} = require
 const { Op } = require('sequelize');
 
 
+
 const TICKET_ROLES = {
 	LEAD_SPONSOR: 1,
 	GOLD_SPONSOR: 2,
@@ -314,6 +315,62 @@ async function getEmployerResumeTicketInfo(req,res){
 	}
 }
 
+async function getSimpleEventTicketTypes(req,res){
+	try{
+		const eventTicketTypes = await EventTicketTypes.findAll({
+			include:[{
+				attributes:['id','eventName','date'],
+				model: Events,
+				as: "events",
+			}],
+		});
+
+		return res.status(httpStatus.OK).json({
+			success: true,
+			eventTicketTypes: eventTicketTypes,
+		});
+	}catch(e)
+	{
+		console.log("getSimpleEventTicketTypes",e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message,
+        });
+	}
+}
+async function getEventTicketsByPromoCode(req,res){
+	try{
+		const eventTickets = await EventTickets.findAll({
+			include:[
+				{
+					attributes:['id','email'],
+					model: User,
+					as:"user"
+				},
+				{
+					attributes:['id','eventName','date'],
+					model: Events,
+					as: "events",
+				}
+			],
+			where:{
+				promoId:req.body.promoId
+			}
+		});
+
+		return res.status(httpStatus.OK).json({
+			success: true,
+			eventTickets: eventTickets,
+		});
+	}catch(e)
+	{
+		console.log("getEventTicketsByPromoCode",e);
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: e.message,
+        });
+	}
+}
 
 module.exports = {
     updateTicketType,
@@ -323,5 +380,7 @@ module.exports = {
 	getEmployerTickets,
 	getResumeTicketInfo,
 	setResumeTicketInfo,
-	getEmployerResumeTicketInfo
+	getEmployerResumeTicketInfo,
+	getSimpleEventTicketTypes,
+	getEventTicketsByPromoCode
 };

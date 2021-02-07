@@ -1,7 +1,7 @@
 
 module.exports = (sequelize, DataTypes) => {
     
-    const TicketTypes = sequelize.define('EventTicketTypes', {
+    const EventTicketTypes = sequelize.define('EventTicketTypes', {
 		eventId: DataTypes.INTEGER,
 		releationEvent:DataTypes.INTEGER,
 		type1:{
@@ -90,10 +90,10 @@ module.exports = (sequelize, DataTypes) => {
         
     }, {});
   
-    TicketTypes.associate = function(models) {
-      TicketTypes.hasOne(models.Events, {as:'events', foreignKey:'id', sourceKey:'eventId'});
+    EventTicketTypes.associate = function(models) {
+		EventTicketTypes.hasOne(models.Events, {as:'events', foreignKey:'id', sourceKey:'eventId'});
     };
 
-    return TicketTypes;
+    return EventTicketTypes;
 };
   
