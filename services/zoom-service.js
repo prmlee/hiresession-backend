@@ -28,6 +28,7 @@ async function createMeeting(body, email) {
             'User-Agent': 'Zoom-api-Jwt-Request',
     };
     try{
+		console.log("createMeeting request:",data);
         const response = await axios({
             method: 'post',
             url,
@@ -35,7 +36,7 @@ async function createMeeting(body, email) {
             data,
         });
 
-        console.log("createMeeting response:",response);
+        console.log("createMeeting response:",response.data);
 
         return {
             data: response.data,
