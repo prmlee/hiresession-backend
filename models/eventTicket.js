@@ -53,8 +53,17 @@ module.exports = (sequelize, DataTypes) => {
         resumeTicketPrice:{
             type: DataTypes.DECIMAL(10,2),
             defaultValue: 0
-        }
-        
+        },
+		promoId:{
+			type:DataTypes.INTEGER,
+			defaultValue: 0
+		},
+		promoCode:{
+			type: DataTypes.STRING,
+		},
+		promoPercent:{
+			type: DataTypes.INTEGER,
+		}
     }, {});
   
     EventTickets.associate = function(models) {

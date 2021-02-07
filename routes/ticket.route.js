@@ -52,5 +52,18 @@ router
         ticketController.getEmployerResumeTicketInfo
 	);
 
+router
+	.route('/getSimpleEventTicketTypes')
+	.get(
+		isLoggedAdmin,
+		ticketController.getSimpleEventTicketTypes,
+	);
+
+router
+	.route('/getEventTicketsByPromoCode')
+	.post(
+		isLoggedAdmin,
+		ticketController.getEventTicketsByPromoCode,
+	);
 
 module.exports = router;
