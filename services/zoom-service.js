@@ -153,7 +153,7 @@ async  function normaliseMettingData(data){
     const duration = parseInt(durationMin)+parseInt((durationhours*60));
 
     return  {
-        topic: "Hiresessions",
+        topic: " ",
         type: 2,
         start_time: dateTime,
         timezone: configs.zoomTimezone,
