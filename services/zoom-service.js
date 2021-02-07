@@ -166,7 +166,7 @@ async  function normaliseMettingData(data){
             join_before_host: true,
             mute_upon_entry: true,
             watermark: true,
-            use_pmi: true,
+            use_pmi: false,
             approval_type: 1,
             registration_type: 1,
             registrants_email_notification: true
