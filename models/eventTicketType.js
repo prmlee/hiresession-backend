@@ -86,7 +86,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         description_type21: {
             type: DataTypes.TEXT
-		}
+		},
+        details:{
+            type: DataTypes.TEXT
+        }
         
     }, {});
   
