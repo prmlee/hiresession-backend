@@ -120,6 +120,7 @@ async function updateEventTicketType(req, res) {
 		const eventTicketType = {
 			eventId,
 			releationEvent: req.body.releationEvent,
+			details: req.body.details,
 		}
 
 		Object.values(TICKET_ROLES).map((roleType)=>{
