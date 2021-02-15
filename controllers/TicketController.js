@@ -103,6 +103,32 @@ async function getEventTicketTypeByEvent(req,res){
         });
     }
 }
+async function updateTicketTypeModel(updatedTicketType)
+{
+	const ticketType = await EventTicketTypes.findOne({
+		attributes: ['id'],
+		where: {
+		  eventId: updatedTicketType.eventId
+		},
+		raw: true,
+	});
+
+	if (!ticketType) {
+		await EventTicketTypes.create(eventTicketType);
+	}
+	else
+	{
+		await EventTicketTypes.update({
+			...eventTicketType,
+		  }, {
+			where: {
+			  id: ticketType.id,
+			},
+			paranoid: true,
+		});
+	} 
+}
+
 async function updateEventTicketType(req, res) {
 	const eventId = req.body.eventId;
     if (!eventId) {
@@ -117,10 +143,9 @@ async function updateEventTicketType(req, res) {
 		const roleData = req.body.roleData;
 		console.log("Role Types",roleTypes);
 		console.log("Role Data",roleData);
-		const eventTicketType = {
+		var eventTicketType = {
 			eventId,
 			releationEvent: req.body.releationEvent,
-			details: req.body.details,
 		}
 
 		Object.values(TICKET_ROLES).map((roleType)=>{
@@ -133,28 +158,36 @@ async function updateEventTicketType(req, res) {
 
 		console.log("eventTicketType",eventTicketType);
 
-        const ticketType = await EventTicketTypes.findOne({
-            attributes: ['id'],
-            where: {
-              eventId
-            },
-            raw: true,
-        });
+		await updateTicketTypeModel(eventTicketType);
+		
+		var tempId = eventTicketType.releationEvent;
+		eventTicketType.releationEvent = eventTicketType.id;
+		eventTicketType.id = tempId;
+
+		await updateTicketTypeModel(eventTicketType);
+
+        // const ticketType = await EventTicketTypes.findOne({
+        //     attributes: ['id'],
+        //     where: {
+        //       eventId
+        //     },
+        //     raw: true,
+        // });
       
-        if (!ticketType) {
-            await EventTicketTypes.create(eventTicketType);
-		}
-		else
-		{
-			await EventTicketTypes.update({
-				...eventTicketType,
-			  }, {
-				where: {
-				  id: ticketType.id,
-				},
-				paranoid: true,
-			});
-		}      
+        // if (!ticketType) {
+        //     await EventTicketTypes.create(eventTicketType);
+		// }
+		// else
+		// {
+		// 	await EventTicketTypes.update({
+		// 		...eventTicketType,
+		// 	  }, {
+		// 		where: {
+		// 		  id: ticketType.id,
+		// 		},
+		// 		paranoid: true,
+		// 	});
+		// }      
     
         return res.status(httpStatus.OK).json({
             success: true,
