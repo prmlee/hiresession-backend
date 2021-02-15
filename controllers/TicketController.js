@@ -114,12 +114,12 @@ async function updateTicketTypeModel(updatedTicketType)
 	});
 
 	if (!ticketType) {
-		await EventTicketTypes.create(eventTicketType);
+		await EventTicketTypes.create(updatedTicketType);
 	}
 	else
 	{
 		await EventTicketTypes.update({
-			...eventTicketType,
+			...updatedTicketType,
 		  }, {
 			where: {
 			  id: ticketType.id,
@@ -160,9 +160,12 @@ async function updateEventTicketType(req, res) {
 
 		await updateTicketTypeModel(eventTicketType);
 		
-		var tempId = eventTicketType.releationEvent;
-		eventTicketType.releationEvent = eventTicketType.id;
-		eventTicketType.id = tempId;
+		if(eventTicketType.releationEvent != null)
+		{
+			var tempId = eventTicketType.releationEvent;
+			eventTicketType.releationEvent = eventTicketType.id;
+			eventTicketType.id = tempId;
+		}
 
 		await updateTicketTypeModel(eventTicketType);
 
