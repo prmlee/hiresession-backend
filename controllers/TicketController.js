@@ -163,8 +163,8 @@ async function updateEventTicketType(req, res) {
 		if(eventTicketType.releationEvent != null)
 		{
 			var tempId = eventTicketType.releationEvent;
-			eventTicketType.releationEvent = eventTicketType.id;
-			eventTicketType.id = tempId;
+			eventTicketType.releationEvent = eventTicketType.eventId;
+			eventTicketType.eventId = tempId;
 		}
 
 		await updateTicketTypeModel(eventTicketType);
