@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { User, Candidates, Employees, Events, AttachedEmployees,Payments,EventTickets,ExtraTickets} = require('../models');
 const stripe = require("stripe")("sk_test_51Hj7cQJZ7kpAYq4CXhMPRwYK5mpLMzsAL6fsEdossHdVMOnB8z9sIutS8juDa8FBbv8KAmehJpmpWNxX7xQIu8AA00JFyOM6Ko");
-
+const mailer = require('../services/mail-sender');
 async function addAttachedEmployees(userId,eventId)
 {
     const attachedEmployee = await AttachedEmployees.findOne({
