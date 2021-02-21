@@ -169,7 +169,7 @@ async function completePayment(req,res){
 		
 		const company = await Employees.findOne({
 			where: {
-			  userId: employee.id,
+			  userId: userId,
 			},
 			raw: true,
 			}
