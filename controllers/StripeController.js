@@ -176,8 +176,9 @@ async function completePayment(req,res){
 		);
 
 		const event = await Events.findOne({
+			attributes:['eventName'],
 			where: {
-				id: req.body.id,
+				id: eventId,
 			},
 			raw: true,
 		})
