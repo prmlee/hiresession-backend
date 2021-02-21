@@ -166,11 +166,34 @@ async function completePayment(req,res){
 
 
         /////////////////////////////////////////////////////////////////////////////////
-        
+		
+		const company = await Employees.findOne({
+			where: {
+			  userId: employee.id,
+			},
+			raw: true,
+			}
+		);
+
+		const event = await Events.findOne({
+			where: {
+				id: req.body.id,
+			},
+			raw: true,
+		})
+
         if(extraTicket != null)
         {
             for(var i = 0; i< extraEmailList.length;i++)
             {
+				await mailer.send(
+					extraEmailList[i],
+					'notificationExtra',
+					{
+						companyName:company.companyName,
+						eventName:event.eventName
+					},
+				);
 				await processTicketEmail(extraEmailList[i],eventTicket.id,eventId,extraTicket.roleType);
 				if(releationEvent != null)
 				{
