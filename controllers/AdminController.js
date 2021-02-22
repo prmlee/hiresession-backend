@@ -7,7 +7,7 @@ const { LIMIT_UPLOAD_FILE_SIZE } = require('../config/constants');
 
 const { User, Candidates, Employees, SupportingDocuments, Admin, Events, Interviews, AttachedEmployees,employeeSettings,SettingDurations} = require('../models');
 const { Op } = require('sequelize');
-
+const dataController = require('../controllers/DataController');
 
 async function createEvent(req, res) {
   const storage = multer.diskStorage({
@@ -295,7 +295,10 @@ async function getLoggedInAdmin(req, res) {
 }
 
 async function getCompanies(req, res) {
-  const limit = req.params.page ? 10 : undefined;
+  
+  try{
+
+	const limit = req.params.page ? 10 : undefined;
   const offset = req.params.page ? (req.params.page - 1) * limit : 0;
 
   var employeeCondition = {};
@@ -304,8 +307,8 @@ async function getCompanies(req, res) {
     status: 1,
   };
   var eventCondition = {};
-  
-  console.log("body",req.body);
+
+	console.log("body",req.body);
   if(req.body.state != '')
     employeeCondition.state = req.body.state;
   if(req.body.city != '')
@@ -333,7 +336,7 @@ async function getCompanies(req, res) {
     userCondition.createdAt = tempObj;
   }
   
-  if(req.body.eventList.length !=0)
+  if(req.body.eventList != null && req.body.eventList.length !=0)
   {
     eventCondition.id = {[Op.in]:req.body.eventList};
     const AttachedEmployeeList = await AttachedEmployees.findAll({
@@ -410,6 +413,17 @@ async function getCompanies(req, res) {
     data: resultRows,
     count: resultRows.length,
   })
+
+  }
+  catch(e)
+  {
+	  console.log("getCompanies error",e);
+	return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+		success: false,
+		message: e.message,
+	  });
+  }
+  
 }
 
 async function getOnlyCompanies(req, res) {
@@ -1189,7 +1203,13 @@ async function changeCandidateProfile(req, res) {
       }
     }
 
-    const updatedObj = req.body;
+	const updatedObj = req.body;
+	
+	if(updatedObj.shcool)
+	{
+		dataController.addSchool(req.body.shcool);
+	}
+	
     if(updatedObj.share == null)
       updatedObj.share = '0';
 
