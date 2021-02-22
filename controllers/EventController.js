@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 
-const {User, Events, Employees, AttachedEmployees, employeeSettings, SettingDurations} = require('../models');
+const {User, Events, Employees, AttachedEmployees, employeeSettings, SettingDurations,EventTicketTypes} = require('../models');
 const {Op} = require('sequelize');
 
 async function getEvent(req, res){
@@ -59,11 +59,24 @@ async function getEvent(req, res){
             if(typeof events[i]['attachedEmployees'][j] !== 'undefined'){
 
                 involvedEmployers.push(events[i]['attachedEmployees'][j]['dataValues']['employeeId']);
-                console.log(events[i]['attachedEmployees'][j]['dataValues']['employeeId']);
+                //console.log(events[i]['attachedEmployees'][j]['dataValues']['employeeId']);
             }
         }
 
         events[i]['dataValues']['involvedEmployers'] = involvedEmployers;
+        //console.log("eventId",events[i].id);
+        const ticketTypeCount = await EventTicketTypes.count({
+            where:{
+                eventId:events[i].id
+            }
+        });
+
+        //console.log(ticketTypeCount);
+
+        if(ticketTypeCount !=0)
+            events[i]['dataValues']['hasTicket'] = true;
+        else
+            events[i]['dataValues']['hasTicket'] = false;
     }
 
     return  res.status(httpStatus.OK).json({
@@ -76,7 +89,7 @@ async function simpleGetEvents(req, res){
     const events = await Events.findAll({
         attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
         order:[
-            ['id','ASC'],
+            ['id','DESC'],
         ]
     });
 
@@ -85,5 +98,18 @@ async function simpleGetEvents(req, res){
         data:events
     })
 }
+async function simpleGetOne(req,res){
+    const events = await Events.findOne({
+        attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
+        where:{
+            id:req.body.id
+        }
+    });
 
-module.exports = {getEvent,simpleGetEvents};
+    return  res.status(httpStatus.OK).json({
+        success:true,
+        data:events
+    })
+}
+
+module.exports = {getEvent,simpleGetEvents,simpleGetOne};

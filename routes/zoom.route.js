@@ -1,24 +1,14 @@
 const express = require('express');
 const {check} = require('express-validator/check');
-const adminController = require('../controllers/AdminController');
-const { isLoggedAdmin } = require('../middlewares/auth');
+const zoomController = require('../controllers/ZoomController');
 
 const router = express.Router();
 
+	
 router
-    .route('/createEvent')
-    .post(
-        isLoggedAdmin,
-        adminController.createEvent
-    );
-
-
-router
-    .route('/updateEvent')
-    .patch(
-        isLoggedAdmin,
-        adminController.updateEvent
-    );
+	.route('/subscription')
+	.post(zoomController.subscription
+	);
 
 
 module.exports = router;
