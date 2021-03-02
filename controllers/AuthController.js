@@ -277,6 +277,8 @@ async function employeeRegister(req, res) {
         {
           resetPassFormUrl: `${configs.frontAppUrl}/activation/${token}`,
           companyName: req.body.companyName,
+					city: req.body.city,
+					state: req.body.state
         },
         configs.bcc,
       );
