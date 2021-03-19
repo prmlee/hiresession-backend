@@ -1,7 +1,7 @@
 const express = require('express');
 const {check} = require('express-validator/check');
 const eventController = require('../controllers/EventController');
-
+const { isLoggedAdmin } = require('../middlewares/auth');
 
 const router = express.Router();
 
@@ -22,5 +22,13 @@ router
     .post(
         eventController.simpleGetOne
     );
+
+router
+	.route("/getEventsByCode")
+	.post(
+		isLoggedAdmin,
+		eventController.getEventsByCode
+	);
+
 
 module.exports = router;

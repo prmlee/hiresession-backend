@@ -710,6 +710,49 @@ async function searchCandidates(req, res) {
   })
 }
 
+async function attachedByCode(req, res) {
+	const user = res.locals.user;
+	
+	const events = await Events.findAndCountAll({
+		attributes: ['id', 'eventName',  'date', 'location', 'type'],
+		where:{
+			code:req.body.code
+		}
+	});
+
+	if(events.rows.length > 0)
+	{
+		for(let i =0; i< events.rows.length;i++)
+		{
+			const eventId = events.rows[i].id;
+			const attachedEmployer = {
+				userId: user.id,
+				EventId:eventId
+			};
+			const isExist = await AttachedEmployees.findOne({
+				where:attachedEmployer
+			});
+
+			if(!isExist)
+			{
+				await AttachedEmployees.create(attachedEmployer);
+			}
+		}
+		
+		res.status(httpStatus.OK).json({
+			success: true,
+			data: events.rows,
+			count: events.rows.length,
+		});
+	}
+	else{
+		res.status(httpStatus.OK).json({
+			success: true,
+			count: 0,
+		});
+	}
+}
+
 
 module.exports = {
   getLoggedInUser,
@@ -725,4 +768,5 @@ module.exports = {
   getGroups,
   checkEmployeeSettingsFull,
   searchCandidates,
+	attachedByCode
 };
