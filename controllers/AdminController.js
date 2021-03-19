@@ -92,6 +92,7 @@ async function createEvent(req, res) {
         timezoneName: req.body.timezoneName || 'EST',
         type: req.body.type || 'private',
         hostLimit: req.body.hostLimit || 1,
+				code: req.body.code
       });
 
       if (req.body.userId) {
@@ -1550,7 +1551,7 @@ async function getEvents(req, res) {
 async function getSingleEvent(req, res) {
 
   const events = await Events.findOne({
-    attributes: ['id', 'bizaboLink', 'pdfFile', 'pdfFileName', 'location', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
+    attributes: ['id', 'bizaboLink', 'pdfFile', 'pdfFileName', 'location', 'eventName', 'eventLogo', 'date', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit','code'],
     include: [
       {
         attributes: ['id'],
