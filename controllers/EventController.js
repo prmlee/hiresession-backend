@@ -86,18 +86,33 @@ async function getEvent(req, res){
 }
 
 async function simpleGetEvents(req, res){
-    const events = await Events.findAll({
-        attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
-        order:[
-            ['id','DESC'],
-        ]
-    });
+	const events = await Events.findAll({
+			attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
+			order:[
+					['id','DESC'],
+			]
+	});
 
-    return  res.status(httpStatus.OK).json({
-        success:true,
-        data:events
-    })
+	return  res.status(httpStatus.OK).json({
+			success:true,
+			data:events
+	})
 }
+
+async function getEventsByCode(req,res){
+	const events = await Events.findAll({
+		attributes: ['id', 'eventName',  'date', 'location', 'type'],
+		where:{
+			code:req.body.code
+		}
+	});
+
+	return  res.status(httpStatus.OK).json({
+			success:true,
+			data:events
+	});
+}
+
 async function simpleGetOne(req,res){
     const events = await Events.findOne({
         attributes: ['id', 'eventName', 'pdfFile', 'pdfFileName', 'bizaboLink','eventLogo', 'date', 'location', 'startTime', 'endTime', 'timezoneOffset', 'timezoneName','type','hostLimit'],
@@ -112,4 +127,9 @@ async function simpleGetOne(req,res){
     })
 }
 
-module.exports = {getEvent,simpleGetEvents,simpleGetOne};
+module.exports = {
+	getEvent,
+	simpleGetEvents,
+	simpleGetOne,
+	getEventsByCode
+};

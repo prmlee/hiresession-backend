@@ -29,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     hostLimit:{
       type:DataTypes.INTEGER,
       defaultValue: 1,
-    }
+    },
+		code: DataTypes.STRING,
   }, {});
 
   Events.associate = function(models) {

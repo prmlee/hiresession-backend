@@ -97,4 +97,14 @@ router
         EmployeeController.searchCandidates
     );
 
+router
+    .route('/attachedByCode')
+    .post(
+        isLoggedEmployer,
+        [
+            check('code').exists(),
+        ],
+        EmployeeController.attachedByCode
+    );
+
 module.exports = router;
